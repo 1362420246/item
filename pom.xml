@@ -20,6 +20,8 @@
         <pagehelper.version>1.2.10</pagehelper.version>
         <mybatis.version>2.1.0</mybatis.version>
         <druid.version>1.1.9</druid.version>
+        <guava.version>20.0</guava.version>
+        <commons-collections.verison>3.2.2</commons-collections.verison>
     </properties>
 
     <dependencies>
@@ -56,6 +58,22 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <!--guava-->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        <!--commons-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>${commons-collections.verison}</version>
         </dependency>
     </dependencies>
 
