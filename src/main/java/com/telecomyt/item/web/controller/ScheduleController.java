@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @RequestMapping("/schedule")
 @RestController
 public class ScheduleController {
@@ -31,9 +34,9 @@ public class ScheduleController {
      * 查询日程列表
      */
     @GetMapping("/query")
-    public BaseResp<String> queryScheduleList(ScheduleListQuery scheduleListQuery){
+    public BaseResp<Map> queryScheduleList(ScheduleListQuery scheduleListQuery){
         BeanValidator.check(scheduleListQuery);
-        if( scheduleListQuery.getStartTime().isBefore(scheduleListQuery.getEndTime()) ){
+        if( scheduleListQuery.getStartTime().isAfter(scheduleListQuery.getEndTime()) ){
             return new BaseResp<>( ResultStatus.INVALID_PARAM );
         }
         return scheduleService.queryScheduleList(scheduleListQuery);

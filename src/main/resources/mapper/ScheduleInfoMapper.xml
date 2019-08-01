@@ -102,13 +102,59 @@
 
   <!--查询不重复日程-->
   <select id="queryScheduleListByNoRepeat" resultType="com.telecomyt.item.dto.ScheduleInfoDto">
-    SELECT *
-    FROM tb_schedule_info i JOIN tb_schedule_group g
-    ON i.group_id = g.id
-    WHERE i.affiliated_cardid = #{cardid}
-    AND is_repeat = 0
-    AND  (g.start_time BETWEEN #{startTime} AND #{endTime}
-    OR 	g.end_Time BETWEEN #{startTime} AND #{endTime})
+      SELECT
+          i.id,
+          g.id AS groupId,
+          i.creator_cardid AS creatorCardid,
+          i.affiliated_cardid AS cardid,
+          g.schedule_title AS title,
+          g.schedule_describe AS scheduleDescribe,
+          g.start_time AS startTime,
+          g.end_time AS endTime
+      FROM tb_schedule_info i JOIN tb_schedule_group g
+      ON i.group_id = g.id
+      WHERE i.affiliated_cardid = #{cardid}
+      AND g.is_repeat = 0
+      AND (g.start_time BETWEEN #{startTime} AND #{endTime}
+      OR g.end_Time BETWEEN #{startTime} AND #{endTime})
+      AND i.is_delete = 0
+  </select>
+
+  <!--查询重复日程-->
+  <select id="queryScheduleListByRepeat" resultType="com.telecomyt.item.dto.ScheduleInfoDto">
+      SELECT
+          i.id,
+          g.id AS groupId,
+          i.creator_cardid AS creatorCardid,
+          i.affiliated_cardid AS cardid,
+          g.schedule_title AS title,
+          g.schedule_describe AS scheduleDescribe,
+          g.start_time AS startTime,
+          g.end_time AS endTime ,
+          g.start_week AS startWeek ,
+          g.end_week AS endWeek ,
+          g.`start_day_month` AS startDayMonth,
+          g.`end_day_month` AS endDayMonth
+      FROM tb_schedule_info i JOIN tb_schedule_group g
+      ON i.group_id = g.id
+      WHERE i.affiliated_cardid = #{cardid}
+      AND i.is_delete = 0
+      AND g.is_repeat = 1
+      AND g.repeat_rules = #{repeatRules}
+      <choose>
+        <when test="dateType == 1 and repeatRules == 2 and startWeek != null and endWeek != null" >
+           AND (g.start_week = #{startWeek} or g.end_week = #{endWeek} )
+        </when>
+        <when test="dateType == 1 and repeatRules == 3 and startDayMonth != null and endDayMonth != null" >
+          <!-- AND (g.start_day_month = #{startDayMonth} or g.end_day_month = #{endDayMonth} ) -->
+          AND (g.start_day_month BETWEEN #{startDayMonth} AND #{endDayMonth} or g.end_day_month BETWEEN #{startDayMonth} AND #{endDayMonth} )
+        </when>
+        <when test="dateType == 2 and repeatRules == 3 and startDayMonth != null and endDayMonth != null" >
+          AND (g.start_day_month BETWEEN #{startDayMonth} AND #{endDayMonth} or g.end_day_month BETWEEN #{startDayMonth} AND #{endDayMonth} )
+        </when>
+      </choose>
+
+
   </select>
 
 

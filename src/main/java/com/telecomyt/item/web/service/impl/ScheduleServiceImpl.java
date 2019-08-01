@@ -1,5 +1,6 @@
 package com.telecomyt.item.web.service.impl;
 
+import com.google.common.collect.Maps;
 import com.telecomyt.item.dto.BaseResp;
 import com.telecomyt.item.dto.ScheduleDto;
 import com.telecomyt.item.dto.ScheduleInfoDto;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -74,12 +76,32 @@ public class ScheduleServiceImpl implements ScheduleService {
      * 查询日程列表
      */
     @Override
-    public BaseResp<String> queryScheduleList(ScheduleListQuery scheduleListQuery) {
+    public BaseResp<Map> queryScheduleList(ScheduleListQuery scheduleListQuery) {
+        Map<String,List> resultMap = Maps.newHashMap();
         //不重复的  必查 按时间查
         List<ScheduleInfoDto> noRepeatList = scheduleInfoMapper.queryScheduleListByNoRepeat(scheduleListQuery);
+        resultMap.put("noRepeatList",noRepeatList);
         //日重复的  必查 直接查
-        //周重复的  日查询时 要算开始时间是周几
+        scheduleListQuery.setRepeatRules(1);
+        List<ScheduleInfoDto> dayRepeatList = scheduleInfoMapper.queryScheduleListByRepeat(scheduleListQuery);
+        resultMap.put("dayRepeatList",dayRepeatList);
+        //周重复的  日查询时 要算开始时间是周几 、结束时间是周几
+        scheduleListQuery.setRepeatRules(2);
+        if(scheduleListQuery.getDateType() == 1){
+            scheduleListQuery.setStartWeek(scheduleListQuery.getStartTime().getDayOfWeek().getValue());
+            scheduleListQuery.setEndWeek(scheduleListQuery.getEndTime().getDayOfWeek().getValue());
+        }
+        List<ScheduleInfoDto> weekRepeatList = scheduleInfoMapper.queryScheduleListByRepeat(scheduleListQuery);
+        resultMap.put("weekRepeatList",weekRepeatList);
         //月重复的  日查询时 要算开始时间是几号 ； 周查询时候 要算 开始时间 和结束时间 都是几号  取范围值
-        return null;
+        scheduleListQuery.setRepeatRules(3);
+        if(scheduleListQuery.getDateType() == 1 || scheduleListQuery.getDateType() == 2){
+            scheduleListQuery.setStartDayMonth(scheduleListQuery.getStartTime().getDayOfMonth());
+            scheduleListQuery.setEndDayMonth(scheduleListQuery.getEndTime().getDayOfMonth());
+        }
+        List<ScheduleInfoDto> monthRepeatList = scheduleInfoMapper.queryScheduleListByRepeat(scheduleListQuery);
+        resultMap.put("monthRepeatList",monthRepeatList);
+        //那些日子有  日重复都有   月重复 和 不重复 相加    周重复？
+        return new BaseResp<>(ResultStatus.SUCCESS,resultMap);
     }
 }

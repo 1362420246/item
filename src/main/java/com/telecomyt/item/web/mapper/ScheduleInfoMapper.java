@@ -53,4 +53,9 @@ public interface ScheduleInfoMapper {
      * 查询不重复日程
      */
     List<ScheduleInfoDto> queryScheduleListByNoRepeat(ScheduleListQuery scheduleListQuery);
+
+    /**
+     * 查询重复日程
+     */
+    List<ScheduleInfoDto> queryScheduleListByRepeat(ScheduleListQuery scheduleListQuery);
 }

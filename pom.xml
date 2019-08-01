@@ -18,8 +18,10 @@
         <skipTests>true</skipTests>
         <java.version>1.8</java.version>
         <pagehelper.version>1.2.10</pagehelper.version>
-        <mybatis.version>2.1.0</mybatis.version>
-        <druid.version>1.1.9</druid.version>
+        <!--推荐的mybatis-spring是2.1.0 会导致 映射LocalDateTime
+         类型报 SQLFeatureNotSupportedException 异常-->
+        <mybatis.version>2.0.0</mybatis.version>
+        <druid.version>1.1.17</druid.version>
         <guava.version>20.0</guava.version>
         <hutool.version>4.3.0</hutool.version>
         <commons-collections.verison>3.2.2</commons-collections.verison>
