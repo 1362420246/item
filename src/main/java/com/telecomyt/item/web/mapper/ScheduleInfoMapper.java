@@ -1,7 +1,11 @@
 package com.telecomyt.item.web.mapper;
 
+import com.telecomyt.item.dto.ScheduleInfoDto;
+import com.telecomyt.item.dto.ScheduleListQuery;
 import com.telecomyt.item.entity.ScheduleInfo;
 import com.telecomyt.item.entity.ScheduleInfoDo;
+
+import java.util.List;
 
 public interface ScheduleInfoMapper {
     /**
@@ -45,4 +49,8 @@ public interface ScheduleInfoMapper {
      */
     int insertList(ScheduleInfoDo scheduleInfoDo);
 
+    /**
+     * 查询不重复日程
+     */
+    List<ScheduleInfoDto> queryScheduleListByNoRepeat(ScheduleListQuery scheduleListQuery);
 }

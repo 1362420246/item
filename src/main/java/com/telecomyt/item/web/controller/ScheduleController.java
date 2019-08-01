@@ -2,15 +2,14 @@ package com.telecomyt.item.web.controller;
 
 import com.telecomyt.item.dto.BaseResp;
 import com.telecomyt.item.dto.ScheduleDto;
+import com.telecomyt.item.dto.ScheduleListQuery;
 import com.telecomyt.item.enums.ResultStatus;
 import com.telecomyt.item.utils.BeanValidator;
 import com.telecomyt.item.web.service.ScheduleService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/schedule")
 @RestController
@@ -26,6 +25,18 @@ public class ScheduleController {
     public BaseResp<String> addSchedule(@RequestBody ScheduleDto scheduleDto){
         BeanValidator.check(scheduleDto);
         return scheduleService.addSchedule(scheduleDto);
+    }
+
+    /**
+     * 查询日程列表
+     */
+    @GetMapping("/query")
+    public BaseResp<String> queryScheduleList(ScheduleListQuery scheduleListQuery){
+        BeanValidator.check(scheduleListQuery);
+        if( scheduleListQuery.getStartTime().isBefore(scheduleListQuery.getEndTime()) ){
+            return new BaseResp<>( ResultStatus.INVALID_PARAM );
+        }
+        return scheduleService.queryScheduleList(scheduleListQuery);
     }
 
 }

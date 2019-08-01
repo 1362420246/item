@@ -100,4 +100,16 @@
     </foreach>
   </insert>
 
+  <!--查询不重复日程-->
+  <select id="queryScheduleListByNoRepeat" resultType="com.telecomyt.item.dto.ScheduleInfoDto">
+    SELECT *
+    FROM tb_schedule_info i JOIN tb_schedule_group g
+    ON i.group_id = g.id
+    WHERE i.affiliated_cardid = #{cardid}
+    AND is_repeat = 0
+    AND  (g.start_time BETWEEN #{startTime} AND #{endTime}
+    OR 	g.end_Time BETWEEN #{startTime} AND #{endTime})
+  </select>
+
+
 </mapper>
