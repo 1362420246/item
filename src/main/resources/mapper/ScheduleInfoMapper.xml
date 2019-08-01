@@ -90,4 +90,14 @@
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!--批量插入-->
+  <insert id="insertList" parameterType="com.telecomyt.item.entity.ScheduleInfoDo">
+    insert into tb_schedule_info (group_id, creator_cardid, affiliated_cardid, is_delete)
+    values
+    <foreach collection="affiliatedCardids" separator="," item="affiliatedCardid" >
+      (#{groupId},#{creatorCardid},#{affiliatedCardid},#{isDelete})
+    </foreach>
+  </insert>
+
 </mapper>

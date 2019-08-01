@@ -1,14 +1,21 @@
 package com.telecomyt.item.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
  * @author qbk
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ScheduleLog implements Serializable {
     private static final long serialVersionUID = -6192533262984824634L;
     /**
@@ -29,7 +36,7 @@ public class ScheduleLog implements Serializable {
     /**
      *   * 1:开始  2:上传照片 3:上传附件 4:结束 
      */
-    private Boolean logType;
+    private Integer logType;
 
     /**
      *   * 操作日志
@@ -54,10 +61,10 @@ public class ScheduleLog implements Serializable {
     /**
      *   * 
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      *   * 
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 }

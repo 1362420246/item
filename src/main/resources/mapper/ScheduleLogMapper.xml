@@ -5,7 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="group_id" jdbcType="INTEGER" property="groupId" />
     <result column="operation_cardid" jdbcType="CHAR" property="operationCardid" />
-    <result column="log_type" jdbcType="BIT" property="logType" />
+    <result column="log_type" jdbcType="INTEGER" property="logType" />
     <result column="log_details" jdbcType="VARCHAR" property="logDetails" />
     <result column="log_remarks" jdbcType="VARCHAR" property="logRemarks" />
     <result column="file_path" jdbcType="VARCHAR" property="filePath" />
@@ -33,7 +33,7 @@
       file_path, file_uri, create_time, 
       update_time)
     values (#{id,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, #{operationCardid,jdbcType=CHAR}, 
-      #{logType,jdbcType=BIT}, #{logDetails,jdbcType=VARCHAR}, #{logRemarks,jdbcType=VARCHAR}, 
+      #{logType,jdbcType=INTEGER}, #{logDetails,jdbcType=VARCHAR}, #{logRemarks,jdbcType=VARCHAR}, 
       #{filePath,jdbcType=VARCHAR}, #{fileUri,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
@@ -82,7 +82,7 @@
         #{operationCardid,jdbcType=CHAR},
       </if>
       <if test="logType != null">
-        #{logType,jdbcType=BIT},
+        #{logType,jdbcType=INTEGER},
       </if>
       <if test="logDetails != null">
         #{logDetails,jdbcType=VARCHAR},
@@ -114,7 +114,7 @@
         operation_cardid = #{operationCardid,jdbcType=CHAR},
       </if>
       <if test="logType != null">
-        log_type = #{logType,jdbcType=BIT},
+        log_type = #{logType,jdbcType=INTEGER},
       </if>
       <if test="logDetails != null">
         log_details = #{logDetails,jdbcType=VARCHAR},
@@ -141,7 +141,7 @@
     update tb_schedule_log
     set group_id = #{groupId,jdbcType=INTEGER},
       operation_cardid = #{operationCardid,jdbcType=CHAR},
-      log_type = #{logType,jdbcType=BIT},
+      log_type = #{logType,jdbcType=INTEGER},
       log_details = #{logDetails,jdbcType=VARCHAR},
       log_remarks = #{logRemarks,jdbcType=VARCHAR},
       file_path = #{filePath,jdbcType=VARCHAR},

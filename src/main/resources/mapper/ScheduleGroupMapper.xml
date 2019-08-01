@@ -9,11 +9,11 @@
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="is_repeat" jdbcType="BIT" property="isRepeat" />
-    <result column="repeat_rules" jdbcType="BIT" property="repeatRules" />
-    <result column="start_week" jdbcType="BIT" property="startWeek" />
-    <result column="end_week" jdbcType="BIT" property="endWeek" />
-    <result column="start_day_month" jdbcType="TINYINT" property="startDayMonth" />
-    <result column="end_day_month" jdbcType="TINYINT" property="endDayMonth" />
+    <result column="repeat_rules" jdbcType="INTEGER" property="repeatRules" />
+    <result column="start_week" jdbcType="INTEGER" property="startWeek" />
+    <result column="end_week" jdbcType="INTEGER" property="endWeek" />
+    <result column="start_day_month" jdbcType="INTEGER" property="startDayMonth" />
+    <result column="end_day_month" jdbcType="INTEGER" property="endDayMonth" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -40,11 +40,11 @@
       create_time, update_time)
     values (#{id,jdbcType=INTEGER}, #{creatorCardid,jdbcType=CHAR}, #{scheduleTitle,jdbcType=VARCHAR}, 
       #{scheduleDescribe,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
-      #{isRepeat,jdbcType=BIT}, #{repeatRules,jdbcType=BIT}, #{startWeek,jdbcType=BIT}, 
-      #{endWeek,jdbcType=BIT}, #{startDayMonth,jdbcType=TINYINT}, #{endDayMonth,jdbcType=TINYINT}, 
+      #{isRepeat,jdbcType=BIT}, #{repeatRules,jdbcType=INTEGER}, #{startWeek,jdbcType=INTEGER}, 
+      #{endWeek,jdbcType=INTEGER}, #{startDayMonth,jdbcType=INTEGER}, #{endDayMonth,jdbcType=INTEGER}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.telecomyt.item.entity.ScheduleGroup">
+  <insert id="insertSelective" parameterType="com.telecomyt.item.entity.ScheduleGroup" useGeneratedKeys="true" keyProperty="id">
     insert into tb_schedule_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -113,19 +113,19 @@
         #{isRepeat,jdbcType=BIT},
       </if>
       <if test="repeatRules != null">
-        #{repeatRules,jdbcType=BIT},
+        #{repeatRules,jdbcType=INTEGER},
       </if>
       <if test="startWeek != null">
-        #{startWeek,jdbcType=BIT},
+        #{startWeek,jdbcType=INTEGER},
       </if>
       <if test="endWeek != null">
-        #{endWeek,jdbcType=BIT},
+        #{endWeek,jdbcType=INTEGER},
       </if>
       <if test="startDayMonth != null">
-        #{startDayMonth,jdbcType=TINYINT},
+        #{startDayMonth,jdbcType=INTEGER},
       </if>
       <if test="endDayMonth != null">
-        #{endDayMonth,jdbcType=TINYINT},
+        #{endDayMonth,jdbcType=INTEGER},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -157,19 +157,19 @@
         is_repeat = #{isRepeat,jdbcType=BIT},
       </if>
       <if test="repeatRules != null">
-        repeat_rules = #{repeatRules,jdbcType=BIT},
+        repeat_rules = #{repeatRules,jdbcType=INTEGER},
       </if>
       <if test="startWeek != null">
-        start_week = #{startWeek,jdbcType=BIT},
+        start_week = #{startWeek,jdbcType=INTEGER},
       </if>
       <if test="endWeek != null">
-        end_week = #{endWeek,jdbcType=BIT},
+        end_week = #{endWeek,jdbcType=INTEGER},
       </if>
       <if test="startDayMonth != null">
-        start_day_month = #{startDayMonth,jdbcType=TINYINT},
+        start_day_month = #{startDayMonth,jdbcType=INTEGER},
       </if>
       <if test="endDayMonth != null">
-        end_day_month = #{endDayMonth,jdbcType=TINYINT},
+        end_day_month = #{endDayMonth,jdbcType=INTEGER},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -188,11 +188,11 @@
       start_time = #{startTime,jdbcType=TIMESTAMP},
       end_time = #{endTime,jdbcType=TIMESTAMP},
       is_repeat = #{isRepeat,jdbcType=BIT},
-      repeat_rules = #{repeatRules,jdbcType=BIT},
-      start_week = #{startWeek,jdbcType=BIT},
-      end_week = #{endWeek,jdbcType=BIT},
-      start_day_month = #{startDayMonth,jdbcType=TINYINT},
-      end_day_month = #{endDayMonth,jdbcType=TINYINT},
+      repeat_rules = #{repeatRules,jdbcType=INTEGER},
+      start_week = #{startWeek,jdbcType=INTEGER},
+      end_week = #{endWeek,jdbcType=INTEGER},
+      start_day_month = #{startDayMonth,jdbcType=INTEGER},
+      end_day_month = #{endDayMonth,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
