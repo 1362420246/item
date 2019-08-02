@@ -1,6 +1,8 @@
 package com.telecomyt.item.web.service.impl;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.telecomyt.item.dto.BaseResp;
 import com.telecomyt.item.dto.ScheduleDto;
 import com.telecomyt.item.dto.ScheduleInfoDto;
@@ -9,6 +11,7 @@ import com.telecomyt.item.entity.ScheduleGroup;
 import com.telecomyt.item.entity.ScheduleInfoDo;
 import com.telecomyt.item.entity.ScheduleLog;
 import com.telecomyt.item.enums.ResultStatus;
+import com.telecomyt.item.utils.DateUtil;
 import com.telecomyt.item.web.mapper.ScheduleGroupMapper;
 import com.telecomyt.item.web.mapper.ScheduleInfoMapper;
 import com.telecomyt.item.web.mapper.ScheduleLogMapper;
@@ -17,9 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -77,7 +80,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     @Override
     public BaseResp<Map> queryScheduleList(ScheduleListQuery scheduleListQuery) {
-        Map<String,List> resultMap = Maps.newHashMap();
+        Map<String, Collection> resultMap = Maps.newHashMap();
         //不重复的  必查 按时间查
         List<ScheduleInfoDto> noRepeatList = scheduleInfoMapper.queryScheduleListByNoRepeat(scheduleListQuery);
         resultMap.put("noRepeatList",noRepeatList);
@@ -101,7 +104,63 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         List<ScheduleInfoDto> monthRepeatList = scheduleInfoMapper.queryScheduleListByRepeat(scheduleListQuery);
         resultMap.put("monthRepeatList",monthRepeatList);
-        //那些日子有  日重复都有   月重复 和 不重复 相加    周重复？
+        //哪些日子有  ： 只有月查询时候
+        Set<String> calendarSet = Sets.newTreeSet();
+        if(scheduleListQuery.getDateType() == 3){
+            //查询的范围
+            List<String> daysByDifference = DateUtil.getDaysByDifference(scheduleListQuery.getStartTime(), scheduleListQuery.getEndTime());
+            //如果有日重复  那返回全部日期
+            if(dayRepeatList.size() > 0){
+                calendarSet.addAll(daysByDifference);
+            }else {
+                //如果有周重复 就算出周任务对应的日期
+                if(weekRepeatList.size() > 0){
+                    Set<Integer> weekSet = Sets.newHashSet();
+                    weekRepeatList.forEach(info -> {
+                        List<Integer> weeksByDifference = DateUtil.getWeeksByDifference(info.getStartWeek(), info.getEndWeek());
+                        weekSet.addAll(weeksByDifference);
+                    });
+                    // startTime 前端传入固定周一  endTime 前端传入固定周日
+                    for (int i = 0; i < daysByDifference.size(); i++) {
+                        int week = i % 7 + 1;
+                        if(weekSet.contains(week)){
+                            calendarSet.add(daysByDifference.get(i));
+                        }
+                    }
+                }
+                //如果有月重复
+                if(monthRepeatList.size() > 0){
+                    Set<Integer> daysOfMonthSets = Sets.newHashSet();
+                    monthRepeatList.forEach(info -> {
+                        List<Integer> daysOfMonth = DateUtil.getDaysOfMonthByDifference(info.getStartDayMonth(), info.getEndDayMonth(),
+                                info.getStartTime().with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth());
+                        daysOfMonthSets.addAll(daysOfMonth);
+                    });
+                    for (String day : daysByDifference) {
+                        Integer dayByString = DateUtil.getDayByString(day);
+                        if (daysOfMonthSets.contains(dayByString)) {
+                            calendarSet.add(day);
+                        }
+                    }
+                }
+                //如果有不重复
+                if(noRepeatList.size() > 0){
+                    Set<String> dnoRepeatSets = Sets.newHashSet();
+                    noRepeatList.forEach( info -> {
+                        LocalDateTime startTime = info.getStartTime();
+                        LocalDateTime endTime = info.getEndTime();
+                        List<String> noRepeatDates = DateUtil.getDaysByDifference(startTime, endTime);
+                        dnoRepeatSets.addAll(noRepeatDates);
+                    });
+                    for (String day : daysByDifference) {
+                        if (dnoRepeatSets.contains(day)) {
+                            calendarSet.add(day);
+                        }
+                    }
+                }
+            }
+        }
+        resultMap.put("calendar",calendarSet);
         return new BaseResp<>(ResultStatus.SUCCESS,resultMap);
     }
 }
