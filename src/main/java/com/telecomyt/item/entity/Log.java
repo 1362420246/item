@@ -12,17 +12,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Log {
+public class Log implements Serializable {
+    private static final long serialVersionUID = -2065926992509367898L;
     private String logId;
     private int groupId;
     private Date logTime;
     private String logPicture;
     private String logCardId;
-
-
 }
