@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * Created by 86186 on 2019/8/1.
+ * web配置
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -26,7 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String homePath = FileUtil.getHomePath();
         registry.addResourceHandler(CommonConstants.REPORTING_PATH + "**")
-                .addResourceLocations("file:"+homePath + CommonConstants.REPORTING_PATH );
+                .addResourceLocations(homePath + CommonConstants.REPORTING_PATH );
     }
 
 }

@@ -185,7 +185,10 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     @Override
     public BaseResp<Object> addScheduleLog(ScheduleLog scheduleLog) {
-        System.out.println(scheduleLog);
-        return new BaseResp<>(ResultStatus.SUCCESS);
+        int result = scheduleLogMapper.insertSelective(scheduleLog);
+        if(result > 0){
+            return new BaseResp<>(ResultStatus.SUCCESS);
+        }
+        return new BaseResp<>(ResultStatus.FAIL);
     }
 }
