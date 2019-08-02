@@ -3,15 +3,13 @@ package com.telecomyt.item.web.service.impl;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.telecomyt.item.dto.BaseResp;
-import com.telecomyt.item.dto.ScheduleDto;
-import com.telecomyt.item.dto.ScheduleInfoDto;
-import com.telecomyt.item.dto.ScheduleListQuery;
+import com.telecomyt.item.dto.*;
 import com.telecomyt.item.entity.ScheduleGroup;
 import com.telecomyt.item.entity.ScheduleInfoDo;
 import com.telecomyt.item.entity.ScheduleLog;
 import com.telecomyt.item.enums.ResultStatus;
 import com.telecomyt.item.utils.DateUtil;
+import com.telecomyt.item.utils.converter.ScheduleInfoVoConverter;
 import com.telecomyt.item.web.mapper.ScheduleGroupMapper;
 import com.telecomyt.item.web.mapper.ScheduleInfoMapper;
 import com.telecomyt.item.web.mapper.ScheduleLogMapper;
@@ -162,5 +160,23 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         resultMap.put("calendar",calendarSet);
         return new BaseResp<>(ResultStatus.SUCCESS,resultMap);
+    }
+
+    /**
+     * 查询日程详情 （包含日志）
+     * @param groupId 组id
+     */
+    @Override
+    public BaseResp<ScheduleInfoVo> queryScheduleInfo(Integer groupId) {
+        ScheduleGroup scheduleGroup = scheduleGroupMapper.selectByPrimaryKey(groupId);
+        if(scheduleGroup == null){
+            return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"日程不存在");
+        }
+        ScheduleInfoVo scheduleInfoVo = ScheduleInfoVoConverter.INSTANCE.scheduleGrouToVo(scheduleGroup);
+        List<String> affiliatedCardids = scheduleInfoMapper.queryAffiliatedCardids(groupId);
+        scheduleInfoVo.setAffiliatedCardids(affiliatedCardids);
+        List<ScheduleLog> scheduleLogs = scheduleLogMapper.queryByGroupId(groupId);
+        scheduleInfoVo.setScheduleLogs(scheduleLogs);
+        return new BaseResp<>(ResultStatus.SUCCESS,scheduleInfoVo);
     }
 }

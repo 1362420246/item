@@ -153,8 +153,14 @@
           AND (g.start_day_month BETWEEN #{startDayMonth} AND #{endDayMonth} or g.end_day_month BETWEEN #{startDayMonth} AND #{endDayMonth} )
         </when>
       </choose>
+  </select>
 
-
+  <!--查询关联人-->
+  <select id="queryAffiliatedCardids" resultType="java.lang.String">
+        SELECT affiliated_cardid
+        FROM tb_schedule_info
+        WHERE group_id = #{groupId}
+        AND is_delete = 0
   </select>
 
 

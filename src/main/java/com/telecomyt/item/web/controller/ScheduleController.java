@@ -2,6 +2,7 @@ package com.telecomyt.item.web.controller;
 
 import com.telecomyt.item.dto.BaseResp;
 import com.telecomyt.item.dto.ScheduleDto;
+import com.telecomyt.item.dto.ScheduleInfoVo;
 import com.telecomyt.item.dto.ScheduleListQuery;
 import com.telecomyt.item.enums.ResultStatus;
 import com.telecomyt.item.utils.BeanValidator;
@@ -42,4 +43,12 @@ public class ScheduleController {
         return scheduleService.queryScheduleList(scheduleListQuery);
     }
 
+    /**
+     * 查询日程详情 （包含日志）
+     * @param groupId 组id
+     */
+    @GetMapping("/query/{groupId}")
+    public BaseResp<ScheduleInfoVo> queryScheduleInfo(@PathVariable Integer groupId){
+        return scheduleService.queryScheduleInfo(groupId);
+    }
 }

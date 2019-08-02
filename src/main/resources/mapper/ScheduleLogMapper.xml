@@ -150,4 +150,13 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!--根据组id查询-->
+  <select id="queryByGroupId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_schedule_log
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </select>
+
 </mapper>

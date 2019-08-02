@@ -4,6 +4,7 @@ import com.telecomyt.item.dto.ScheduleInfoDto;
 import com.telecomyt.item.dto.ScheduleListQuery;
 import com.telecomyt.item.entity.ScheduleInfo;
 import com.telecomyt.item.entity.ScheduleInfoDo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -58,4 +59,10 @@ public interface ScheduleInfoMapper {
      * 查询重复日程
      */
     List<ScheduleInfoDto> queryScheduleListByRepeat(ScheduleListQuery scheduleListQuery);
+
+    /**
+     * 查询关联人
+     * @param groupId 组id
+     */
+    List<String> queryAffiliatedCardids(@Param("groupId") Integer groupId);
 }

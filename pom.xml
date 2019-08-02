@@ -24,6 +24,7 @@
         <druid.version>1.1.17</druid.version>
         <guava.version>20.0</guava.version>
         <hutool.version>4.3.0</hutool.version>
+        <mapstruct.version>1.2.0.Final</mapstruct.version>
         <commons-collections.verison>3.2.2</commons-collections.verison>
     </properties>
 
@@ -84,12 +85,17 @@
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.baomidou</groupId>-->
-<!--            <artifactId>mybatis-plus-boot-starter</artifactId>-->
-<!--            <version>3.1.0</version>-->
-<!--        </dependency>-->
-
+        <!--mapstruct-->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-jdk8</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
