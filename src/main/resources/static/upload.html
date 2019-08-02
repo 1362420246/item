@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>上报</title>
+</head>
+<body>
+<h2>文件上传</h2>
+    <form action="schedule/reporting" enctype="multipart/form-data" method="post">
+    <table>
+        <tr>
+            <td>logType类型:</td>
+            <td><label>
+                <input type="text" name="logType">
+            </label></td>
+        </tr>
+        <tr>
+            <td>groupId:</td>
+            <td><label>
+                <input type="text" name="groupId">
+            </label></td>
+        </tr>
+        <tr>
+            <td>operationCardid:</td>
+            <td><label>
+                <input type="text" name="operationCardid">
+            </label></td>
+        </tr>
+        <tr>
+            <td>描述:</td>
+            <td><label>
+                <input type="text" name="logRemarks">
+            </label></td>
+        </tr>
+        <tr>
+            <td>请选择文件:</td>
+            <td><input type="file" name="file"></td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="上传"></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

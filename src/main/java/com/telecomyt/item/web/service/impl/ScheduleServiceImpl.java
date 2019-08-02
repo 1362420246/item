@@ -58,14 +58,14 @@ public class ScheduleServiceImpl implements ScheduleService {
                 log.info("新增日程详情失败。");
                 return new BaseResp<>(ResultStatus.FAIL);
             }
-            //TODO 是否补日志中文描述
-            ScheduleLog scheduleLog = ScheduleLog.builder().groupId(groupId).operationCardid(creatorCardid).logType(1).build();
-            int addLogResult = scheduleLogMapper.insertSelective(scheduleLog);
-            if(addLogResult == 0){
-                //TODO 回滚
-                log.info("新增日程日志失败。");
-                return new BaseResp<>(ResultStatus.FAIL);
-            }
+            //TODO  日程的创建 不是日程的开始 ， 日程的开始和结束日志先不考虑
+//            ScheduleLog scheduleLog = ScheduleLog.builder().groupId(groupId).operationCardid(creatorCardid).logType(1).build();
+//            int addLogResult = scheduleLogMapper.insertSelective(scheduleLog);
+//            if(addLogResult == 0){
+//                //TODO 回滚
+//                log.info("新增日程日志失败。");
+//                return new BaseResp<>(ResultStatus.FAIL);
+//            }
             return new BaseResp<>(ResultStatus.SUCCESS);
         }else {
             log.info("新增日程组失败。");
@@ -178,5 +178,14 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<ScheduleLog> scheduleLogs = scheduleLogMapper.queryByGroupId(groupId);
         scheduleInfoVo.setScheduleLogs(scheduleLogs);
         return new BaseResp<>(ResultStatus.SUCCESS,scheduleInfoVo);
+    }
+
+    /**
+     * 添加日程日志
+     */
+    @Override
+    public BaseResp<Object> addScheduleLog(ScheduleLog scheduleLog) {
+        System.out.println(scheduleLog);
+        return new BaseResp<>(ResultStatus.SUCCESS);
     }
 }

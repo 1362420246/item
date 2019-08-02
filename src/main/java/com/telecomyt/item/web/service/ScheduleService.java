@@ -4,6 +4,7 @@ import com.telecomyt.item.dto.BaseResp;
 import com.telecomyt.item.dto.ScheduleDto;
 import com.telecomyt.item.dto.ScheduleInfoVo;
 import com.telecomyt.item.dto.ScheduleListQuery;
+import com.telecomyt.item.entity.ScheduleLog;
 
 import java.util.List;
 import java.util.Map;
@@ -25,4 +26,9 @@ public interface ScheduleService {
      * @param groupId 组id
      */
     BaseResp<ScheduleInfoVo> queryScheduleInfo(Integer groupId);
+
+    /**
+     * 添加日程日志
+     */
+    BaseResp<Object> addScheduleLog(ScheduleLog scheduleLog);
 }

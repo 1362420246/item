@@ -34,7 +34,7 @@ public class ScheduleLog implements Serializable {
     private String operationCardid;
 
     /**
-     *   * 1:开始  2:上传照片 3:上传附件 4:结束 
+     *   * 1:开始  2:上传照片 3:上传附件 4:任务标注 5:删除 6:结束
      */
     private Integer logType;
 
