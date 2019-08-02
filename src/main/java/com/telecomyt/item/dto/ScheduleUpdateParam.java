@@ -3,13 +3,14 @@ package com.telecomyt.item.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
+/**
+ * 修改日程参数对象
+ */
 @Data
 public class ScheduleUpdateParam implements Serializable {
 

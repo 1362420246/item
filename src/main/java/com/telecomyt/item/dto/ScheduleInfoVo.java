@@ -7,6 +7,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 日程详情显示层对象
+ */
 @Data
 public class ScheduleInfoVo implements Serializable {
 

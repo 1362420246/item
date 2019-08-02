@@ -22,9 +22,14 @@ public class WebConfig implements WebMvcConfigurer {
         requestFactory.setReadTimeout(25000);
         return new RestTemplate(requestFactory);
     }
+
+    /**
+     * 静态资源映射
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String homePath = FileUtil.getHomePath();
+        //映射上传文件的路径
         registry.addResourceHandler(CommonConstants.REPORTING_PATH + "**")
                 .addResourceLocations(homePath + CommonConstants.REPORTING_PATH );
     }

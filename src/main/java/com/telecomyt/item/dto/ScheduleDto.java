@@ -2,14 +2,15 @@ package com.telecomyt.item.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
+/**
+ * 日程综合传输对象
+ */
 @Data
 public class ScheduleDto implements Serializable {
 

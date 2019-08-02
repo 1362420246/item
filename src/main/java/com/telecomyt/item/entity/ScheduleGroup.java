@@ -1,6 +1,5 @@
 package com.telecomyt.item.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.telecomyt.item.dto.ScheduleDto;
 import com.telecomyt.item.dto.ScheduleUpdateParam;
 import lombok.AllArgsConstructor;
@@ -11,8 +10,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
+/**
+ * 日程组实体
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

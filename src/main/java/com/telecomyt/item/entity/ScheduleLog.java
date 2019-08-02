@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
- * @author qbk
+ * 日程日志实体
  */
 @Data
 @AllArgsConstructor

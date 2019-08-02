@@ -5,6 +5,9 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 日程详情传输对象
+ */
 @Data
 public class ScheduleInfoDto implements Serializable {
 

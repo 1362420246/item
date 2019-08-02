@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * 日程详情数据层对象
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

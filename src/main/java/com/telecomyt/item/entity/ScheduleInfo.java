@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * 日程详情实体
+ */
 @Data
 public class ScheduleInfo implements Serializable {
     private static final long serialVersionUID = -4220731920111379303L;

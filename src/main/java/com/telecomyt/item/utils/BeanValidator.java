@@ -96,7 +96,6 @@ public class BeanValidator {
     public static void check(Object first,Object... objects)throws BasicException {
         Map<String, String> result = validateObject(first);
         if(!MapUtils.isEmpty(result)){
-
             while(result.entrySet().iterator().hasNext()){
                 Map.Entry<String, String> next = result.entrySet().iterator().next();
                 throw new BasicException(ResultStatus.INVALID_PARAM.getErrorCode(),next.getValue());

@@ -2,6 +2,9 @@ package com.telecomyt.item.utils;
 
 import org.springframework.boot.system.ApplicationHome;
 
+/**
+ * 文件工具
+ */
 public class FileUtil {
 
     /**

@@ -2,26 +2,23 @@ package com.telecomyt.item.web.controller;
 
 import com.telecomyt.item.constant.CommonConstants;
 import com.telecomyt.item.dto.*;
-import com.telecomyt.item.entity.ScheduleGroup;
 import com.telecomyt.item.entity.ScheduleLog;
 import com.telecomyt.item.enums.ResultStatus;
 import com.telecomyt.item.utils.BeanValidator;
 import com.telecomyt.item.utils.FileUtil;
 import com.telecomyt.item.web.service.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
+/**
+ * 日程控制层
+ */
 @Slf4j
 @RequestMapping("/schedule")
 @RestController

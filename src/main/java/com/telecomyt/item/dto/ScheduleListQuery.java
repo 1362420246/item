@@ -1,7 +1,5 @@
 package com.telecomyt.item.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -9,6 +7,9 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 日程列表查询对象
+ */
 @Data
 public class ScheduleListQuery implements Serializable {
     private static final long serialVersionUID = 1981292753101129303L;

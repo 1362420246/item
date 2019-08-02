@@ -1,7 +1,7 @@
 package com.telecomyt.item.constant;
 
 /**
- * 通用
+ * 通用常量
  */
 public interface CommonConstants {
 
