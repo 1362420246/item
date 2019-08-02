@@ -21,9 +21,9 @@
         <!--推荐的mybatis-spring是2.1.0 会导致 映射LocalDateTime
          类型报 SQLFeatureNotSupportedException 异常-->
         <mybatis.version>1.3.2</mybatis.version>
-        <druid.version>1.1.17</druid.version>
+        <druid.version>1.1.10</druid.version>
         <guava.version>20.0</guava.version>
-        <hutool.version>4.3.0</hutool.version>
+        <hutool.version>4.5.9</hutool.version>
         <mapstruct.version>1.2.0.Final</mapstruct.version>
         <commons-collections.verison>3.2.2</commons-collections.verison>
     </properties>
