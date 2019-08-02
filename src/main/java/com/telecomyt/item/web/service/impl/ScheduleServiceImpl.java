@@ -1,6 +1,5 @@
 package com.telecomyt.item.web.service.impl;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.telecomyt.item.dto.*;
@@ -186,6 +185,19 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public BaseResp<Object> addScheduleLog(ScheduleLog scheduleLog) {
         int result = scheduleLogMapper.insertSelective(scheduleLog);
+        if(result > 0){
+            return new BaseResp<>(ResultStatus.SUCCESS);
+        }
+        return new BaseResp<>(ResultStatus.FAIL);
+    }
+
+    /**
+     *  修改日程
+     */
+    @Override
+    public BaseResp<Object> updateSchedule(ScheduleUpdateParam scheduleUpdateParam) {
+        ScheduleGroup scheduleGroup = new ScheduleGroup(scheduleUpdateParam);
+        int result = scheduleGroupMapper.updateByPrimaryKeySelective(scheduleGroup);
         if(result > 0){
             return new BaseResp<>(ResultStatus.SUCCESS);
         }

@@ -2,6 +2,7 @@ package com.telecomyt.item.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.telecomyt.item.dto.ScheduleDto;
+import com.telecomyt.item.dto.ScheduleUpdateParam;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -114,7 +115,29 @@ public class ScheduleGroup implements Serializable {
                     break;
             }
         }
-
-
+    }
+    public ScheduleGroup(ScheduleUpdateParam param) {
+        this.id = param.getId();
+        this.scheduleTitle = param.getScheduleTitle();
+        this.scheduleDescribe = param.getScheduleDescribe();
+        this.startTime = param.getStartTime();
+        this.endTime = param.getEndTime();
+        this.isRepeat = param.getIsRepeat();
+        this.repeatRules = param.getRepeatRules();
+        this.updateTime = LocalDateTime.now();
+        if(isRepeat){
+            switch (repeatRules){
+                case 2:
+                    this.startWeek = startTime.getDayOfWeek().getValue() ;
+                    this.endWeek = endTime.getDayOfWeek().getValue() ;
+                    break;
+                case 3:
+                    this.startDayMonth = startTime.getDayOfMonth();
+                    this.endDayMonth = endTime.getDayOfMonth();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

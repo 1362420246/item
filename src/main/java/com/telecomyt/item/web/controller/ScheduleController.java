@@ -1,10 +1,8 @@
 package com.telecomyt.item.web.controller;
 
 import com.telecomyt.item.constant.CommonConstants;
-import com.telecomyt.item.dto.BaseResp;
-import com.telecomyt.item.dto.ScheduleDto;
-import com.telecomyt.item.dto.ScheduleInfoVo;
-import com.telecomyt.item.dto.ScheduleListQuery;
+import com.telecomyt.item.dto.*;
+import com.telecomyt.item.entity.ScheduleGroup;
 import com.telecomyt.item.entity.ScheduleLog;
 import com.telecomyt.item.enums.ResultStatus;
 import com.telecomyt.item.utils.BeanValidator;
@@ -109,4 +107,14 @@ public class ScheduleController {
         }
         return scheduleService.addScheduleLog(scheduleLog);
     }
+
+    /**
+     * 修改日程
+     */
+    @PutMapping("/update")
+    public BaseResp<Object> updateSchedule(@RequestBody ScheduleUpdateParam scheduleUpdateParam){
+        BeanValidator.check(scheduleUpdateParam);
+        return scheduleService.updateSchedule(scheduleUpdateParam);
+    }
+
 }

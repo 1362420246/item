@@ -1,19 +1,26 @@
 package com.telecomyt.item.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Data
-public class ScheduleDto implements Serializable {
+public class ScheduleUpdateParam implements Serializable {
 
-    private static final long serialVersionUID = -2219223120814315631L;
+    private static final long serialVersionUID = -5981108391353912678L;
+
+    /**
+     *   *  组id  groupId
+     */
+    @NotNull(message = "组id不能为空")
+    @JsonProperty("groupId")
+    private Integer id;
 
     /**
      *   * 日程标题
@@ -51,16 +58,5 @@ public class ScheduleDto implements Serializable {
      */
     @NotNull(message = "重复规则不能为空")
     private Integer repeatRules;
-
-    /**
-     *   * 创建人身份证
-     */
-    @NotNull(message = "创建人身份证不能为空")
-    private String creatorCardid;
-
-    /**
-     *   * 关联人身份证
-     */
-    private List<String> affiliatedCardids;
 
 }
