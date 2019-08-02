@@ -2,6 +2,7 @@ package com.telecomyt.item.utils;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.telecomyt.item.entity.log.SysLog;
@@ -49,7 +50,7 @@ public class LogUtils {
                 .createTime(LocalDateTime.now())
                 .updateTime(LocalDateTime.now())
                 .time(0L)
-                .remoteAddr(HttpUtil.getClientIP(request))
+                .remoteAddr(ServletUtil.getClientIP(request))
                 .requestUri(URLUtil.getPath(request.getRequestURI()))
                 .userAgent(request.getHeader("user-agent"))
                 .params(Base64.encode(params))
