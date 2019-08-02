@@ -55,16 +55,9 @@ public class ScheduleServiceImpl implements ScheduleService {
             if(addInfoResult == 0){
                 //TODO 回滚
                 log.info("新增日程详情失败。");
-                return new BaseResp<>(ResultStatus.FAIL);
+                //return new BaseResp<>(ResultStatus.FAIL);
             }
             //TODO  日程的创建 不是日程的开始 ， 日程的开始和结束日志先不考虑
-//            ScheduleLog scheduleLog = ScheduleLog.builder().groupId(groupId).operationCardid(creatorCardid).logType(1).build();
-//            int addLogResult = scheduleLogMapper.insertSelective(scheduleLog);
-//            if(addLogResult == 0){
-//                //TODO 回滚
-//                log.info("新增日程日志失败。");
-//                return new BaseResp<>(ResultStatus.FAIL);
-//            }
             return new BaseResp<>(ResultStatus.SUCCESS);
         }else {
             log.info("新增日程组失败。");
@@ -213,6 +206,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     public BaseResp<Object> deleteSchedule(Integer groupId, String cardid) {
         int result = scheduleInfoMapper.deleteByGroupIdAndCardid(groupId,cardid);
         if(result > 0){
+            ScheduleLog scheduleLog = ScheduleLog.builder().groupId(groupId).operationCardid(cardid).logType(5).build();
+            int addLogResult = scheduleLogMapper.insertSelective(scheduleLog);
+            if(addLogResult == 0){
+                //TODO 回滚
+                log.info("新增日程日志失败。");
+                //return new BaseResp<>(ResultStatus.FAIL);
+            }
             return new BaseResp<>(ResultStatus.SUCCESS);
         }
         return new BaseResp<>(ResultStatus.FAIL);
