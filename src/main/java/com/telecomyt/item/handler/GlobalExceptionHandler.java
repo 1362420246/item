@@ -1,9 +1,14 @@
 package com.telecomyt.item.handler;
 
 import cn.hutool.json.JSONUtil;
-import com.telecomyt.item.dto.BaseResp;
+import com.telecomyt.item.dto.resp.BaseResp;
+import com.telecomyt.item.entity.log.ExceptionLog;
+import com.telecomyt.item.entity.log.SysLog;
 import com.telecomyt.item.enums.ResultStatus;
+import com.telecomyt.item.event.ServiceLogEvent;
 import com.telecomyt.item.exception.BasicException;
+import com.telecomyt.item.utils.LogUtils;
+import com.telecomyt.item.utils.SpringContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -41,8 +46,8 @@ public class GlobalExceptionHandler {
 
         BaseResp baseResp = new BaseResp();
         //获取日志信息
-//        SysLog sysLog = LogUtils.getServiceLog();
-//        sysLog.setTitle("异常日志");
+        SysLog sysLog = LogUtils.getServiceLog();
+        sysLog.setTitle("异常日志");
 
         if (e instanceof BasicException) {
             baseResp.setCode(((BasicException) e).getCode());
@@ -63,9 +68,9 @@ public class GlobalExceptionHandler {
         e.printStackTrace();
         //获取异常信息
         baseResp.setData("");
-//        sysLog.setReturnMsg(JSONUtil.toJsonStr(baseResp));
-//        sysLog.setException(JSONUtil.toJsonStr(ExceptionLog.builder().cause(e.toString()).stackTrace(e.getStackTrace()).build()));
-//        SpringContextHolder.publishEvent(new ServiceLogEvent(sysLog));
+        sysLog.setReturnMsg(JSONUtil.toJsonStr(baseResp));
+        sysLog.setException(JSONUtil.toJsonStr(ExceptionLog.builder().cause(e.toString()).stackTrace(e.getStackTrace()).build()));
+        SpringContextHolder.publishEvent(new ServiceLogEvent(sysLog));
         return baseResp;
     }
 

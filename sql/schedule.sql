@@ -44,3 +44,19 @@ CREATE TABLE `tb_schedule_log`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '日程日志表' ROW_FORMAT = Compact;
  
+CREATE TABLE `tb_log`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '日志id',
+  `type` int(2) NOT NULL COMMENT '日志类型',
+  `title` varchar(50) NOT NULL COMMENT '日志标题',
+  `create_user` varchar(10) NOT NULL DEFAULT '0' COMMENT '创建者',
+  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  `remote_addr` varchar(50) NOT NULL COMMENT '操作者IP',
+  `request_uri` varchar(50) NOT NULL COMMENT '请求uri',
+  `params` text NOT NULL COMMENT '请求参数',
+  `cost_time` int(11) NOT NULL COMMENT '执行时间',
+  `return_msg` text NOT NULL,
+  `user_agent` varchar(200) NULL DEFAULT NULL,
+  `exception` text NULL COMMENT '异常信息',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '日志表' ROW_FORMAT = Compact;

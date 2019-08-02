@@ -1,7 +1,9 @@
 package com.telecomyt.item.web.controller;
 
+import com.telecomyt.item.annotation.ServiceLog;
 import com.telecomyt.item.constant.CommonConstants;
 import com.telecomyt.item.dto.*;
+import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.ScheduleLog;
 import com.telecomyt.item.enums.ResultStatus;
 import com.telecomyt.item.utils.BeanValidator;
@@ -30,6 +32,7 @@ public class ScheduleController {
     /**
      * 新增日程
      */
+    @ServiceLog("添加日程")
     @PostMapping("/add")
     public BaseResp<String> addSchedule(@RequestBody ScheduleDto scheduleDto){
         BeanValidator.check(scheduleDto);
@@ -39,6 +42,7 @@ public class ScheduleController {
     /**
      * 查询日程列表
      */
+    @ServiceLog("查询日程列表")
     @GetMapping("/query")
     public BaseResp<Map> queryScheduleList(ScheduleListQuery scheduleListQuery){
         BeanValidator.check(scheduleListQuery);
@@ -52,6 +56,7 @@ public class ScheduleController {
      * 查询日程详情 （包含日志）
      * @param groupId 组id
      */
+    @ServiceLog("查询日程详情")
     @GetMapping("/query/{groupId}")
     public BaseResp<ScheduleInfoVo> queryScheduleInfo(@PathVariable Integer groupId){
         return scheduleService.queryScheduleInfo(groupId);
@@ -64,6 +69,7 @@ public class ScheduleController {
      * @param groupId 组id
      * @param operationCardid 操作日身份证
      */
+    @ServiceLog("上报日程日志")
     @PostMapping("/reporting")
     public BaseResp<Object>  reporting(
             @RequestParam(value = "logType") Integer logType ,
@@ -109,6 +115,7 @@ public class ScheduleController {
     /**
      * 修改日程
      */
+    @ServiceLog("修改日程")
     @PutMapping("/update")
     public BaseResp<Object> updateSchedule(@RequestBody ScheduleUpdateParam scheduleUpdateParam){
         BeanValidator.check(scheduleUpdateParam);
@@ -120,6 +127,7 @@ public class ScheduleController {
      * @param groupId 组id
      * @param cardid 身份证号
      */
+    @ServiceLog("删除日程")
    @DeleteMapping("/delete")
     public BaseResp<Object> deleteSchedule(
             @RequestParam("groupId")Integer groupId ,

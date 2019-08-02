@@ -1,4 +1,4 @@
-package com.telecomyt.item.dto;
+package com.telecomyt.item.dto.resp;
 
 import com.telecomyt.item.enums.ResultStatus;
 import lombok.AllArgsConstructor;
