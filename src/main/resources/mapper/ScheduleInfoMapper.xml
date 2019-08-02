@@ -163,5 +163,9 @@
         AND is_delete = 0
   </select>
 
+  <!-- 删除日程 -->
+  <update id="deleteByGroupIdAndCardid">
+        update tb_schedule_info set is_delete = 1 where group_id = #{groupId} and affiliated_cardid = #{cardid}
+  </update>
 
 </mapper>

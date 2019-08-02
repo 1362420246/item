@@ -203,4 +203,18 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         return new BaseResp<>(ResultStatus.FAIL);
     }
+
+    /**
+     * 删除日程
+     * @param groupId 组id
+     * @param cardid 身份证号
+     */
+    @Override
+    public BaseResp<Object> deleteSchedule(Integer groupId, String cardid) {
+        int result = scheduleInfoMapper.deleteByGroupIdAndCardid(groupId,cardid);
+        if(result > 0){
+            return new BaseResp<>(ResultStatus.SUCCESS);
+        }
+        return new BaseResp<>(ResultStatus.FAIL);
+    }
 }

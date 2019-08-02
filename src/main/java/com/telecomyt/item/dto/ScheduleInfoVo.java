@@ -12,6 +12,10 @@ public class ScheduleInfoVo implements Serializable {
 
     private static final long serialVersionUID = -2078135105826726377L;
     /**
+     * 日程组id
+     */
+    private Integer groupId ;
+    /**
      * 标题
      */
     private String title ;

@@ -32,4 +32,11 @@ public interface ScheduleService {
      * 修改日程
      */
     BaseResp<Object> updateSchedule(ScheduleUpdateParam scheduleUpdateParam);
+
+    /**
+     * 删除日程
+     * @param groupId 组id
+     * @param cardid 身份证号
+     */
+    BaseResp<Object> deleteSchedule(Integer groupId, String cardid);
 }

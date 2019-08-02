@@ -10,6 +10,7 @@ import com.telecomyt.item.utils.FileUtil;
 import com.telecomyt.item.web.service.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
@@ -117,4 +118,15 @@ public class ScheduleController {
         return scheduleService.updateSchedule(scheduleUpdateParam);
     }
 
+    /**
+     * 删除日程
+     * @param groupId 组id
+     * @param cardid 身份证号
+     */
+   @DeleteMapping("/delete")
+    public BaseResp<Object> deleteSchedule(
+            @RequestParam("groupId")Integer groupId ,
+            @RequestParam("cardid")String cardid ){
+        return scheduleService.deleteSchedule(groupId,cardid);
+    }
 }

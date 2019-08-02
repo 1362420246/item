@@ -65,4 +65,11 @@ public interface ScheduleInfoMapper {
      * @param groupId 组id
      */
     List<String> queryAffiliatedCardids(@Param("groupId") Integer groupId);
+
+    /**
+     * 删除日程
+     * @param groupId 组id
+     * @param cardid 身份证号
+     */
+    int deleteByGroupIdAndCardid(@Param("groupId")Integer groupId,@Param("cardid") String cardid);
 }
