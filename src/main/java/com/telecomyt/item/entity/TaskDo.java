@@ -22,6 +22,7 @@ import java.util.List;
 public class TaskDo implements Serializable {
 
     private static final long serialVersionUID = 6214878095480373924L;
+
     private List<String> taskCardId;
     private int groupId;
     private int taskType;
@@ -29,4 +30,6 @@ public class TaskDo implements Serializable {
     private int taskMain;
     private Date taskEndTime;
     private String taskFile;
+
+    
 }

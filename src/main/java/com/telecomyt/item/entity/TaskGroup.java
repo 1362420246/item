@@ -1,12 +1,6 @@
 
-/**
- * @Author ZhangSF
- * @Date 2019/8/2
- * @Version 1.0
- */
 package com.telecomyt.item.entity;
 
-import com.telecomyt.item.dto.ScheduleDto;
 import com.telecomyt.item.dto.TaskDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,8 +9,11 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
-
+/**
+ * @Author ZhangSF
+ * @Date 2019/8/2
+ * @Version 1.0
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,10 +25,10 @@ public class TaskGroup implements Serializable {
     private String sheetTitle;
     private String sheetDescribe;
     private LocalDateTime endTime;
-public  TaskGroup(TaskDto taskDto){
+    public  TaskGroup(TaskDto taskDto){
         this.creatorCardid = taskDto.getCreator_CardId();
         this.sheetDescribe = taskDto.getSheet_Describe();
         this.sheetTitle = taskDto.getSheet_Title();
         this.endTime = taskDto.getEnd_time();
-}
+    }
 }

@@ -1,9 +1,4 @@
 
-/**
- * @Author ZhangSF
- * @Date 2019/8/2
- * @Version 1.0
- */
 
 package com.telecomyt.item.web.service.impl;
 
@@ -17,10 +12,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+/**
+ * @Author ZhangSF
+ * @Date 2019/8/2
+ * @Version 1.0
+ */
+
 @Slf4j
 @Service
 @Transactional
@@ -32,7 +32,8 @@ public class TaskServiceImpl implements TaskService {
 private TaskMapper taskMapper;
 
     /**
-
+     * 新增组
+     * @param taskDto
      * @return
      */
     @Override
@@ -52,23 +53,81 @@ private TaskMapper taskMapper;
                 log.info("新增任务失败。");
                 //return new BaseResp<>(ResultStatus.FAIL);
             }
-            //TODO  日程的创建 不是日程的开始 ， 日程的开始和结束日志先不考虑
+            //TODO
             return new BaseResp<>(ResultStatus.SUCCESS);
         }else {
             log.info("新增任务组失败。");
             return new BaseResp<>(ResultStatus.FAIL);
         }
     }
+//新增日志（未处理上传）
+    @Override
+    public  BaseResp<String> insertLog(int groupId, Date logTime, String logPicture, String logCardId) {
+        int flag = taskMapper.insertLog(groupId,logTime,logPicture,logCardId);
+        if(flag > 0){
+            //TODO 回滚
+            log.info("新增日志。");
+            return new BaseResp<>(ResultStatus.FAIL);
+        }else{
+            return new BaseResp<>(ResultStatus.SUCCESS);
+        }
+
+    }
+//查询个人任务详情
 
     @Override
-    public boolean insertGroup(String creatorCardid, String sheetTitle, String sheetDescribe, Date endTime) {
-        return false;
+    public BaseResp<List> queryMyTaskById(String taskCardId){
+        List<Task> task = taskMapper.queryMyTaskById(taskCardId);
+        if(task == null) {
+          return new BaseResp<>(ResultStatus.FAIL);
+        }else{
+          return new BaseResp<>(ResultStatus.SUCCESS,task);
+        }
     }
-
+//任务详情
     @Override
-    public boolean insertTask(String taskId, int groupId, int taskType, int taskState, int taskMain, Date taskEndTime, String taskFile) {
-        return false;
+    public BaseResp<TaskLog> queryMyTaskLog(int groupId) {
+        TaskLog taskLog = taskMapper.queryMyTaskLogById(groupId);
+        if(taskLog == null) {
+            return new BaseResp<>(ResultStatus.FAIL);
+        }else{
+            return new BaseResp<>(ResultStatus.SUCCESS,taskLog);
+        }
     }
+//更改个人任务状态
+    @Override
+    public BaseResp<String> updateMyTaskByIdAndGroupId(String taskCardId,int groupId, int taskState) {
+
+        int flag = taskMapper.updateMyTaskByIdAndGroupId(taskCardId,groupId,taskState);
+        if(flag > 0){
+            return new BaseResp<>(ResultStatus.SUCCESS);
+        }else{
+            return new BaseResp<>(ResultStatus.FAIL);
+
+        }
+
+    }
+//删除任务
+    @Override
+    public BaseResp<String> deleteTask(String taskCardId,int groupId) {
+        int TaskResult = taskMapper.deleteTask(taskCardId, groupId);
+        if(TaskResult > 0){
+           int LogResult = taskMapper.deleteTaskLog(groupId);
+           if(LogResult > 0){
+                return new BaseResp<>(ResultStatus.SUCCESS);
+           }
+        }
+        return new BaseResp<>(ResultStatus.FAIL);
+    }
+//    @Override
+//    public boolean insertGroup(String creatorCardid, String sheetTitle, String sheetDescribe, Date endTime) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean insertTask(String taskId, int groupId, int taskType, int taskState, int taskMain, Date taskEndTime, String taskFile) {
+//        return false;
+//    }
 
 
 //    @Override
@@ -76,34 +135,6 @@ private TaskMapper taskMapper;
 //     int flag = taskMapper.insertTask(taskId,groupId,taskType,taskState,taskMain,taskEndTime,taskFile);
 //        return flag > 0 ? true : false;
 //    }
-
-
-    @Override
-    public boolean insertLog(int groupId, Date logTime, String logPicture, String logCardId) {
-        int flag = taskMapper.insertLog(groupId,logTime,logPicture,logCardId);
-        return flag > 0 ? true : false;
-    }
-
-    @Override
-    public List<Task> queryMyTaskById(String taskCardid) {
-        return taskMapper.queryMyTaskById(taskCardid);
-    }
-
-    @Override
-    public List<TaskLog> queryMyLogByGroupId(String groupId) {
-        return taskMapper.queryMyLogByGroupId(groupId);
-    }
-    @Override
-    public boolean updateMyTaskByIdAndGroupId(String taskCardId,int groupId, int taskState) {
-        int flag = taskMapper.updateMyTaskByIdAndGroupId(taskCardId,groupId,taskState);
-        return flag > 0 ? true : false;
-    }
-
-    @Override
-    public boolean deleteTask(String taskCardId,String groupId) {
-        int flag = taskMapper.deleteTask(taskCardId, groupId);
-        return flag > 0 ? true : false;
-    }
 
 
 }

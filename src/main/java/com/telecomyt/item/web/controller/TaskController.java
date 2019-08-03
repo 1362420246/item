@@ -1,28 +1,20 @@
+
+package com.telecomyt.item.web.controller;
+
+import com.telecomyt.item.dto.TaskDto;
+import com.telecomyt.item.dto.resp.BaseResp;
+import com.telecomyt.item.entity.TaskLog;
+import com.telecomyt.item.web.service.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import java.util.Date;
+import java.util.List;
+
 /**
  * @Author ZhangSF
  * @Date 2019/8/2
  * @Version 1.0
  */
-
-
-
-package com.telecomyt.item.web.controller;
-
-
-import com.telecomyt.item.dto.resp.BaseResp;
-import com.telecomyt.item.entity.TaskGroup;
-import com.telecomyt.item.entity.TaskLog;
-import com.telecomyt.item.entity.Task;
-import com.telecomyt.item.enums.ResultStatus;
-import com.telecomyt.item.web.service.TaskService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 
 @RestController
 @RequestMapping("/taskController")
@@ -30,42 +22,25 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
-
+//新增组
     @PostMapping("/insertNewTask")
-    public boolean insertNewTask(String creatorCardid, String sheetTitle, String sheetDescribe, Date endTime,
-                                 String taskId, int taskType, int taskState, int taskMain,
-                                 Date taskEndTime,String taskFile){
-
-
-        TaskGroup group = new TaskGroup();
-        boolean flag0 = taskService.insertGroup(creatorCardid,sheetTitle,sheetDescribe,endTime);
-        try {
-            int groupId = group.getGroupId();
-            if(flag0){
-                boolean flag1 =taskService.insertTask(taskId,groupId,taskType,taskState,taskMain,taskEndTime,taskFile);
-                if(!flag1){
-                    return false; }
-            }else {
-                return false;}
-
-        } catch (Exception e) {
-            e.printStackTrace(); }
-
-        return true;
+    public  BaseResp<String> insertNewTask(TaskDto taskDto){
+        return taskService.addTask(taskDto);
     }
+//新增日志
     @PostMapping("/insertNewLog")
-    public  boolean insertNewLog(int groupId, Date logTime, String logPicture, String logCardId){
-               boolean flag = taskService.insertLog(groupId,logTime,logPicture,logCardId);
-               if(!flag){
-                   return false;}
+    public  BaseResp<String> insertNewLog(int groupId, Date logTime, String logPicture, String logCardId){
+        return taskService.insertLog(groupId,logTime,logPicture,logCardId);
 
-        return true;
+
     }
+//得到个人任务列表
     @GetMapping("/getTaskList")
-    public BaseResp<List> getTaskList(String taskCardid){
+    public BaseResp<List> getTaskList(String taskCardId){
+        return  taskService.queryMyTaskById(taskCardId);
 //        Map<String, Object> modleMap = new HashMap<>();
-        List<Task> task = taskService.queryMyTaskById(taskCardid);
-        return new BaseResp<>(ResultStatus.SUCCESS,task);
+//        List<Task> task = taskService.queryMyTaskById(taskCardid);
+//        return new BaseResp<>(ResultStatus.SUCCESS,task);
 //        if(task != null) {
 //            modleMap.put("task",task);
 //        }else {
@@ -73,43 +48,20 @@ public class TaskController {
 //        }
 //        return modleMap;
     }
-
-    @GetMapping("/getTaskAndLogList")
-     public Map<String,Object> getTaskList(String taskCardid,String groupId){
-        Map<String, Object> modleMap = new HashMap<>();
-        List<Task> task = taskService.queryMyTaskById(taskCardid);
-        if(task != null) {
-            modleMap.put("task",task);
-        }else {
-            modleMap.put("task","00");
-        }
-        List<TaskLog> log = taskService.queryMyLogByGroupId(groupId);
-        if(log != null) {
-            modleMap.put("log",log);
-        }else {
-            modleMap.put("log","0");
-        }
-        return modleMap;
+//查询任务日志
+    @GetMapping("/getMyTaskLog")
+    public BaseResp<TaskLog> queryMyTaskLog(int groupId){
+        return taskService.queryMyTaskLog(groupId);
     }
+//修改个人在任务中的状态
     @PatchMapping("/updateMyTaskState")
-    public boolean updateMyTaskState (String taskCardId, int groupId, int taskState){
-         boolean flag = taskService.updateMyTaskByIdAndGroupId(taskCardId,groupId,taskState);
-         if(!flag){
-             return  false;}
-         return true;
+    public BaseResp<String> updateMyTaskState (String taskCardId, int groupId, int taskState) {
+        return taskService.updateMyTaskByIdAndGroupId(taskCardId, groupId, taskState);
     }
-
-
+//删除任务同时删除日志
     @DeleteMapping("/deleteMyTask")
-       public boolean deleteMyTask(String taskCardId,String groupId){
-           boolean flag = taskService.deleteTask(taskCardId,groupId);
-           if(!flag){
-               return false;
-           }
-          return true;
+    public BaseResp<String> deleteMyTask(String taskCardId,int groupId){
+        return taskService.deleteTask(taskCardId,groupId);
     }
-
-
-
 
 }

@@ -17,7 +17,6 @@ import java.util.List;
 
 public class TaskDto implements Serializable {
     private static final long serialVersionUID = -1920361582855456009L;
-
    @NotNull(message = "创建人id不能为空")
    private String creator_CardId;
    @NotNull(message = "任务标题不能为空")

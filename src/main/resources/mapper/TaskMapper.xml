@@ -8,11 +8,11 @@
         insert into db_sheet_group (creator_cardid,sheet_title,sheet_describe,end_time) values (#{creatorCardid},#{sheetTitle},#{sheetDescribe},#{endTime})
     </insert>
     <!--批量插入-->
-    <insert id="insertList" parameterType="com.telecomyt.item.entity.ScheduleInfoDo">
-        insert into tb_schedule_info (group_id, creator_cardid, affiliated_cardid, is_delete)
+    <insert id="insertTask" parameterType="com.telecomyt.item.entity.TaskDo">
+        insert into tb_schedule_info (task_cardid, group_id, task_type, task_state,task_main,task_file,task_endtime)
         values
-        <foreach collection="affiliatedCardids" separator="," item="affiliatedCardid" >
-            (#{groupId},#{creatorCardid},#{affiliatedCardid},#{isDelete})
+        <foreach collection="taskCardId" separator="," item="taskCardId" >
+            (#{taskCardId},#{groupId},#{taskType},#{taskState},#{taskMain},#{taskFile},#{taskEndTime})
         </foreach>
     </insert>
 
@@ -25,12 +25,12 @@
         insert into db_sheet_log (group_id,log_time,log_picture,log_cardid) values (#{groupId},#{logTime},#{logPicture},#{logCardId})
     </insert>
 
-    <!--通过身份证查询任务-->
+    <!--查询个人任务列表-->
     <select id="queryMyTaskById" resultType="com.telecomyt.item.entity.Task">
         select group_id,task_type,task_state,task_main,task_file,task_endtime from db_sheet_task where task_cardid = #{taskCardId}
     </select>
     <!--查询日志-->
-    <select id="queryMyLogByGroupId" resultType="com.telecomyt.item.entity.TaskLog">
+    <select id="queryMyTaskLogById" resultType="com.telecomyt.item.entity.TaskLog">
         select group_id,log_time,log_picture,log_cardid from db_sheet_log where group_id = #{groupId}
     </select>
     <!--更改任务状态 0 任务未开始 1 任务已开始 2 任务已结束 3 任务超时 4 任务已拒绝-->
@@ -46,7 +46,10 @@
     <delete id="deleteTask" parameterType="String">
     delete from db_sheet_task where task_cardid=#{taskCardId}
     </delete>
-
+    <!--删除任务日志-->
+    <delete id="deleteTaskLog" parameterType="String">
+    delete from db_sheet_log where groupid=#{groupId}
+    </delete>
 
 
 </mapper>
