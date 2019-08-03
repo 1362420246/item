@@ -6,7 +6,10 @@
  */
 package com.telecomyt.item.web.service;
 
-import com.telecomyt.item.entity.Log;
+import com.telecomyt.item.dto.ScheduleDto;
+import com.telecomyt.item.dto.TaskDto;
+import com.telecomyt.item.dto.resp.BaseResp;
+import com.telecomyt.item.entity.TaskLog;
 import com.telecomyt.item.entity.Task;
 
 import java.util.Date;
@@ -18,7 +21,8 @@ import java.util.List;
 
 public interface TaskService {
 
-
+//    增加组
+        BaseResp<String> addTask(TaskDto taskDto);
     /**
      *
      */
@@ -42,7 +46,7 @@ public interface TaskService {
     /**
      *
      */
-    List<Log> queryMyLogByGroupId(String groupId);
+    List<TaskLog> queryMyLogByGroupId(String groupId);
 
     /**
      *

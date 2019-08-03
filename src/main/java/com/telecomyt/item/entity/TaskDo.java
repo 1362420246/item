@@ -1,11 +1,3 @@
-/**
- * @Author ZhangSF
- * @Date 2019/8/2
- * @Version 1.0
- */
-
-
-
 package com.telecomyt.item.entity;
 
 import lombok.AllArgsConstructor;
@@ -15,19 +7,26 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
+/**
+ * @Author ZhangSF
+ * @Date 2019/8/3 14:50
+ * @Version 1.0
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Task implements Serializable {
-    private static final long serialVersionUID = -5240558862435141520L;
-    private String taskCardId;
+public class TaskDo implements Serializable {
+
+    private static final long serialVersionUID = 6214878095480373924L;
+    private List<String> taskCardId;
     private int groupId;
     private int taskType;
     private int taskState;
     private int taskMain;
     private Date taskEndTime;
     private String taskFile;
-
-
 }

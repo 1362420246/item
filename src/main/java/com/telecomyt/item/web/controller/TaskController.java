@@ -10,8 +10,8 @@ package com.telecomyt.item.web.controller;
 
 
 import com.telecomyt.item.dto.resp.BaseResp;
-import com.telecomyt.item.entity.Group;
-import com.telecomyt.item.entity.Log;
+import com.telecomyt.item.entity.TaskGroup;
+import com.telecomyt.item.entity.TaskLog;
 import com.telecomyt.item.entity.Task;
 import com.telecomyt.item.enums.ResultStatus;
 import com.telecomyt.item.web.service.TaskService;
@@ -35,7 +35,9 @@ public class TaskController {
     public boolean insertNewTask(String creatorCardid, String sheetTitle, String sheetDescribe, Date endTime,
                                  String taskId, int taskType, int taskState, int taskMain,
                                  Date taskEndTime,String taskFile){
-        Group group = new Group();
+
+
+        TaskGroup group = new TaskGroup();
         boolean flag0 = taskService.insertGroup(creatorCardid,sheetTitle,sheetDescribe,endTime);
         try {
             int groupId = group.getGroupId();
@@ -81,7 +83,7 @@ public class TaskController {
         }else {
             modleMap.put("task","00");
         }
-        List<Log> log = taskService.queryMyLogByGroupId(groupId);
+        List<TaskLog> log = taskService.queryMyLogByGroupId(groupId);
         if(log != null) {
             modleMap.put("log",log);
         }else {

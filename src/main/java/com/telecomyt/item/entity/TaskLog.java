@@ -18,7 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Log implements Serializable {
+public class TaskLog implements Serializable {
     private static final long serialVersionUID = -2244507047106889578L;
     private String logId;
     private int groupId;

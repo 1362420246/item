@@ -7,7 +7,11 @@
 
 package com.telecomyt.item.web.mapper;
 
-import com.telecomyt.item.entity.Log;
+import com.telecomyt.item.dto.ScheduleDto;
+import com.telecomyt.item.dto.TaskDto;
+import com.telecomyt.item.entity.TaskDo;
+import com.telecomyt.item.entity.TaskGroup;
+import com.telecomyt.item.entity.TaskLog;
 import com.telecomyt.item.entity.Task;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,26 +22,17 @@ import java.util.List;
 public interface TaskMapper {
     /**
      *
-     * @param creatorCardid
-     * @param sheetTitle
-     * @param sheetDescribe
-     * @param endTime
+
      * @return
      */
-    int insertGroup(@Param("creatorCardid") String creatorCardid, @Param("sheetTitle") String sheetTitle, @Param("sheetDescribe") String sheetDescribe, @Param("endTime") Date endTime);
+    int insertGroup(TaskGroup taskGroup);
 
     /**
      *
-     * @param taskId
-     * @param groupId
-     * @param taskType
-     * @param taskState
-     * @param taskMain
-     * @param taskEndTime
-     * @param taskFile
+
      * @return
      */
-    int insertTask(@Param("taskId") String taskId, @Param("groupId") int groupId, @Param("taskType") int taskType, @Param("taskState") int taskState, @Param("taskMain") int taskMain, @Param("taskEndTime") Date taskEndTime, @Param("taskFile") String taskFile);
+    int insertTask(TaskDo taskDo);
 
     /**
      *
@@ -61,7 +56,7 @@ public interface TaskMapper {
      * @param groupId
      * @return
      */
-   List<Log> queryMyLogByGroupId(String groupId);
+   List<TaskLog> queryMyLogByGroupId(String groupId);
 
     /**
      *

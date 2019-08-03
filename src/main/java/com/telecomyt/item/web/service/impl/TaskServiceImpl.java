@@ -7,17 +7,21 @@
 
 package com.telecomyt.item.web.service.impl;
 
-import com.telecomyt.item.entity.Log;
-import com.telecomyt.item.entity.Task;
+import com.telecomyt.item.dto.TaskDto;
+import com.telecomyt.item.dto.resp.BaseResp;
+import com.telecomyt.item.entity.*;
+import com.telecomyt.item.enums.ResultStatus;
 import com.telecomyt.item.web.mapper.TaskMapper;
 import com.telecomyt.item.web.service.TaskService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+@Slf4j
 @Service
 @Transactional
 public class TaskServiceImpl implements TaskService {
@@ -28,24 +32,50 @@ public class TaskServiceImpl implements TaskService {
 private TaskMapper taskMapper;
 
     /**
-     *
-     * @param creator_Cardid
-     * @param sheet_Title
-     * @param sheet_Describe
-     * @param end_Time
+
      * @return
      */
     @Override
-    public boolean insertGroup(String creatorCardid, String sheetTitle, String sheetDescribe, Date endTime) {
-        int flag = taskMapper.insertGroup(creatorCardid,sheetTitle,sheetDescribe,endTime);
-        return flag > 0 ? true : false;
+    public BaseResp<String> addTask(TaskDto taskDto) {
+        TaskGroup taskGroup = new TaskGroup(taskDto);
+        int addTaskGroupResult = taskMapper.insertGroup(taskGroup);
+        if(addTaskGroupResult > 0){
+            Integer groupId = taskGroup.getGroupId();
+            List<String> taskCardId = taskDto.getTaskCardId();
+            if(taskCardId == null){
+                taskCardId = new ArrayList<>();
+            }
+            TaskDo taskDo = TaskDo.builder().groupId(groupId).taskCardId(taskCardId).build();
+            int addTaskResult = taskMapper.insertTask(taskDo);
+            if(addTaskResult == 0){
+                //TODO 回滚
+                log.info("新增任务失败。");
+                //return new BaseResp<>(ResultStatus.FAIL);
+            }
+            //TODO  日程的创建 不是日程的开始 ， 日程的开始和结束日志先不考虑
+            return new BaseResp<>(ResultStatus.SUCCESS);
+        }else {
+            log.info("新增任务组失败。");
+            return new BaseResp<>(ResultStatus.FAIL);
+        }
     }
 
     @Override
-    public boolean insertTask(String taskId, int groupId, int taskType, int taskState, int taskMain, Date taskEndTime,String taskFile) {
-     int flag = taskMapper.insertTask(taskId,groupId,taskType,taskState,taskMain,taskEndTime,taskFile);
-        return flag > 0 ? true : false;
+    public boolean insertGroup(String creatorCardid, String sheetTitle, String sheetDescribe, Date endTime) {
+        return false;
     }
+
+    @Override
+    public boolean insertTask(String taskId, int groupId, int taskType, int taskState, int taskMain, Date taskEndTime, String taskFile) {
+        return false;
+    }
+
+
+//    @Override
+//    public boolean insertTask(String taskId, int groupId, int taskType, int taskState, int taskMain, Date taskEndTime,String taskFile) {
+//     int flag = taskMapper.insertTask(taskId,groupId,taskType,taskState,taskMain,taskEndTime,taskFile);
+//        return flag > 0 ? true : false;
+//    }
 
 
     @Override
@@ -60,7 +90,7 @@ private TaskMapper taskMapper;
     }
 
     @Override
-    public List<Log> queryMyLogByGroupId(String groupId) {
+    public List<TaskLog> queryMyLogByGroupId(String groupId) {
         return taskMapper.queryMyLogByGroupId(groupId);
     }
     @Override
