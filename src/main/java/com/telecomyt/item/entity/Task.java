@@ -20,7 +20,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class Task implements Serializable {
-    private static final long serialVersionUID = -6220020594773979964L;
+    private static final long serialVersionUID = -5240558862435141520L;
     private String taskCardId;
     private int groupeId;
     private int taskType;
@@ -28,4 +28,6 @@ public class Task implements Serializable {
     private int taskMain;
     private Date taskEndTime;
     private String taskFile;
+
+
 }

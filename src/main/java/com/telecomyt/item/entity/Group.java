@@ -19,10 +19,12 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class Group implements Serializable {
-    private static final long serialVersionUID = 474985485361705501L;
+    private static final long serialVersionUID = 8240255160784435225L;
     private int groupId;
     private String creatorCardid;
     private String sheetTitle;
     private String sheetDescribe;
     private Date endTime;
+
+
 }
