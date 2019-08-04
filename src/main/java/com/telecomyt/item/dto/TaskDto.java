@@ -33,7 +33,7 @@ public class TaskDto implements Serializable {
     /**
      *   * 关联人身份证
      */
-    private List<String> taskCardId;
+    private List<String> taskCardIds;
     @NotNull
     private int groupId;
     @NotNull

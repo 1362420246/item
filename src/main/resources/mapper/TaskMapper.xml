@@ -1,21 +1,18 @@
-
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telecomyt.item.web.mapper.TaskMapper">
     <!--新增组-->
     <insert id="insertGroup" useGeneratedKeys="true" keyProperty="groupId" keyColumn="group_id" parameterType="com.telecomyt.item.entity.TaskGroup">
-        insert into db_sheet_group (creator_cardid,sheet_title,sheet_describe,task_endtime) values (#{creatorCardid},#{sheetTitle},#{sheetDescribe},#{taskEndTime})
+        insert into db_sheet_group (creator_cardid,sheet_title,sheet_describe,task_endtime) values (#{creatorCardId},#{sheetTitle},#{sheetDescribe},#{taskEndTime})
     </insert>
     <!--批量插入-->
     <insert id="insertTask" parameterType="com.telecomyt.item.entity.TaskDo">
-        insert into db_sheet_task (task_cardid, group_id, task_type, task_state,task_main,task_file,task_endtime)
+        insert into db_sheet_task (task_cardid, group_id, task_type, task_state, task_main, task_file, task_endtime)
         values
-        <foreach collection="taskCardId" separator="," item="taskCardId" >
+        <foreach collection="taskCardIds" separator="," item="taskCardId" >
             (#{taskCardId},#{groupId},#{taskType},#{taskState},#{taskMain},#{taskFile},#{taskEndTime})
         </foreach>
     </insert>
-
     <!--&lt;!&ndash;新增任务&ndash;&gt;-->
     <!--<insert id="insertTask" useGeneratedKeys="true" keyProperty="taskId" keyColumn="task_id" parameterType="com.telecomyt.item.entity.Task">-->
         <!--insert into db_sheet_task(task_cardid,group_id,task_type,task_state,task_main,task_endtime,task_file) values (#{taskCardid},#{groupId},#{taskType},#{taskState},#{taskMain},#{taskEndTime},#{taskFile})-->

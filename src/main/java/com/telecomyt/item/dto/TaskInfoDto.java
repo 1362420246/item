@@ -14,11 +14,11 @@ import java.io.Serializable;
 public class TaskInfoDto implements Serializable {
 
     private static final long serialVersionUID = -8717474322435171318L;
-    private String task_CardId;
-    private int group_Id;
-    private int task_Type;
-    private int task_State;
-    private int task_Main;
-    private int task_File;
-    private int task_Endtime;
+    private String taskCardId;
+    private int groupId;
+    private int taskType;
+    private int taskState;
+    private int taskMain;
+    private int taskFile;
+    private int taskEndtime;
 }

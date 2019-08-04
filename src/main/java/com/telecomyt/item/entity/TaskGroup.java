@@ -21,14 +21,14 @@ import java.time.LocalDateTime;
 public class TaskGroup implements Serializable {
     private static final long serialVersionUID = 8240255160784435225L;
     private int groupId;
-    private String creatorCardid;
+    private String creatorCardId;
     private String sheetTitle;
     private String sheetDescribe;
-    private LocalDateTime endTime;
+    private LocalDateTime taskEndTime;
     public  TaskGroup(TaskDto taskDto){
-        this.creatorCardid = taskDto.getCreatorCardId();
+        this.creatorCardId = taskDto.getCreatorCardId();
         this.sheetDescribe = taskDto.getSheetDescribe();
         this.sheetTitle = taskDto.getSheetTitle();
-        this.endTime = taskDto.getTaskEndTime();
+        this.taskEndTime = taskDto.getTaskEndTime();
     }
 }

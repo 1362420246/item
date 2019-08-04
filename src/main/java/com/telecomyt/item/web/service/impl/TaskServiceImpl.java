@@ -49,13 +49,13 @@ private TaskMapper taskMapper;
             Integer taskState = taskDto.getTaskState();
             Integer taskMain = taskDto.getTaskMain();
             LocalDateTime  taskEndTime = taskDto.getTaskEndTime();
-            List<String> taskCardId = taskDto.getTaskCardId();
+            List<String> taskCardIds = taskDto.getTaskCardIds();
             String taskFile = taskDto.getTaskFile();
-            if(taskCardId == null){
-                taskCardId = new ArrayList<>();
+            if(taskCardIds == null){
+                taskCardIds = new ArrayList<>();
             }
 
-            TaskDo taskDo = TaskDo.builder().taskCardId(taskCardId).groupId(groupId).taskType(taskType).taskState(taskState).taskMain(taskMain).taskEndTime(taskEndTime).taskFile(taskFile).build();
+            TaskDo taskDo = TaskDo.builder().taskCardIds(taskCardIds).groupId(groupId).taskType(taskType).taskState(taskState).taskMain(taskMain).taskEndTime(taskEndTime).taskFile(taskFile).build();
             int addTaskResult = taskMapper.insertTask(taskDo);
             if(addTaskResult     == 0){
                 //TODO 回滚

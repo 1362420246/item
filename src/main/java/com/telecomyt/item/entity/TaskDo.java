@@ -24,7 +24,7 @@ public class TaskDo implements Serializable {
 
     private static final long serialVersionUID = 6214878095480373924L;
 
-    private List<String> taskCardId;
+    private List<String> taskCardIds;
     private int groupId;
     private int taskType;
     private int taskState;
