@@ -14,9 +14,9 @@ import java.util.List;
  * @Version 1.0
  */
 @Data
-
 public class TaskDto implements Serializable {
     private static final long serialVersionUID = -1920361582855456009L;
+
    @NotNull(message = "创建人id不能为空")
    private String creatorCardId;
 
@@ -33,16 +33,18 @@ public class TaskDto implements Serializable {
     /**
      *   * 关联人身份证
      */
+    @NotNull(message = "任务执行人不能为空")
     private List<String> taskCardIds;
-    @NotNull
+
     private int groupId;
-    @NotNull
-    private int taskType;
-    @NotNull
-    private int taskState;
-    @NotNull
-    private int taskMain;
-    @NotNull
+
+    @NotNull(message = "任务类型不能为空")
+    private Integer taskType;
+    @NotNull(message = "任务状态不能为空")
+    private Integer taskState;
+    @NotNull(message = "任务主从关系不能为空")
+    private Integer taskMain;
+
     private String taskFile;
 
 }

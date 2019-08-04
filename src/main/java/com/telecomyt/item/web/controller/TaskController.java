@@ -4,6 +4,7 @@ package com.telecomyt.item.web.controller;
 import com.telecomyt.item.dto.TaskDto;
 import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.TaskLog;
+import com.telecomyt.item.utils.BeanValidator;
 import com.telecomyt.item.web.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,19 +23,27 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
-//新增组
+
+    /**
+     * 新增组
+     */
     @PostMapping("/insertNewTask")
-    public  BaseResp<String> insertNewTask(TaskDto taskDto){
+    public BaseResp<String> insertNewTask(@RequestBody TaskDto taskDto){
+        BeanValidator.check(taskDto);
         return taskService.addTask(taskDto);
     }
-//新增日志
+
+    /**
+     * 新增日志
+     */
     @PostMapping("/insertNewLog")
     public  BaseResp<String> insertNewLog(int groupId, Date logTime, String logPicture, String logCardId){
         return taskService.insertLog(groupId,logTime,logPicture,logCardId);
-
-
     }
-//得到个人任务列表
+
+    /**
+     * 得到个人任务列表
+     */
     @GetMapping("/getTaskList")
     public BaseResp<List> getTaskList(String taskCardId){
         return  taskService.queryMyTaskById(taskCardId);
@@ -48,17 +57,26 @@ public class TaskController {
 //        }
 //        return modleMap;
     }
-//查询任务日志
+
+    /**
+     * 查询任务日志
+     */
     @GetMapping("/getMyTaskLog")
     public BaseResp<TaskLog> queryMyTaskLog(int groupId){
         return taskService.queryMyTaskLog(groupId);
     }
-//修改个人在任务中的状态
+
+    /**
+     * 修改个人在任务中的状态
+     */
     @PatchMapping("/updateMyTaskState")
     public BaseResp<String> updateMyTaskState (String taskCardId, int groupId, int taskState) {
         return taskService.updateMyTaskByIdAndGroupId(taskCardId, groupId, taskState);
     }
-//删除任务同时删除日志
+
+    /**
+     * 删除任务同时删除日志
+     */
     @DeleteMapping("/deleteMyTask")
     public BaseResp<String> deleteMyTask(String taskCardId,int groupId){
         return taskService.deleteTask(taskCardId,groupId);
