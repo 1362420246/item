@@ -29,6 +29,6 @@ public class TaskGroup implements Serializable {
         this.creatorCardid = taskDto.getCreator_CardId();
         this.sheetDescribe = taskDto.getSheet_Describe();
         this.sheetTitle = taskDto.getSheet_Title();
-        this.endTime = taskDto.getEnd_time();
+        this.endTime = taskDto.getTaskEndTime();
     }
 }

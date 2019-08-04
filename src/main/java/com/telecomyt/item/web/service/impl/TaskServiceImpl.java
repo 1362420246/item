@@ -8,10 +8,13 @@ import com.telecomyt.item.entity.*;
 import com.telecomyt.item.enums.ResultStatus;
 import com.telecomyt.item.web.mapper.TaskMapper;
 import com.telecomyt.item.web.service.TaskService;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,13 +45,19 @@ private TaskMapper taskMapper;
         int addTaskGroupResult = taskMapper.insertGroup(taskGroup);
         if(addTaskGroupResult > 0){
             Integer groupId = taskGroup.getGroupId();
+            Integer taskType = taskDto.getTaskType();
+            Integer taskState = taskDto.getTaskState();
+            Integer taskMain = taskDto.getTaskMain();
+            LocalDateTime  taskEndTime = taskDto.getTaskEndTime();
             List<String> taskCardId = taskDto.getTaskCardId();
+            String taskFile = taskDto.getTaskFile();
             if(taskCardId == null){
                 taskCardId = new ArrayList<>();
             }
-            TaskDo taskDo = TaskDo.builder().groupId(groupId).taskCardId(taskCardId).build();
+
+            TaskDo taskDo = TaskDo.builder().taskCardId(taskCardId).groupId(groupId).taskType(taskType).taskState(taskState).taskMain(taskMain).taskEndTime(taskEndTime).taskFile(taskFile).build();
             int addTaskResult = taskMapper.insertTask(taskDo);
-            if(addTaskResult == 0){
+            if(addTaskResult     == 0){
                 //TODO 回滚
                 log.info("新增任务失败。");
                 //return new BaseResp<>(ResultStatus.FAIL);

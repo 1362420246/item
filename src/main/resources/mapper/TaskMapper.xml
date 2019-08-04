@@ -9,17 +9,17 @@
     </insert>
     <!--批量插入-->
     <insert id="insertTask" parameterType="com.telecomyt.item.entity.TaskDo">
-        insert into tb_schedule_info (task_cardid, group_id, task_type, task_state,task_main,task_file,task_endtime)
+        insert into db_sheet_task (task_cardid, group_id, task_type, task_state,task_main,task_file,task_endtime)
         values
         <foreach collection="taskCardId" separator="," item="taskCardId" >
             (#{taskCardId},#{groupId},#{taskType},#{taskState},#{taskMain},#{taskFile},#{taskEndTime})
         </foreach>
     </insert>
 
-    <!--新增任务-->
-    <insert id="insertTask" useGeneratedKeys="true" keyProperty="taskId" keyColumn="task_id" parameterType="com.telecomyt.item.entity.Task">
-        insert into db_sheet_task(task_cardid,group_id,task_type,task_state,task_main,task_endtime,task_file) values (#{taskCardid},#{groupId},#{taskType},#{taskState},#{taskMain},#{taskEndTime},#{taskFile})
-    </insert>
+    <!--&lt;!&ndash;新增任务&ndash;&gt;-->
+    <!--<insert id="insertTask" useGeneratedKeys="true" keyProperty="taskId" keyColumn="task_id" parameterType="com.telecomyt.item.entity.Task">-->
+        <!--insert into db_sheet_task(task_cardid,group_id,task_type,task_state,task_main,task_endtime,task_file) values (#{taskCardid},#{groupId},#{taskType},#{taskState},#{taskMain},#{taskEndTime},#{taskFile})-->
+    <!--</insert>-->
     <!--新增日志-->
     <insert id="insertLog" useGeneratedKeys="true" keyProperty="logId" keyColumn="log_id" parameterType="com.telecomyt.item.entity.TaskLog">
         insert into db_sheet_log (group_id,log_time,log_picture,log_cardid) values (#{groupId},#{logTime},#{logPicture},#{logCardId})
