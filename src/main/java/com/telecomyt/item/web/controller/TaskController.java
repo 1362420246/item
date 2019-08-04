@@ -34,7 +34,7 @@ public class TaskController {
     }
 
     /**
-     * 新增日志
+     * 新增任务日志
      */
     @PostMapping("/insertNewLog")
     public  BaseResp<String> insertNewLog(int groupId, Date logTime, String logPicture, String logCardId){
@@ -69,7 +69,7 @@ public class TaskController {
     /**
      * 修改个人在任务中的状态
      */
-    @PatchMapping("/updateMyTaskState")
+    @PutMapping("/updateMyTaskState")
     public BaseResp<String> updateMyTaskState (String taskCardId, int groupId, int taskState) {
         return taskService.updateMyTaskByIdAndGroupId(taskCardId, groupId, taskState);
     }

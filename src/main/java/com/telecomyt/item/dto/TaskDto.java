@@ -36,7 +36,6 @@ public class TaskDto implements Serializable {
     @NotNull(message = "任务执行人不能为空")
     private List<String> taskCardIds;
 
-    private int groupId;
 
     @NotNull(message = "任务类型不能为空")
     private Integer taskType;
