@@ -44,6 +44,16 @@ public class ScheduleInfoDto implements Serializable {
      * 结束时间
      */
     private LocalDateTime endTime ;
+
+    /**
+     * 是否重复
+     */
+    private Boolean isRepeat ;
+    /**
+     * 重复规则 0:不重复 1每天 2每周 3每月
+     */
+    private Integer repeatRules ;
+
     /**
      *   * 开始时间的星期
      */

@@ -110,7 +110,9 @@
           g.schedule_title AS title,
           g.schedule_describe AS scheduleDescribe,
           g.start_time AS startTime,
-          g.end_time AS endTime
+          g.end_time AS endTime ,
+          g.is_repeat AS isRepeat ,
+          g.repeat_rules AS repeatRules
       FROM tb_schedule_info i JOIN tb_schedule_group g
       ON i.group_id = g.id
       WHERE i.affiliated_cardid = #{cardid}
@@ -131,6 +133,8 @@
           g.schedule_describe AS scheduleDescribe,
           g.start_time AS startTime,
           g.end_time AS endTime ,
+          g.is_repeat AS isRepeat ,
+          g.repeat_rules AS repeatRules ,
           g.start_week AS startWeek ,
           g.end_week AS endWeek ,
           g.`start_day_month` AS startDayMonth,
