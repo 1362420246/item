@@ -5,7 +5,7 @@
 <mapper namespace="com.telecomyt.item.web.mapper.TaskMapper">
     <!--新增组-->
     <insert id="insertGroup" useGeneratedKeys="true" keyProperty="groupId" keyColumn="group_id" parameterType="com.telecomyt.item.entity.TaskGroup">
-        insert into db_sheet_group (creator_cardid,sheet_title,sheet_describe,end_time) values (#{creatorCardid},#{sheetTitle},#{sheetDescribe},#{endTime})
+        insert into db_sheet_group (creator_cardid,sheet_title,sheet_describe,task_endtime) values (#{creatorCardid},#{sheetTitle},#{sheetDescribe},#{taskEndTime})
     </insert>
     <!--批量插入-->
     <insert id="insertTask" parameterType="com.telecomyt.item.entity.TaskDo">

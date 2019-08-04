@@ -119,8 +119,8 @@ private TaskMapper taskMapper;
 //删除任务
     @Override
     public BaseResp<String> deleteTask(String taskCardId,int groupId) {
-        int TaskResult = taskMapper.deleteTask(taskCardId, groupId);
-        if(TaskResult > 0){
+        int taskResult = taskMapper.deleteTask(taskCardId, groupId);
+        if(taskResult > 0){
            int LogResult = taskMapper.deleteTaskLog(groupId);
            if(LogResult > 0){
                 return new BaseResp<>(ResultStatus.SUCCESS);
