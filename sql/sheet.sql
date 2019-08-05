@@ -6,7 +6,7 @@ CREATE TABLE `db_sheet_log`  (
   `log_picture` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '上传任务进度图片路径、文档路径、文字描述',
   `log_cardid` char(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `log_type` int(255) NULL DEFAULT NULL COMMENT '上传类型 0-图片 1-文档 2-文字描述',
-  PRIMARY KEY (`log_id`, `log_time`) USING BTREE
+  PRIMARY KEY (`log_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 

@@ -114,9 +114,12 @@ public class ScheduleServiceImpl implements ScheduleService {
                         List<Integer> weeksByDifference = DateUtil.getWeeksByDifference(info.getStartWeek(), info.getEndWeek());
                         weekSet.addAll(weeksByDifference);
                     });
-                    // startTime 前端传入固定周一  endTime 前端传入固定周日
+                    // startTime 前端传入固定周日  endTime 前端传入固定周六
                     for (int i = 0; i < daysByDifference.size(); i++) {
-                        int week = i % 7 + 1;
+                        int week = i % 7 ;
+                        if(week == 0 ){
+                            week = 7;
+                        }
                         if(weekSet.contains(week)){
                             calendarSet.add(daysByDifference.get(i));
                         }

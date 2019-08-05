@@ -31,7 +31,7 @@ public class WebConfig implements WebMvcConfigurer {
         String homePath = FileUtil.getHomePath();
         //映射上传文件的路径
         registry.addResourceHandler(CommonConstants.REPORTING_PATH + "**")
-                .addResourceLocations(homePath + CommonConstants.REPORTING_PATH );
+                .addResourceLocations("file:"+ homePath + CommonConstants.REPORTING_PATH );
     }
 
 }
