@@ -71,8 +71,8 @@ private TaskMapper taskMapper;
     }
 //新增日志（未处理上传）
     @Override
-    public  BaseResp<String> insertLog(int groupId, Date logTime, String logPicture, String logCardId) {
-        int flag = taskMapper.insertLog(groupId,logTime,logPicture,logCardId);
+    public  BaseResp<String> insertLog(int groupId, Date logTime, String logPicture, String logCardId,int logType) {
+        int flag = taskMapper.insertLog(groupId,logTime,logPicture,logCardId,logType);
         if(flag > 0){
             //TODO 回滚
             log.info("新增日志。");

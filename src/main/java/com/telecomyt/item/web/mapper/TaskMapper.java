@@ -40,7 +40,7 @@ public interface TaskMapper {
      * @param logCardId
      * @return
      */
-   int insertLog(@Param("groupId") int groupId, @Param("logTime") Date logTime, @Param("logPicture") String logPicture, @Param("logCardId") String logCardId);
+   int insertLog(@Param("groupId") int groupId, @Param("logTime") Date logTime, @Param("logPicture") String logPicture, @Param("logCardId") String logCardId,@Param("logType") int logType);
 
     /**
      *  查询任务列表

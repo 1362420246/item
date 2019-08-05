@@ -39,7 +39,7 @@ public interface TaskService {
      * @param logCardId
      * @return
      */
-    BaseResp<String> insertLog(int groupId, Date logTime, String logPicture, String logCardId);
+    BaseResp<String> insertLog(int groupId, Date logTime, String logPicture, String logCardId,int log_Type);
 
     /**
      * 查询个人任务列表

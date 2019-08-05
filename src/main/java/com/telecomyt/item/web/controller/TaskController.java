@@ -37,8 +37,8 @@ public class TaskController {
      * 新增任务日志
      */
     @PostMapping("/insertNewLog")
-    public  BaseResp<String> insertNewLog(int groupId, Date logTime, String logPicture, String logCardId){
-        return taskService.insertLog(groupId,logTime,logPicture,logCardId);
+    public  BaseResp<String> insertNewLog(int groupId, Date logTime, String logPicture, String logCardId,int logType){
+        return taskService.insertLog(groupId,logTime,logPicture,logCardId,logType);
     }
 
     /**

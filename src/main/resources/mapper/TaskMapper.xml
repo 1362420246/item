@@ -19,7 +19,7 @@
     <!--</insert>-->
     <!--新增日志-->
     <insert id="insertLog" useGeneratedKeys="true" keyProperty="logId" keyColumn="log_id" parameterType="com.telecomyt.item.entity.TaskLog">
-        insert into db_sheet_log (group_id,log_time,log_picture,log_cardid) values (#{groupId},#{logTime},#{logPicture},#{logCardId})
+        insert into db_sheet_log (group_id,log_time,log_picture,log_cardid,log_type) values (#{groupId},#{logTime},#{logPicture},#{logCardId},#{logType})
     </insert>
 
     <!--查询个人任务列表-->

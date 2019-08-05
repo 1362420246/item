@@ -25,6 +25,7 @@ public class TaskLog implements Serializable {
     private Date logTime;
     private String logPicture;
     private String logCardId;
+    private  int logType;
 
 
 }
