@@ -29,6 +29,7 @@ public class Task implements Serializable {
     private Integer taskMain;
     private LocalDateTime taskEndTime;
     private String taskFile;
+    private String taskCopierId;
 
 
 }

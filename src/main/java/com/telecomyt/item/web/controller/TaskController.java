@@ -58,6 +58,17 @@ public class TaskController {
 //        }
 //        return modleMap;
     }
+    //查询新增任务（可进行拒绝或者点击开始操作）
+    @GetMapping("/getNewTask")
+    public BaseResp<List> getNewTask(String taskCardId){
+        return taskService.queryNewTask(taskCardId);
+    }
+
+    //查询进行、过期、拒绝任务
+    @GetMapping("/getOtherTask")
+    public BaseResp<List> getOtherTask(String taskCardId){
+        return taskService.queryOtherTask(taskCardId);
+    }
 
     /**
      * 查询任务日志

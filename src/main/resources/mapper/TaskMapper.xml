@@ -13,6 +13,14 @@
             (#{taskCardId},#{groupId},#{taskType},#{taskState},#{taskMain},#{taskFile},#{taskEndTime})
         </foreach>
     </insert>
+    <!--批量插入-->
+    <insert id="insertTask" parameterType="com.telecomyt.item.entity.TaskDo">
+        insert into db_sheet_task (task_cardid, group_id, task_type, task_state, task_main, task_file, task_endtime)
+        values
+        <foreach collection="taskCopierIds" separator="," item="taskCopierId" >
+            (#{taskCardId},#{groupId},#{taskType},#{taskState},#{taskMain},#{taskFile},#{taskEndTime})
+        </foreach>
+    </insert>
     <!--&lt;!&ndash;新增任务&ndash;&gt;-->
     <!--<insert id="insertTask" useGeneratedKeys="true" keyProperty="taskId" keyColumn="task_id" parameterType="com.telecomyt.item.entity.Task">-->
         <!--insert into db_sheet_task(task_cardid,group_id,task_type,task_state,task_main,task_endtime,task_file) values (#{taskCardid},#{groupId},#{taskType},#{taskState},#{taskMain},#{taskEndTime},#{taskFile})-->
@@ -25,6 +33,14 @@
     <!--查询个人任务列表-->
     <select id="queryMyTaskById" resultType="com.telecomyt.item.entity.Task">
         select group_id,task_type,task_state,task_main,task_file,task_endtime from db_sheet_task where task_cardid = #{taskCardId}
+    </select>
+    <!--查询新增任务列表-->
+    <select id="queryNewTask" resultType="com.telecomyt.item.entity.Task">
+         select group_id,task_type,task_state,task_main,task_file,task_endtime from db_sheet_task where task_cardid = #{taskCardId} and (task_state = 0)
+    </select>
+    <!--查询新增任务列表-->
+    <select id="queryOtherTask" resultType="com.telecomyt.item.entity.Task">
+         select group_id,task_type,task_state,task_main,task_file,task_endtime from db_sheet_task where task_cardid = #{taskCardId} and (task_state = 1 or task_state = 2)
     </select>
     <!--查询日志-->
     <select id="queryMyTaskLogById" resultType="com.telecomyt.item.entity.TaskLog">

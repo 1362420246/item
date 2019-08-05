@@ -31,6 +31,7 @@ public class TaskDo implements Serializable {
     private Integer taskMain;
     private LocalDateTime taskEndTime;
     private String taskFile;
+    private  List<String> taskCopierIds;
 
 
     

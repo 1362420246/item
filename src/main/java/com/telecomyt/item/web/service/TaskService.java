@@ -3,6 +3,7 @@ package com.telecomyt.item.web.service;
 
 import com.telecomyt.item.dto.TaskDto;
 import com.telecomyt.item.dto.resp.BaseResp;
+import com.telecomyt.item.entity.Task;
 import com.telecomyt.item.entity.TaskLog;
 import java.util.Date;
 import java.util.List;
@@ -48,12 +49,15 @@ public interface TaskService {
      */
     BaseResp<List> queryMyTaskById(String taskCardId);
 
+    BaseResp<List> queryNewTask(String taskCardId);
+    BaseResp<List> queryOtherTask(String taskCardId);
     /**
      * 查询日志信息
      * @param groupId
      * @return
      */
     BaseResp<TaskLog> queryMyTaskLog(Integer groupId);
+
 
     /**
      * 更改个人任务状态

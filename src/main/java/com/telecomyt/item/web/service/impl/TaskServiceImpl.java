@@ -12,7 +12,9 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -31,7 +33,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private TaskMapper taskMapper;
-
     /**
      * 新增组
      * @param taskDto
@@ -48,22 +49,33 @@ public class TaskServiceImpl implements TaskService {
             Integer taskMain = taskDto.getTaskMain();
             LocalDateTime  taskEndTime = taskDto.getTaskEndTime();
             List<String> taskCardIds = taskDto.getTaskCardIds();
+            List<String> taskCopierIds = taskDto.getTaskCopierIds();
             String taskFile = taskDto.getTaskFile();
             if(taskCardIds == null){
                 taskCardIds = new ArrayList<>();
             }
 
-            TaskDo taskDo = TaskDo.builder().taskCardIds(taskCardIds).groupId(groupId).taskType(taskType).taskState(taskState).taskMain(taskMain).taskEndTime(taskEndTime).taskFile(taskFile).build();
-            int addTaskResult = taskMapper.insertTask(taskDo);
-            if(addTaskResult     == 0){
+            TaskDo executorTaskDo = TaskDo.builder().taskCardIds(taskCardIds).groupId(groupId).taskType(1).taskState(taskState).taskMain(taskMain).taskEndTime(taskEndTime).taskFile(taskFile).build();
+            int addExecutorTaskResult = taskMapper.insertTask(executorTaskDo);
+            if(addExecutorTaskResult == 0){
                 //TODO 回滚
-                log.info("新增任务失败。");
-                //return new BaseResp<>(ResultStatus.FAIL);
+                log.info("新增任务执行人失败。");
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return new BaseResp<>(ResultStatus.FAIL);
             }
             //TODO
+            TaskDo copierTaskDo = TaskDo.builder().taskCopierIds(taskCopierIds).groupId(groupId).taskType(2).taskState(taskState).taskMain(taskMain).taskEndTime(taskEndTime).taskFile(taskFile).build();
+            int addTaskCoperResult = taskMapper.insertTask(copierTaskDo);
+            if(addTaskCoperResult == 0){
+                //TODO 回滚
+                log.info("新增任务抄送人失败。");
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                //return new BaseResp<>(ResultStatus.FAIL);
+            }
             return new BaseResp<>(ResultStatus.SUCCESS);
         }else {
             log.info("新增任务组失败。");
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return new BaseResp<>(ResultStatus.FAIL);
         }
     }
@@ -74,9 +86,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public  BaseResp<String> insertLog(Integer groupId, Date logTime, String logPicture, String logCardId,Integer logType) {
         int flag = taskMapper.insertLog(groupId,logTime,logPicture,logCardId,logType);
-        if(flag > 0){
+        if(flag == 0){
             //TODO 回滚
-            log.info("新增日志。");
+            log.info("新增日志失败");
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return new BaseResp<>(ResultStatus.FAIL);
         }else{
             return new BaseResp<>(ResultStatus.SUCCESS);
@@ -89,11 +102,31 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public BaseResp<List> queryMyTaskById(String taskCardId){
-        List<Task> task = taskMapper.queryMyTaskById(taskCardId);
-        if(task == null) {
+        List<Task> allTesk = taskMapper.queryMyTaskById(taskCardId);
+        if(allTesk == null) {
           return new BaseResp<>(ResultStatus.FAIL);
         }else{
-          return new BaseResp<>(ResultStatus.SUCCESS,task);
+          return new BaseResp<>(ResultStatus.SUCCESS,allTesk);
+        }
+    }
+    //查询新增任务详情
+    @Override
+    public BaseResp<List> queryNewTask(String taskCardId){
+        List<Task> newTask = taskMapper.queryNewTask(taskCardId);
+        if(newTask == null) {
+            return new BaseResp<>(ResultStatus.FAIL);
+        }else{
+            return new BaseResp<>(ResultStatus.SUCCESS,newTask);
+        }
+    }
+    //查询其它任务详情
+    @Override
+    public BaseResp<List> queryOtherTask(String taskCardId){
+        List<Task> otherTask = taskMapper.queryOtherTask(taskCardId);
+        if(otherTask == null) {
+            return new BaseResp<>(ResultStatus.FAIL);
+        }else{
+            return new BaseResp<>(ResultStatus.SUCCESS,otherTask);
         }
     }
 

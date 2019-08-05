@@ -49,6 +49,9 @@ public interface TaskMapper {
      */
    List<Task> queryMyTaskById(String taskCardId);
 
+
+   List<Task> queryNewTask(String taskCardId);
+   List<Task>queryOtherTask(String taskCardId);
     /**
      *查询任务日志
      * @param groupId
