@@ -31,7 +31,13 @@ public interface TaskMapper {
      * @return
      */
     int insertTask(TaskDo taskDo);
-    int taskCopierIds(TaskDo taskDo);
+
+    /**
+     *
+     * @param taskDo
+     * @return
+     */
+    int insertCoperTask(TaskDo taskDo);
 
     /**
      *增加日志
