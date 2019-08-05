@@ -187,11 +187,14 @@ public class DateUtil {
 //        System.out.println(daysOfMonth);
 
         LocalDateTime startDate = LocalDateTime.of(2019,7,29,11,11,11);
-        LocalDateTime endDate = LocalDateTime.of(2019,8,2,11,11,11);
-        List<String> daysByDifference = DateUtil.getDaysByDifference(startDate, endDate);
-        System.out.println(daysByDifference);
-        Integer s = getDayByString(daysByDifference.get(3));
+//        LocalDateTime endDate = LocalDateTime.of(2019,8,2,11,11,11);
+//        List<String> daysByDifference = DateUtil.getDaysByDifference(startDate, endDate);
+//        System.out.println(daysByDifference);
+//        Integer s = getDayByString(daysByDifference.get(3));
+//        System.out.println(s);
+        String s = startDate.toLocalDate().toString();
         System.out.println(s);
+        System.out.println("2019-07-29".equals(s));
 
     }
 }

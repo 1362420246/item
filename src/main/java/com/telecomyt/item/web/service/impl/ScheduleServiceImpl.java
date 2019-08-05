@@ -13,6 +13,7 @@ import com.telecomyt.item.utils.converter.ScheduleInfoVoConverter;
 import com.telecomyt.item.web.mapper.ScheduleGroupMapper;
 import com.telecomyt.item.web.mapper.ScheduleInfoMapper;
 import com.telecomyt.item.web.mapper.ScheduleLogMapper;
+import com.telecomyt.item.web.mapper.TaskMapper;
 import com.telecomyt.item.web.service.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Autowired
     private ScheduleLogMapper scheduleLogMapper ;
+
+    @Autowired
+    private TaskMapper taskMapper ;
 
     /**
      * 新增日程
@@ -79,6 +83,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public BaseResp<Map> queryScheduleList(ScheduleListQuery scheduleListQuery) {
         Map<String, Collection> resultMap = Maps.newHashMap();
+        //查询任务
+        List<TaskVo> taskList = taskMapper.getTaskByCardIdAndDate(scheduleListQuery.getCardid(),scheduleListQuery.getStartTime(),scheduleListQuery.getEndTime());
+        resultMap.put("taskList",taskList);
         //不重复的  必查 按时间查
         List<ScheduleInfoDto> noRepeatList = scheduleInfoMapper.queryScheduleListByNoRepeat(scheduleListQuery);
         resultMap.put("noRepeatList",noRepeatList);
@@ -158,6 +165,14 @@ public class ScheduleServiceImpl implements ScheduleService {
                             calendarSet.add(day);
                         }
                     }
+                }
+                //任务
+                if(taskList.size() > 0){
+                    taskList.forEach(taskVo -> {
+                        LocalDateTime taskEndtime = taskVo.getTaskEndtime();
+                        String endStr = taskEndtime.toLocalDate().toString();
+                        calendarSet.add(endStr);
+                    });
                 }
             }
         }

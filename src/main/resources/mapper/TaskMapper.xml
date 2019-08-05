@@ -82,5 +82,24 @@
     delete from db_sheet_log where group_id=#{groupId}
     </delete>
 
+    <!--按照身份证和时间去查询任务-->
+    <select id="getTaskByCardIdAndDate" resultType="com.telecomyt.item.dto.TaskVo">
+        SELECT
+            a.group_id,
+            a.task_type,
+            a.task_state,
+            a.task_main,
+            a.task_file,
+            a.task_endtime,
+            b.sheet_title ,
+            b.sheet_describe
+        FROM
+            db_sheet_task a,
+            db_sheet_group b
+        WHERE a.group_id = b.group_id
+        AND (a.task_cardid = #{cardid} or a.task_copierid = #{cardid})
+        AND a.task_endtime BETWEEN #{startTime} AND #{endTime}
+     </select>
+
 
 </mapper>
