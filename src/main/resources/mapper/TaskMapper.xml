@@ -32,34 +32,34 @@
 
     <!--查询个人任务列表-->
     <select id="queryMyTaskById" resultType="com.telecomyt.item.entity.Task">
-        select a.group_id,a.task_type,a.task_state,a.task_main,a.task_file,a.task_endtime
+        select a.group_id,a.task_type,a.task_state,a.task_main,a.task_file,a.task_endtime,
                b.sheet_title,b.sheet_describe
          from db_sheet_task a,db_sheet_group b
          where a.group_id = #{groupId}
-               b.group_id = #{groupId}
-               a.group_id = b.group_id
-               a.task_cardid = #{taskCardId}
+              and b.group_id = #{groupId}
+              and a.group_id = b.group_id
+              and a.task_cardid = #{taskCardId}
 
     </select>
     <!--查询新增任务列表-->
     <select id="queryNewTask" resultType="com.telecomyt.item.entity.Task">
-         select a.group_id,a.task_type,a.task_state,a.task_main,a.task_file,a.task_endtime
+         select a.group_id,a.task_type,a.task_state,a.task_main,a.task_file,a.task_endtime,
                b.sheet_title,b.sheet_describe
           from db_sheet_task a,db_sheet_group b
           where a.group_id = #{groupId}
-               b.group_id = #{groupId}
-               a.group_id = b.group_id
-               a.task_cardid = #{taskCardId} and (task_state = 0)
+               and b.group_id = #{groupId}
+               and a.group_id = b.group_id
+               and a.task_cardid = #{taskCardId} and (task_state = 0)
     </select>
     <!--查询新增任务列表-->
     <select id="queryOtherTask" resultType="com.telecomyt.item.entity.Task">
-         select a.group_id,a.task_type,a.task_state,a.task_main,a.task_file,a.task_endtime
+         select a.group_id,a.task_type,a.task_state,a.task_main,a.task_file,a.task_endtime,
                b.sheet_title,b.sheet_describe
           from db_sheet_task a,db_sheet_group b
           where a.group_id = #{groupId}
-               b.group_id = #{groupId}
-               a.group_id = b.group_id
-               a.task_cardid = #{taskCardId} and (task_state = 1 or task_state = 2)
+               and b.group_id = #{groupId}
+               and a.group_id = b.group_id
+               and a.task_cardid = #{taskCardId} and (task_state = 1 or task_state = 2)
     </select>
     <!--查询日志-->
     <select id="queryMyTaskLogById" resultType="com.telecomyt.item.entity.TaskLog">
