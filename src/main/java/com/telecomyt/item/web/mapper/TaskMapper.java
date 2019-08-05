@@ -70,7 +70,7 @@ public interface TaskMapper {
      * @param groupId
      * @return
      */
-   int deleteTask(String taskCardId, Integer groupId);
+   int deleteTask(@Param("taskCardId") String taskCardId,@Param("groupId") Integer groupId);
 
     /**
      * 删除任务日志

@@ -7,6 +7,7 @@ import com.telecomyt.item.entity.TaskLog;
 import com.telecomyt.item.utils.BeanValidator;
 import com.telecomyt.item.web.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +38,7 @@ public class TaskController {
      * 新增任务日志
      */
     @PostMapping("/insertNewLog")
-    public  BaseResp<String> insertNewLog(int groupId, Date logTime, String logPicture, String logCardId,int logType){
+    public  BaseResp<String> insertNewLog(Integer groupId, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")  Date logTime, String logPicture, String logCardId, Integer logType){
         return taskService.insertLog(groupId,logTime,logPicture,logCardId,logType);
     }
 

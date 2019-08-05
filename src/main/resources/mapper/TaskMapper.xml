@@ -34,18 +34,17 @@
     <update id="updateMyTaskByIdAndGroupId" parameterType="com.telecomyt.item.entity.Task">
         update db_sheet_task
         <set>
-            <if test="group_Id!=null">group_id=#{groupId},</if>
-            <if test="task_State!=null">task_state=#{taskState},</if>
+            <if test="taskState!=null">task_state=#{taskState},</if>
         </set>
-        where task_cardid=#{taskCardId}
+        where task_cardid=#{taskCardId} and group_id=#{groupId}
     </update>
     <!--删除任务-->
-    <delete id="deleteTask" parameterType="String">
-    delete from db_sheet_task where task_cardid=#{taskCardId}
+    <delete id="deleteTask">
+    delete from db_sheet_task where task_cardid=#{taskCardId} and group_id=#{groupId}
     </delete>
     <!--删除任务日志-->
-    <delete id="deleteTaskLog" parameterType="String">
-    delete from db_sheet_log where groupid=#{groupId}
+    <delete id="deleteTaskLog">
+    delete from db_sheet_log where group_id=#{groupId}
     </delete>
 
 
