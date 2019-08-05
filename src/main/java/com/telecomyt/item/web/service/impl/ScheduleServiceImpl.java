@@ -17,6 +17,9 @@ import com.telecomyt.item.web.service.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
@@ -42,6 +45,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * 新增日程
      */
     @Override
+    @Transactional(transactionManager = "transactionManager" ,propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public BaseResp<String> addSchedule(ScheduleDto scheduleDto) {
         ScheduleGroup scheduleGroup = new ScheduleGroup(scheduleDto);
         int addGroupResult = scheduleGroupMapper.insertSelective(scheduleGroup);
@@ -57,9 +61,9 @@ public class ScheduleServiceImpl implements ScheduleService {
                     .creatorCardid(creatorCardid).affiliatedCardids(affiliatedCardids).build();
             int addInfoResult = scheduleInfoMapper.insertList(scheduleInfoDo);
             if(addInfoResult == 0){
-                //TODO 回滚
-                log.info("新增日程详情失败。");
-                //return new BaseResp<>(ResultStatus.FAIL);
+                log.info("新增日程详情失败。事务回滚");
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return new BaseResp<>(ResultStatus.FAIL);
             }
             //TODO  日程的创建 不是日程的开始 ， 日程的开始和结束日志先不考虑
             return new BaseResp<>(ResultStatus.SUCCESS);
@@ -210,15 +214,16 @@ public class ScheduleServiceImpl implements ScheduleService {
      * @param cardid 身份证号
      */
     @Override
+    @Transactional(transactionManager = "transactionManager" ,propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public BaseResp<Object> deleteSchedule(Integer groupId, String cardid) {
         int result = scheduleInfoMapper.deleteByGroupIdAndCardid(groupId,cardid);
         if(result > 0){
             ScheduleLog scheduleLog = ScheduleLog.builder().groupId(groupId).operationCardid(cardid).logType(5).build();
             int addLogResult = scheduleLogMapper.insertSelective(scheduleLog);
             if(addLogResult == 0){
-                //TODO 回滚
-                log.info("新增日程日志失败。");
-                //return new BaseResp<>(ResultStatus.FAIL);
+                log.info("新增日程日志失败。事务回滚");
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return new BaseResp<>(ResultStatus.FAIL);
             }
             return new BaseResp<>(ResultStatus.SUCCESS);
         }

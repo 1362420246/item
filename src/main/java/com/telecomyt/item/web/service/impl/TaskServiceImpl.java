@@ -29,10 +29,8 @@ import java.util.List;
 @Transactional
 public class TaskServiceImpl implements TaskService {
 
-
-
     @Autowired
-private TaskMapper taskMapper;
+    private TaskMapper taskMapper;
 
     /**
      * 新增组
@@ -69,7 +67,10 @@ private TaskMapper taskMapper;
             return new BaseResp<>(ResultStatus.FAIL);
         }
     }
-//新增日志（未处理上传）
+
+    /**
+     * 新增日志（未处理上传）
+     */
     @Override
     public  BaseResp<String> insertLog(Integer groupId, Date logTime, String logPicture, String logCardId,Integer logType) {
         int flag = taskMapper.insertLog(groupId,logTime,logPicture,logCardId,logType);
@@ -82,8 +83,10 @@ private TaskMapper taskMapper;
         }
 
     }
-//查询个人任务详情
 
+    /**
+     * 查询个人任务详情
+     */
     @Override
     public BaseResp<List> queryMyTaskById(String taskCardId){
         List<Task> task = taskMapper.queryMyTaskById(taskCardId);
@@ -93,7 +96,10 @@ private TaskMapper taskMapper;
           return new BaseResp<>(ResultStatus.SUCCESS,task);
         }
     }
-//任务详情
+
+    /**
+     * 任务详情
+     */
     @Override
     public BaseResp<TaskLog> queryMyTaskLog(Integer groupId) {
         TaskLog taskLog = taskMapper.queryMyTaskLogById(groupId);
@@ -103,7 +109,10 @@ private TaskMapper taskMapper;
             return new BaseResp<>(ResultStatus.SUCCESS,taskLog);
         }
     }
-//更改个人任务状态
+
+    /**
+     * 更改个人任务状态
+     */
     @Override
     public BaseResp<String> updateMyTaskByIdAndGroupId(String taskCardId,Integer groupId, Integer taskState) {
 
@@ -116,7 +125,10 @@ private TaskMapper taskMapper;
         }
 
     }
-//删除任务
+
+    /**
+     * 删除任务
+     */
     @Override
     public BaseResp<String> deleteTask(String taskCardId,Integer groupId) {
         int taskResult = taskMapper.deleteTask(taskCardId, groupId);
