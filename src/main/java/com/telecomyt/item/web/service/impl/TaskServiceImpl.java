@@ -109,7 +109,13 @@ public class TaskServiceImpl implements TaskService {
           return new BaseResp<>(ResultStatus.SUCCESS,allTesk);
         }
     }
-    //查询新增任务详情
+
+    /**
+     * 查询新增任务详情
+     * @param taskCardId
+     * @param groupId
+     * @return
+     */
     @Override
     public BaseResp<List> queryNewTask(String taskCardId,Integer groupId){
         List<Task> newTask = taskMapper.queryNewTask(taskCardId,groupId);
@@ -119,7 +125,13 @@ public class TaskServiceImpl implements TaskService {
             return new BaseResp<>(ResultStatus.SUCCESS,newTask);
         }
     }
-    //查询其它任务详情
+
+    /**
+     * 查询其它任务详情
+     * @param taskCardId
+     * @param groupId
+     * @return
+     */
     @Override
     public BaseResp<List> queryOtherTask(String taskCardId,Integer groupId){
         List<Task> otherTask = taskMapper.queryOtherTask(taskCardId,groupId);

@@ -49,7 +49,20 @@ public interface TaskService {
      */
     BaseResp<List> queryMyTaskById(String taskCardId,Integer groupId);
 
+    /**
+     * 查询新增加任务
+     * @param taskCardId
+     * @param groupId
+     * @return
+     */
     BaseResp<List> queryNewTask(String taskCardId,Integer groupId);
+
+    /**
+     * 查询过期、拒绝、进行中任务
+     * @param taskCardId
+     * @param groupId
+     * @return
+     */
     BaseResp<List> queryOtherTask(String taskCardId,Integer groupId);
     /**
      * 查询日志信息

@@ -58,13 +58,24 @@ public class TaskController {
 //        }
 //        return modleMap;
     }
-    //查询新增任务（可进行拒绝或者点击开始操作）
+
+    /**
+     * 查询新增任务（可进行拒绝或者点击开始操作）
+     * @param taskCardId
+     * @param groupId
+     * @return
+     */
     @GetMapping("/getNewTask")
     public BaseResp<List> getNewTask(String taskCardId,Integer groupId){
         return taskService.queryNewTask(taskCardId,groupId);
     }
 
-    //查询进行、过期、拒绝任务
+    /**
+     * /查询进行、过期、拒绝任务
+     * @param taskCardId
+     * @param groupId
+     * @return
+     */
     @GetMapping("/getOtherTask")
     public BaseResp<List> getOtherTask(String taskCardId,Integer groupId){
         return taskService.queryOtherTask(taskCardId,groupId);
