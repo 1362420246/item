@@ -31,6 +31,7 @@ public interface TaskMapper {
      * @return
      */
     int insertTask(TaskDo taskDo);
+    int taskCopierIds(TaskDo taskDo);
 
     /**
      *增加日志
@@ -41,7 +42,6 @@ public interface TaskMapper {
      * @return
      */
    int insertLog(@Param("groupId") Integer groupId, @Param("logTime") Date logTime, @Param("logPicture") String logPicture, @Param("logCardId") String logCardId,@Param("logType") Integer logType);
-
     /**
      *  查询任务列表
      * @param taskCardId

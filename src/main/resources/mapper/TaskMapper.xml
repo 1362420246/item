@@ -14,7 +14,7 @@
         </foreach>
     </insert>
     <!--批量插入-->
-    <insert id="insertTask" parameterType="com.telecomyt.item.entity.TaskDo">
+    <insert id="insertCoperTask" parameterType="com.telecomyt.item.entity.TaskDo">
         insert into db_sheet_task (task_cardid, group_id, task_type, task_state, task_main, task_file, task_endtime)
         values
         <foreach collection="taskCopierIds" separator="," item="taskCopierId" >

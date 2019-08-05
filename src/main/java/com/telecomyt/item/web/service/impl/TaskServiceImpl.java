@@ -65,7 +65,7 @@ public class TaskServiceImpl implements TaskService {
             }
             //TODO
             TaskDo copierTaskDo = TaskDo.builder().taskCopierIds(taskCopierIds).groupId(groupId).taskType(2).taskState(taskState).taskMain(taskMain).taskEndTime(taskEndTime).taskFile(taskFile).build();
-            int addTaskCoperResult = taskMapper.insertTask(copierTaskDo);
+            int addTaskCoperResult = taskMapper.taskCopierIds(copierTaskDo);
             if(addTaskCoperResult == 0){
                 //TODO 回滚
                 log.info("新增任务抄送人失败。");
