@@ -187,6 +187,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * 添加日程日志
      */
     @Override
+    @Transactional(transactionManager = "transactionManager" ,propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public BaseResp<Object> addScheduleLog(ScheduleLog scheduleLog) {
         int result = scheduleLogMapper.insertSelective(scheduleLog);
         if(result > 0){
@@ -199,6 +200,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      *  修改日程
      */
     @Override
+    @Transactional(transactionManager = "transactionManager" ,propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public BaseResp<Object> updateSchedule(ScheduleUpdateParam scheduleUpdateParam) {
         ScheduleGroup scheduleGroup = new ScheduleGroup(scheduleUpdateParam);
         int result = scheduleGroupMapper.updateByPrimaryKeySelective(scheduleGroup);
