@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Builder
 public class TaskGroup implements Serializable {
     private static final long serialVersionUID = 8240255160784435225L;
-    private int groupId;
+    private Integer groupId;
     private String creatorCardId;
     private String sheetTitle;
     private String sheetDescribe;

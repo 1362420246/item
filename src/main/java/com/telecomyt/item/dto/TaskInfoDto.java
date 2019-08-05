@@ -15,10 +15,10 @@ public class TaskInfoDto implements Serializable {
 
     private static final long serialVersionUID = -8717474322435171318L;
     private String taskCardId;
-    private int groupId;
-    private int taskType;
-    private int taskState;
-    private int taskMain;
-    private int taskFile;
-    private int taskEndtime;
+    private Integer groupId;
+    private Integer taskType;
+    private Integer taskState;
+    private Integer taskMain;
+    private Integer taskFile;
+    private Integer taskEndtime;
 }

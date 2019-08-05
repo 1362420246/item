@@ -62,7 +62,7 @@ public class TaskController {
      * 查询任务日志
      */
     @GetMapping("/getMyTaskLog")
-    public BaseResp<TaskLog> queryMyTaskLog(int groupId){
+    public BaseResp<TaskLog> queryMyTaskLog(Integer groupId){
         return taskService.queryMyTaskLog(groupId);
     }
 
@@ -70,7 +70,7 @@ public class TaskController {
      * 修改个人在任务中的状态
      */
     @PutMapping("/updateMyTaskState")
-    public BaseResp<String> updateMyTaskState (String taskCardId, int groupId, int taskState) {
+    public BaseResp<String> updateMyTaskState (String taskCardId, Integer groupId, Integer taskState) {
         return taskService.updateMyTaskByIdAndGroupId(taskCardId, groupId, taskState);
     }
 
@@ -78,7 +78,7 @@ public class TaskController {
      * 删除任务同时删除日志
      */
     @DeleteMapping("/deleteMyTask")
-    public BaseResp<String> deleteMyTask(String taskCardId,int groupId){
+    public BaseResp<String> deleteMyTask(String taskCardId,Integer groupId){
         return taskService.deleteTask(taskCardId,groupId);
     }
 

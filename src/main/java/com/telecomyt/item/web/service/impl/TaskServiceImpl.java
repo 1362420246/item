@@ -71,7 +71,7 @@ private TaskMapper taskMapper;
     }
 //新增日志（未处理上传）
     @Override
-    public  BaseResp<String> insertLog(int groupId, Date logTime, String logPicture, String logCardId,int logType) {
+    public  BaseResp<String> insertLog(Integer groupId, Date logTime, String logPicture, String logCardId,Integer logType) {
         int flag = taskMapper.insertLog(groupId,logTime,logPicture,logCardId,logType);
         if(flag > 0){
             //TODO 回滚
@@ -95,7 +95,7 @@ private TaskMapper taskMapper;
     }
 //任务详情
     @Override
-    public BaseResp<TaskLog> queryMyTaskLog(int groupId) {
+    public BaseResp<TaskLog> queryMyTaskLog(Integer groupId) {
         TaskLog taskLog = taskMapper.queryMyTaskLogById(groupId);
         if(taskLog == null) {
             return new BaseResp<>(ResultStatus.FAIL);
@@ -105,7 +105,7 @@ private TaskMapper taskMapper;
     }
 //更改个人任务状态
     @Override
-    public BaseResp<String> updateMyTaskByIdAndGroupId(String taskCardId,int groupId, int taskState) {
+    public BaseResp<String> updateMyTaskByIdAndGroupId(String taskCardId,Integer groupId, Integer taskState) {
 
         int flag = taskMapper.updateMyTaskByIdAndGroupId(taskCardId,groupId,taskState);
         if(flag > 0){
@@ -118,7 +118,7 @@ private TaskMapper taskMapper;
     }
 //删除任务
     @Override
-    public BaseResp<String> deleteTask(String taskCardId,int groupId) {
+    public BaseResp<String> deleteTask(String taskCardId,Integer groupId) {
         int taskResult = taskMapper.deleteTask(taskCardId, groupId);
         if(taskResult > 0){
            int LogResult = taskMapper.deleteTaskLog(groupId);

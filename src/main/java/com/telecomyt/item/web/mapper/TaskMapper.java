@@ -40,7 +40,7 @@ public interface TaskMapper {
      * @param logCardId
      * @return
      */
-   int insertLog(@Param("groupId") int groupId, @Param("logTime") Date logTime, @Param("logPicture") String logPicture, @Param("logCardId") String logCardId,@Param("logType") int logType);
+   int insertLog(@Param("groupId") Integer groupId, @Param("logTime") Date logTime, @Param("logPicture") String logPicture, @Param("logCardId") String logCardId,@Param("logType") Integer logType);
 
     /**
      *  查询任务列表
@@ -54,7 +54,7 @@ public interface TaskMapper {
      * @param groupId
      * @return
      */
-   TaskLog queryMyTaskLogById(int groupId);
+   TaskLog queryMyTaskLogById(Integer groupId);
     /**
      *改变个人任务状态
      * @param taskCardId
@@ -62,7 +62,7 @@ public interface TaskMapper {
      * @param taskState
      * @return
      */
-    int updateMyTaskByIdAndGroupId(@Param("taskCardId") String taskCardId, @Param("groupId") int groupId, @Param("taskState") int taskState);
+    int updateMyTaskByIdAndGroupId(@Param("taskCardId") String taskCardId, @Param("groupId") Integer groupId, @Param("taskState") Integer taskState);
 
     /**
      *删除任务
@@ -70,7 +70,7 @@ public interface TaskMapper {
      * @param groupId
      * @return
      */
-   int deleteTask(String taskCardId, int groupId);
+   int deleteTask(String taskCardId, Integer groupId);
 
     /**
      * 删除任务日志
@@ -78,7 +78,7 @@ public interface TaskMapper {
      * @return
      */
 
-   int deleteTaskLog(int groupId);
+   int deleteTaskLog(Integer groupId);
 
 
 }

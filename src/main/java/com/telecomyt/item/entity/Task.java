@@ -23,10 +23,10 @@ import java.util.Date;
 public class Task implements Serializable {
     private static final long serialVersionUID = -5240558862435141520L;
     private String taskCardId;
-    private int groupId;
-    private int taskType;
-    private int taskState;
-    private int taskMain;
+    private Integer groupId;
+    private Integer taskType;
+    private Integer taskState;
+    private Integer taskMain;
     private LocalDateTime taskEndTime;
     private String taskFile;
 

@@ -39,7 +39,7 @@ public interface TaskService {
      * @param logCardId
      * @return
      */
-    BaseResp<String> insertLog(int groupId, Date logTime, String logPicture, String logCardId,int log_Type);
+    BaseResp<String> insertLog(Integer groupId, Date logTime, String logPicture, String logCardId,Integer logType);
 
     /**
      * 查询个人任务列表
@@ -53,7 +53,7 @@ public interface TaskService {
      * @param groupId
      * @return
      */
-    BaseResp<TaskLog> queryMyTaskLog(int groupId);
+    BaseResp<TaskLog> queryMyTaskLog(Integer groupId);
 
     /**
      * 更改个人任务状态
@@ -62,7 +62,7 @@ public interface TaskService {
      * @param taskState
      * @return
      */
-    BaseResp<String> updateMyTaskByIdAndGroupId(String taskCardId, int groupId, int taskState);
+    BaseResp<String> updateMyTaskByIdAndGroupId(String taskCardId, Integer groupId, Integer taskState);
 
     /**
      * 删除任务
@@ -70,7 +70,7 @@ public interface TaskService {
      * @param groupId
      * @return
      */
-    BaseResp<String> deleteTask(String taskCardId, int groupId);
+    BaseResp<String> deleteTask(String taskCardId, Integer groupId);
 
 
 }
