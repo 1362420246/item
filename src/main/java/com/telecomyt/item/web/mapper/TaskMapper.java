@@ -47,11 +47,11 @@ public interface TaskMapper {
      * @param taskCardId
      * @return
      */
-   List<Task> queryMyTaskById(String taskCardId);
+   List<Task> queryMyTaskById(String taskCardId,Integer groupId);
 
 
-   List<Task> queryNewTask(String taskCardId);
-   List<Task>queryOtherTask(String taskCardId);
+   List<Task> queryNewTask(String taskCardId,Integer groupId);
+   List<Task>queryOtherTask(String taskCardId,Integer groupId);
     /**
      *查询任务日志
      * @param groupId

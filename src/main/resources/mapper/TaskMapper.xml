@@ -32,15 +32,34 @@
 
     <!--查询个人任务列表-->
     <select id="queryMyTaskById" resultType="com.telecomyt.item.entity.Task">
-        select group_id,task_type,task_state,task_main,task_file,task_endtime from db_sheet_task where task_cardid = #{taskCardId}
+        select a.group_id,a.task_type,a.task_state,a.task_main,a.task_file,a.task_endtime
+               b.sheet_title,b.sheet_describe
+         from db_sheet_task a,db_sheet_group b
+         where a.group_id = #{groupId}
+               b.group_id = #{groupId}
+               a.group_id = b.group_id
+               a.task_cardid = #{taskCardId}
+
     </select>
     <!--查询新增任务列表-->
     <select id="queryNewTask" resultType="com.telecomyt.item.entity.Task">
-         select group_id,task_type,task_state,task_main,task_file,task_endtime from db_sheet_task where task_cardid = #{taskCardId} and (task_state = 0)
+         select a.group_id,a.task_type,a.task_state,a.task_main,a.task_file,a.task_endtime
+               b.sheet_title,b.sheet_describe
+          from db_sheet_task a,db_sheet_group b
+          where a.group_id = #{groupId}
+               b.group_id = #{groupId}
+               a.group_id = b.group_id
+               a.task_cardid = #{taskCardId} and (task_state = 0)
     </select>
     <!--查询新增任务列表-->
     <select id="queryOtherTask" resultType="com.telecomyt.item.entity.Task">
-         select group_id,task_type,task_state,task_main,task_file,task_endtime from db_sheet_task where task_cardid = #{taskCardId} and (task_state = 1 or task_state = 2)
+         select a.group_id,a.task_type,a.task_state,a.task_main,a.task_file,a.task_endtime
+               b.sheet_title,b.sheet_describe
+          from db_sheet_task a,db_sheet_group b
+          where a.group_id = #{groupId}
+               b.group_id = #{groupId}
+               a.group_id = b.group_id
+               a.task_cardid = #{taskCardId} and (task_state = 1 or task_state = 2)
     </select>
     <!--查询日志-->
     <select id="queryMyTaskLogById" resultType="com.telecomyt.item.entity.TaskLog">

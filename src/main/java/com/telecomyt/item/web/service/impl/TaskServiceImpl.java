@@ -101,8 +101,8 @@ public class TaskServiceImpl implements TaskService {
      * 查询个人任务详情
      */
     @Override
-    public BaseResp<List> queryMyTaskById(String taskCardId){
-        List<Task> allTesk = taskMapper.queryMyTaskById(taskCardId);
+    public BaseResp<List> queryMyTaskById(String taskCardId,Integer groupId){
+        List<Task> allTesk = taskMapper.queryMyTaskById(taskCardId,groupId);
         if(allTesk == null) {
           return new BaseResp<>(ResultStatus.FAIL);
         }else{
@@ -111,8 +111,8 @@ public class TaskServiceImpl implements TaskService {
     }
     //查询新增任务详情
     @Override
-    public BaseResp<List> queryNewTask(String taskCardId){
-        List<Task> newTask = taskMapper.queryNewTask(taskCardId);
+    public BaseResp<List> queryNewTask(String taskCardId,Integer groupId){
+        List<Task> newTask = taskMapper.queryNewTask(taskCardId,groupId);
         if(newTask == null) {
             return new BaseResp<>(ResultStatus.FAIL);
         }else{
@@ -121,8 +121,8 @@ public class TaskServiceImpl implements TaskService {
     }
     //查询其它任务详情
     @Override
-    public BaseResp<List> queryOtherTask(String taskCardId){
-        List<Task> otherTask = taskMapper.queryOtherTask(taskCardId);
+    public BaseResp<List> queryOtherTask(String taskCardId,Integer groupId){
+        List<Task> otherTask = taskMapper.queryOtherTask(taskCardId,groupId);
         if(otherTask == null) {
             return new BaseResp<>(ResultStatus.FAIL);
         }else{

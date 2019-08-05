@@ -46,8 +46,8 @@ public class TaskController {
      * 得到个人任务列表
      */
     @GetMapping("/getTaskList")
-    public BaseResp<List> getTaskList(String taskCardId){
-        return  taskService.queryMyTaskById(taskCardId);
+    public BaseResp<List> getTaskList(String taskCardId,Integer groupId){
+        return  taskService.queryMyTaskById(taskCardId,groupId);
 //        Map<String, Object> modleMap = new HashMap<>();
 //        List<Task> task = taskService.queryMyTaskById(taskCardid);
 //        return new BaseResp<>(ResultStatus.SUCCESS,task);
@@ -60,14 +60,14 @@ public class TaskController {
     }
     //查询新增任务（可进行拒绝或者点击开始操作）
     @GetMapping("/getNewTask")
-    public BaseResp<List> getNewTask(String taskCardId){
-        return taskService.queryNewTask(taskCardId);
+    public BaseResp<List> getNewTask(String taskCardId,Integer groupId){
+        return taskService.queryNewTask(taskCardId,groupId);
     }
 
     //查询进行、过期、拒绝任务
     @GetMapping("/getOtherTask")
-    public BaseResp<List> getOtherTask(String taskCardId){
-        return taskService.queryOtherTask(taskCardId);
+    public BaseResp<List> getOtherTask(String taskCardId,Integer groupId){
+        return taskService.queryOtherTask(taskCardId,groupId);
     }
 
     /**

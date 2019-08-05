@@ -47,10 +47,10 @@ public interface TaskService {
      * @param taskCardId
      * @return
      */
-    BaseResp<List> queryMyTaskById(String taskCardId);
+    BaseResp<List> queryMyTaskById(String taskCardId,Integer groupId);
 
-    BaseResp<List> queryNewTask(String taskCardId);
-    BaseResp<List> queryOtherTask(String taskCardId);
+    BaseResp<List> queryNewTask(String taskCardId,Integer groupId);
+    BaseResp<List> queryOtherTask(String taskCardId,Integer groupId);
     /**
      * 查询日志信息
      * @param groupId
