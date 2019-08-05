@@ -103,6 +103,7 @@ public class ScheduleController {
             //访问路径（uri）
             scheduleLog.setFileUri(CommonConstants.REPORTING_PATH + filename);
             log.info("上报文件保存路径："+saveFile.getAbsolutePath());
+            log.info("上报文件保存路径2："+ FileUtil.getHomePath() + CommonConstants.REPORTING_PATH + filename);
             log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + filename);
         }else if(logType == 4){
             scheduleLog.setLogRemarks(logRemarks);
