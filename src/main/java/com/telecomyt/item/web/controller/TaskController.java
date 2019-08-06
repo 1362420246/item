@@ -86,7 +86,7 @@ public class TaskController {
             log.info("上报文件保存路径："+saveTaskLogFile.getAbsolutePath());
             log.info("上报文件保存路径2："+ FileUtil.getHomePath() + CommonConstants.REPORTING_PATH + taskLogFilename);
             log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + taskLogFilename);
-        }else if(logType == 4){
+        }else if(logType == 2){
             taskLog.setFileTagging(fileTagging);
         }else{
             return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"上报失败，上报类型错误");
