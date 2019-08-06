@@ -44,6 +44,5 @@ public class TaskDto implements Serializable {
     @NotNull(message = "任务主从关系不能为空")
     private Integer taskMain;
 
-    private String taskFile;
 
 }

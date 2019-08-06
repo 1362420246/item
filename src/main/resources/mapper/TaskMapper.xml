@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.telecomyt.item.web.mapper.TaskMapper">
-    <!--新增组-->
+    <!--新增组，处理附件-->
     <insert id="insertGroup" useGeneratedKeys="true" keyProperty="groupId" keyColumn="group_id" parameterType="com.telecomyt.item.entity.TaskGroup">
-        insert into db_sheet_group (creator_cardid,sheet_title,sheet_describe,task_endtime) values (#{creatorCardId},#{sheetTitle},#{sheetDescribe},#{taskEndTime})
+        insert into db_sheet_group (creator_cardid,sheet_title,sheet_describe,task_endtime,group_fileurl,group_filepath) values (#{creatorCardId},#{sheetTitle},#{sheetDescribe},#{taskEndTime},#{taskFileUrl},#{taskFilePath})
     </insert>
     <!--批量插入-->
     <insert id="insertTask" parameterType="com.telecomyt.item.entity.TaskDo">
@@ -25,7 +25,11 @@
     <!--<insert id="insertTask" useGeneratedKeys="true" keyProperty="taskId" keyColumn="task_id" parameterType="com.telecomyt.item.entity.Task">-->
         <!--insert into db_sheet_task(task_cardid,group_id,task_type,task_state,task_main,task_endtime,task_file) values (#{taskCardid},#{groupId},#{taskType},#{taskState},#{taskMain},#{taskEndTime},#{taskFile})-->
     <!--</insert>-->
-    <!--新增日志-->
+    <!--新增日志，处理上传-->
+    <insert id="insertMyLog" useGeneratedKeys="true" keyProperty="logId" keyColumn="log_id" parameterType="com.telecomyt.item.entity.TaskLog">
+        insert into db_sheet_log (group_id,log_time,log_cardid,log_type,file_path,file_url,file_tagging) values (#{groupId},#{logTime},#{logCardId},#{logType},#{logPath},#{logUrl},#{fileTagging})
+    </insert>
+    <!--新增日志，未处理上传-->
     <insert id="insertLog" useGeneratedKeys="true" keyProperty="logId" keyColumn="log_id" parameterType="com.telecomyt.item.entity.TaskLog">
         insert into db_sheet_log (group_id,log_time,log_picture,log_cardid,log_type) values (#{groupId},#{logTime},#{logPicture},#{logCardId},#{logType})
     </insert>
@@ -63,7 +67,7 @@
     </select>
     <!--查询日志-->
     <select id="queryMyTaskLogById" resultType="com.telecomyt.item.entity.TaskLog">
-        select group_id,log_time,log_picture,log_cardid from db_sheet_log where group_id = #{groupId}
+        select group_id,log_time,log_type,log_cardid,file_tagging,group_fileurl,group_filepath, from db_sheet_log where group_id = #{groupId}
     </select>
     <!--更改任务状态 0 任务未开始 1 任务已开始 2 任务已结束 3 任务超时 4 任务已拒绝-->
     <update id="updateMyTaskByIdAndGroupId" parameterType="com.telecomyt.item.entity.Task">

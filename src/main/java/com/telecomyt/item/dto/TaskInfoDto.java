@@ -3,6 +3,7 @@ package com.telecomyt.item.dto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * @Author ZhangSF
@@ -19,6 +20,5 @@ public class TaskInfoDto implements Serializable {
     private Integer taskType;
     private Integer taskState;
     private Integer taskMain;
-    private Integer taskFile;
-    private Integer taskEndtime;
+    private LocalDateTime taskEndtime;
 }

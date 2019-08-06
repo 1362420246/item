@@ -5,6 +5,9 @@ import com.telecomyt.item.dto.TaskDto;
 import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.Task;
 import com.telecomyt.item.entity.TaskLog;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +24,7 @@ public interface TaskService {
      * @param taskDto
      * @return
      */
-    BaseResp<String> addTask(TaskDto taskDto);
+    BaseResp<String> addTask(TaskDto taskDto,MultipartFile grouptaskFile) throws IOException;
 //    /**
 //     *
 //     */
@@ -41,6 +44,7 @@ public interface TaskService {
      * @return
      */
     BaseResp<String> insertLog(Integer groupId, Date logTime, String logPicture, String logCardId,Integer logType);
+    BaseResp<String> insertMyLog(TaskLog taskLog);
 
     /**
      * 查询个人任务列表

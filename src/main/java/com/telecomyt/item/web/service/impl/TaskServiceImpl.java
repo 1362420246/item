@@ -2,20 +2,22 @@
 
 package com.telecomyt.item.web.service.impl;
 
+import com.telecomyt.item.constant.CommonConstants;
 import com.telecomyt.item.dto.TaskDto;
 import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.*;
 import com.telecomyt.item.enums.ResultStatus;
+import com.telecomyt.item.utils.FileUtil;
 import com.telecomyt.item.web.mapper.TaskMapper;
 import com.telecomyt.item.web.service.TaskService;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-
+import org.springframework.web.multipart.MultipartFile;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,8 +41,30 @@ public class TaskServiceImpl implements TaskService {
      * @return
      */
     @Override
-    public BaseResp<String> addTask(TaskDto taskDto) {
+    public BaseResp<String> addTask(TaskDto taskDto,MultipartFile groupTaskFile) throws IOException {
         TaskGroup taskGroup = new TaskGroup(taskDto);
+        if(groupTaskFile.isEmpty()) {
+            return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"上传失败，请选择文件");
+        }
+        //上传文件路径
+        String taskGroupFilePath = FileUtil.getHomePath() + CommonConstants.REPORTING_PATH ;
+        //上传文件名
+        String groupFileName = groupTaskFile.getOriginalFilename();
+        File GroupFilePath = new File(taskGroupFilePath,groupFileName);
+        //判断路径是否存在，如果不存在就创建一个
+        if (!GroupFilePath.getParentFile().exists()) {
+            GroupFilePath.getParentFile().mkdirs();
+        }
+        //将上传文件保存到一个目标文件当中
+        File  TaskGroupFile = new File(taskGroupFilePath + groupFileName);
+        groupTaskFile.transferTo(TaskGroupFile);
+        //存储的路径（相对路径）
+        taskGroup.setTaskFilePath(CommonConstants.REPORTING_PATH + groupFileName);
+        //访问路径（uri）
+        taskGroup.setTaskFileUrl(CommonConstants.REPORTING_PATH + groupFileName);
+        log.info("上报文件保存路径："+TaskGroupFile.getAbsolutePath());
+        log.info("上报文件保存路径2："+ FileUtil.getHomePath() + CommonConstants.REPORTING_PATH + groupFileName);
+        log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + groupFileName);
         int addTaskGroupResult = taskMapper.insertGroup(taskGroup);
         if(addTaskGroupResult > 0){
             Integer groupId = taskGroup.getGroupId();
@@ -50,12 +74,11 @@ public class TaskServiceImpl implements TaskService {
             LocalDateTime  taskEndTime = taskDto.getTaskEndTime();
             List<String> taskCardIds = taskDto.getTaskCardIds();
             List<String> taskCopierIds = taskDto.getTaskCopierIds();
-            String taskFile = taskDto.getTaskFile();
             if(taskCardIds == null){
                 taskCardIds = new ArrayList<>();
             }
 
-            TaskDo executorTaskDo = TaskDo.builder().taskCardIds(taskCardIds).groupId(groupId).taskType(1).taskState(taskState).taskMain(taskMain).taskEndTime(taskEndTime).taskFile(taskFile).build();
+            TaskDo executorTaskDo = TaskDo.builder().taskCardIds(taskCardIds).groupId(groupId).taskType(1).taskState(taskState).taskMain(taskMain).taskEndTime(taskEndTime).build();
             int addExecutorTaskResult = taskMapper.insertTask(executorTaskDo);
             if(addExecutorTaskResult == 0){
                 //TODO 回滚
@@ -64,7 +87,7 @@ public class TaskServiceImpl implements TaskService {
                 return new BaseResp<>(ResultStatus.FAIL);
             }
             //TODO
-            TaskDo copierTaskDo = TaskDo.builder().taskCopierIds(taskCopierIds).groupId(groupId).taskType(2).taskState(taskState).taskMain(taskMain).taskEndTime(taskEndTime).taskFile(taskFile).build();
+            TaskDo copierTaskDo = TaskDo.builder().taskCopierIds(taskCopierIds).groupId(groupId).taskType(2).taskState(taskState).taskMain(taskMain).taskEndTime(taskEndTime).build();
             int addTaskCoperResult = taskMapper.insertCoperTask(copierTaskDo);
             if(addTaskCoperResult == 0){
                 //TODO 回滚
@@ -96,6 +119,63 @@ public class TaskServiceImpl implements TaskService {
         }
 
     }
+
+    /**
+     * 新增日志（处理上传）
+     * @param taskLog
+     * @return
+     */
+
+
+    @Override
+    public BaseResp<String> insertMyLog(TaskLog taskLog) {
+        int resultNewLog = taskMapper.insertMyLog(taskLog);
+        if(resultNewLog > 0){
+            return new BaseResp<>(ResultStatus.SUCCESS);
+        }
+        return new BaseResp<>(ResultStatus.FAIL);
+    }
+//    @Override
+//        public  BaseResp<String> insertMyLog(Integer groupId, Date logTime, MultipartFile logPicture, String logCardId, Integer logType,String fileTagging) throws IOException {
+//        if(logType == null || groupId == null || logCardId == null ){
+//            return new BaseResp<>(ResultStatus.INVALID_PARAM);
+//        }
+//        TaskLog taskLog = TaskLog.builder().groupId(groupId).logCardId(logCardId).logType(logType).build();
+//        if(logType == 0 || logType == 1){
+//            //如果文件不为空，写入上传路径
+//            if(logPicture.isEmpty()) {
+//                return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"上报失败，请选择文件");
+//            }
+//            //上传文件路径
+//            String Logpath = FileUtil.getHomePath() + CommonConstants.REPORTING_PATH ;
+//            //上传文件名
+//            String filename = logPicture.getOriginalFilename();
+//            File filepath = new File(Logpath,filename);
+//            //判断路径是否存在，如果不存在就创建一个
+//            if (!filepath.getParentFile().exists()) {
+//                filepath.getParentFile().mkdirs();
+//            }
+//            //将上传文件保存到一个目标文件当中
+//            File saveLogFile = new File(Logpath + filename);
+//            logPicture.transferTo(saveLogFile);
+//            //存储的路径（相对路径）
+//            taskLog.setLogPath(CommonConstants.REPORTING_PATH + filename);
+//            //访问路径（uri）
+//            taskLog.setLogUrl(CommonConstants.REPORTING_PATH + filename);
+//            log.info("上报文件保存路径："+saveLogFile.getAbsolutePath());
+//            log.info("上报文件保存路径2："+ FileUtil.getHomePath() + CommonConstants.REPORTING_PATH + filename);
+//            log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + filename);
+//        }else if(logType == 4){
+//            taskLog.setFileTagging(fileTagging);
+//        }else{
+//            return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"上报失败，上报类型错误");
+//        }
+//           int logResult = taskMapper.insertMyLog(taskLog);
+//        if(logResult > 0){
+//            return new BaseResp<>(ResultStatus.SUCCESS);
+//        }
+//        return new BaseResp<>(ResultStatus.FAIL);
+//    }
 
     /**
      * 查询个人任务详情

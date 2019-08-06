@@ -7,6 +7,7 @@
 
 package com.telecomyt.item.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,9 +24,11 @@ public class TaskLog implements Serializable {
     private String logId;
     private Integer groupId;
     private Date logTime;
-    private String logPicture;
     private String logCardId;
     private  Integer logType;
+    private String logPath;
+    private  String logUrl;
+    private  String fileTagging;
 
 
 }

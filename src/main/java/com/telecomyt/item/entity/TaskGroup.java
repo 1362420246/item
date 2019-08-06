@@ -25,7 +25,8 @@ public class TaskGroup implements Serializable {
     private String sheetTitle;
     private String sheetDescribe;
     private LocalDateTime taskEndTime;
-
+    private String taskFileUrl;
+    private String taskFilePath;
 
 
 

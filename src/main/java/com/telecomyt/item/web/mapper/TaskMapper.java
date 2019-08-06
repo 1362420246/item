@@ -23,15 +23,13 @@ import java.util.Map;
 
 public interface TaskMapper {
     /**
-     *
-
+     *x新增组
      * @return
      */
     int insertGroup(TaskGroup taskGroup);
 
     /**
-     *
-
+     *新增任务
      * @return
      */
     int insertTask(TaskDo taskDo);
@@ -52,7 +50,14 @@ public interface TaskMapper {
      * @return
      */
    int insertLog(@Param("groupId") Integer groupId, @Param("logTime") Date logTime, @Param("logPicture") String logPicture, @Param("logCardId") String logCardId,@Param("logType") Integer logType);
+
     /**
+     * 新增任务日志（处理上传）
+     * @param taskLog
+     * @return
+     */
+   int insertMyLog(TaskLog taskLog);
+   /**
      *  查询任务列表
      * @param taskCardId
      * @return
