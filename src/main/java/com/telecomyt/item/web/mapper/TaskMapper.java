@@ -73,12 +73,11 @@ public interface TaskMapper {
 
     /**
      * 下两个为查询新增任务和其他任务
-     * @param taskCardId
-     * @param groupId
-     * @return
+     * @param
+     *
      */
-   List<Task> queryNewTask(@Param("taskCardId") String taskCardId,@Param("groupId")Integer groupId);
-   List<Task>queryOtherTask(@Param("taskCardId") String taskCardId,@Param("groupId")Integer groupId);
+   List<Task> queryNewTask(@Param("taskCardId") String taskCardId);
+//   List<Task>queryOtherTask(@Param("taskCardId") String taskCardId);
     /**
      *查询任务日志
      * @param groupId
@@ -97,14 +96,17 @@ public interface TaskMapper {
      * @return
      */
     int updateMyTaskByIdAndGroupId(@Param("taskCardId") String taskCardId, @Param("groupId") Integer groupId, @Param("taskState") Integer taskState);
-
+    /**
+     * g更改任务状态（创建者）
+     */
+    int updateTaskByIdAndGroupId ( @Param("groupId") Integer groupId, @Param("taskState") Integer taskState);
     /**
      *删除任务
-     * @param taskCardId
+     * @param creatorCardId
      * @param groupId
      * @return
      */
-   int deleteTask(@Param("taskCardId") String taskCardId,@Param("groupId") Integer groupId);
+   int deleteTask(@Param("creatorCardId") String creatorCardId,@Param("groupId") Integer groupId);
 
     /**
      * 删除任务日志

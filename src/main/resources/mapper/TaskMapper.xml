@@ -125,20 +125,20 @@
           where a.group_id = b.group_id
                and a.task_cardid = #{taskCardId} and (a.task_state = 0)
     </select>
-    <!--查询其它任务列表详情-->
-    <select id="queryOtherTask" resultType="com.telecomyt.item.entity.Task">
-         select a.group_id,a.task_type,a.task_state,a.task_endtime,b.task_creattime,
-               b.sheet_title,b.sheet_describe
-          from db_sheet_task a,db_sheet_group b
-          where
-                a.group_id = b.group_id
-               and a.task_cardid = #{taskCardId} and (task_state = 1 or task_state = 2)
-    </select>
+    <!--&lt;!&ndash;查询其它任务列表详情&ndash;&gt;-->
+    <!--<select id="queryOtherTask" resultType="com.telecomyt.item.entity.Task">-->
+         <!--select a.group_id,a.task_type,a.task_state,a.task_endtime,b.task_creattime,-->
+               <!--b.sheet_title,b.sheet_describe-->
+          <!--from db_sheet_task a,db_sheet_group b-->
+          <!--where-->
+                <!--a.group_id = b.group_id-->
+               <!--and a.task_cardid = #{taskCardId} and (task_state = 1 or task_state = 2)-->
+    <!--</select>-->
     <!--查询日志-->
     <select id="queryMyTaskLogById" resultType="com.telecomyt.item.entity.TaskLog">
         select group_id,log_time,log_type,log_cardid,file_url,file_tagging from db_sheet_log where group_id = #{groupId}
     </select>
-    <!--更改任务状态 0 任务未开始 1 任务已开始 2 任务已结束 3 任务超时 4 任务已拒绝-->
+    <!--更改个人任务状态 -->
     <update id="updateMyTaskByIdAndGroupId" parameterType="com.telecomyt.item.entity.Task">
         update db_sheet_task
         <set>
@@ -146,9 +146,17 @@
         </set>
         where task_cardid=#{taskCardId} and group_id=#{groupId}
     </update>
+    <!--更改任务状态（创建人修改） -->
+    <update id="updateTaskByIdAndGroupId" parameterType="com.telecomyt.item.entity.Task">
+        update db_sheet_task
+        <set>
+            <if test="taskState!=null">task_state=#{taskState},</if>
+        </set>
+        where group_id=#{groupId}
+    </update>
     <!--删除任务-->
     <delete id="deleteTask">
-    delete from db_sheet_task where task_cardid=#{taskCardId} and group_id=#{groupId}
+    delete from db_sheet_group where creator_cardid=#{creatorCardId} and group_id=#{groupId}
     </delete>
     <!--删除任务日志-->
     <delete id="deleteTaskLog">

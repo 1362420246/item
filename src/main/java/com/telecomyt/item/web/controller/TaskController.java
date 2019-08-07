@@ -122,24 +122,24 @@ public class TaskController {
     /**
      * 查询新增任务（可进行拒绝或者点击开始操作）
      * @param taskCardId
-     * @param groupId
+     * @param
      * @return
      */
     @GetMapping("/getNewTask")
-    public BaseResp<List> getNewTask(String taskCardId,Integer groupId){
-        return taskService.queryNewTask(taskCardId,groupId);
+    public BaseResp<List> getNewTask(String taskCardId ){
+        return taskService.queryNewTask(taskCardId);
     }
 
-    /**
-     * /查询进行、过期、拒绝任务
-     * @param taskCardId
-     * @param groupId
-     * @return
-     */
-    @GetMapping("/getOtherTask")
-    public BaseResp<List> getOtherTask(String taskCardId,Integer groupId){
-        return taskService.queryOtherTask(taskCardId,groupId);
-    }
+//    /**
+//     * /查询进行、过期、拒绝任务
+//     * @param taskCardId
+//     * @param
+//     * @return
+//     */
+//    @GetMapping("/getOtherTask")
+//    public BaseResp<List> getOtherTask(String taskCardId ){
+//        return taskService.queryOtherTask(taskCardId);
+//    }
 
     /**
      * 查询任务日志
@@ -156,13 +156,22 @@ public class TaskController {
     public BaseResp<String> updateMyTaskState (String taskCardId, Integer groupId, Integer taskState) {
         return taskService.updateMyTaskByIdAndGroupId(taskCardId, groupId, taskState);
     }
-
+    /**
+     * 人物创建人员结束任务
+     */
+    /**
+     * 修改个人在任务中的状态(执行人修改)
+     */
+    @PutMapping("/updateTaskState")
+    public BaseResp<String> updateTaskState (  Integer groupId, Integer taskState) {
+        return taskService.updateTaskByIdAndGroupId( groupId, taskState);
+    }
     /**
      * 删除任务同时删除日志
      */
     @DeleteMapping("/deleteMyTask")
-    public BaseResp<String> deleteMyTask(String taskCardId,Integer groupId){
-        return taskService.deleteTask(taskCardId,groupId);
+    public BaseResp<String> deleteMyTask(String creatorCardId,Integer groupId){
+        return taskService.deleteTask(creatorCardId,groupId);
     }
 
 }

@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 
 @Data
 public class TaskInfoDto implements Serializable {
-
     private static final long serialVersionUID = -8717474322435171318L;
     private String taskCardId;
     private Integer groupId;

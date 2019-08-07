@@ -63,18 +63,18 @@ public interface TaskService {
     /**
      * 查询新增加任务
      * @param taskCardId
-     * @param groupId
+     * @param
      * @return
      */
-    BaseResp<List> queryNewTask(String taskCardId,Integer groupId);
+    BaseResp<List> queryNewTask(String taskCardId);
 
-    /**
-     * 查询过期、拒绝、进行中任务
-     * @param taskCardId
-     * @param groupId
-     * @return
-     */
-    BaseResp<List> queryOtherTask(String taskCardId,Integer groupId);
+//    /**
+//     * 查询过期、拒绝、进行中任务
+//     * @param taskCardId
+//     * @param
+//     * @return
+//     */
+//    BaseResp<List> queryOtherTask(String taskCardId);
     /**
      * 查询日志信息
      * @param groupId
@@ -91,14 +91,18 @@ public interface TaskService {
      * @return
      */
     BaseResp<String> updateMyTaskByIdAndGroupId(String taskCardId, Integer groupId, Integer taskState);
-
     /**
+     * 更改任务状态（创建者）
+     */
+    BaseResp<String> updateTaskByIdAndGroupId( Integer groupId, Integer taskState);
+    /**
+     *
      * 删除任务
-     * @param taskCardId
+     * @param creatorCardId
      * @param groupId
      * @return
      */
-    BaseResp<String> deleteTask(String taskCardId, Integer groupId);
+    BaseResp<String> deleteTask(String creatorCardId, Integer groupId);
 
 
 }

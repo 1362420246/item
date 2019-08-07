@@ -211,12 +211,12 @@ public class TaskServiceImpl implements TaskService {
     /**
      * 查询新增任务详情
      * @param taskCardId
-     * @param groupId
+     * @param
      * @return
      */
     @Override
-    public BaseResp<List> queryNewTask(String taskCardId,Integer groupId){
-        List<Task> newTask = taskMapper.queryNewTask(taskCardId,groupId);
+    public BaseResp<List> queryNewTask(String taskCardId){
+        List<Task> newTask = taskMapper.queryNewTask(taskCardId);
         if(newTask == null) {
             return new BaseResp<>(ResultStatus.FAIL);
         }else{
@@ -230,15 +230,15 @@ public class TaskServiceImpl implements TaskService {
      * @param groupId
      * @return
      */
-    @Override
-    public BaseResp<List> queryOtherTask(String taskCardId,Integer groupId){
-        List<Task> otherTask = taskMapper.queryOtherTask(taskCardId,groupId);
-        if(otherTask == null) {
-            return new BaseResp<>(ResultStatus.FAIL);
-        }else{
-            return new BaseResp<>(ResultStatus.SUCCESS,otherTask);
-        }
-    }
+//    @Override
+//    public BaseResp<List> queryOtherTask(String taskCardId,Integer groupId){
+//        List<Task> otherTask = taskMapper.queryOtherTask(taskCardId,groupId);
+//        if(otherTask == null) {
+//            return new BaseResp<>(ResultStatus.FAIL);
+//        }else{
+//            return new BaseResp<>(ResultStatus.SUCCESS,otherTask);
+//        }
+//    }
 
     /**
      * 任务详情
@@ -268,13 +268,29 @@ public class TaskServiceImpl implements TaskService {
         }
 
     }
+    /**
+     * 更改任务状态（创建人）
+     */
+    @Override
+    public BaseResp<String> updateTaskByIdAndGroupId( Integer groupId, Integer taskState) {
+
+        int flag = taskMapper.updateTaskByIdAndGroupId(groupId,taskState);
+        if(flag > 0){
+            return new BaseResp<>(ResultStatus.SUCCESS);
+        }else{
+            return new BaseResp<>(ResultStatus.FAIL);
+
+        }
+
+    }
+
 
     /**
      * 删除任务
      */
     @Override
-    public BaseResp<String> deleteTask(String taskCardId,Integer groupId) {
-        int taskResult = taskMapper.deleteTask(taskCardId, groupId);
+    public BaseResp<String> deleteTask(String creatorCardId,Integer groupId) {
+        int taskResult = taskMapper.deleteTask(creatorCardId, groupId);
         if(taskResult > 0){
            int LogResult = taskMapper.deleteTaskLog(groupId);
            if(LogResult > 0){
