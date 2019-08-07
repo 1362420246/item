@@ -2,6 +2,7 @@ package com.telecomyt.item.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -26,18 +27,18 @@ public class TaskDto implements Serializable {
    @NotNull(message = "任务描述不能为空")
    private String sheetDescribe;
 
-//   @NotNull (message = "任务结束时间不能为空")
-//   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+   @NotNull (message = "任务结束时间不能为空")
+   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
    private LocalDateTime taskEndTime;
 
     /**
      *   * 关联人身份证
      */
-   // @NotNull(message = "任务执行人不能为空")
+    @NotNull(message = "任务执行人不能为空")
     private List<String> taskCardIds;
     private List<String> taskCopierIds;
     private Integer taskType;
-    //@NotNull(message = "任务状态不能为空")
+    @NotNull(message = "任务状态不能为空")
     private Integer taskState;
 //    @NotNull(message = "任务创建时间不能为空")
 //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

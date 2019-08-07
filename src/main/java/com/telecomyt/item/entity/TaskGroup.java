@@ -30,8 +30,6 @@ public class TaskGroup implements Serializable {
     private Integer taskType;
     private LocalDateTime taskCreatTime;
 
-
-
     public  TaskGroup(TaskDto taskDto){
         this.creatorCardId = taskDto.getCreatorCardId();
         this.sheetDescribe = taskDto.getSheetDescribe();

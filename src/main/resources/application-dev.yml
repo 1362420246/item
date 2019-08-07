@@ -44,7 +44,7 @@ spring:
       host: 127.0.0.1
       port: 6379
       # 密码 没有则可以不填
-      password:
+      password: 123456
       # 如果使用的jedis 则将lettuce改成jedis即可
       jedis:
         pool:

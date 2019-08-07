@@ -34,7 +34,6 @@ import java.util.List;
  * @Date 2019/8/2
  * @Version 1.0
  */
-
 @Slf4j
 @Service
 @Transactional
@@ -51,45 +50,36 @@ public class TaskServiceImpl implements TaskService {
      * @param taskDto
      * @return
      */
-//    ,MultipartFile groupTaskFile  throws IOException
     @Override
     public BaseResp<String> addTask(TaskDto taskDto, MultipartFile groupTaskFile) throws IOException {
         TaskGroup taskGroup = new TaskGroup(taskDto);
-
-        if(groupTaskFile.isEmpty()) {
-            return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"上传失败，请选择文件");
+        if(groupTaskFile != null && !groupTaskFile.isEmpty()) {
+            //上传文件路径
+            String taskGroupFilePath = FileUtil.getHomePath() + CommonConstants.REPORTING_PATH ;
+            //上传文件名
+            String groupFileName = groupTaskFile.getOriginalFilename();
+            File groupFilePath = new File(taskGroupFilePath,groupFileName);
+            //判断路径是否存在，如果不存在就创建一个
+            if (!groupFilePath.getParentFile().exists()) {
+                groupFilePath.getParentFile().mkdirs();
+            }
+            //将上传文件保存到一个目标文件当中
+            File  taskGroupFile = new File(taskGroupFilePath + groupFileName);
+            groupTaskFile.transferTo(taskGroupFile);
+            //存储的路径（相对路径）
+            taskGroup.setTaskFilePath(CommonConstants.REPORTING_PATH + groupFileName);
+            //访问路径（uri）
+            taskGroup.setTaskFileUrl(CommonConstants.REPORTING_PATH + groupFileName);
+            log.info("上报文件保存路径："+taskGroupFile.getAbsolutePath());
+            log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + groupFileName);
         }
-        //上传文件路径
-        String taskGroupFilePath = FileUtil.getHomePath() + CommonConstants.REPORTING_PATH ;
-        //上传文件名
-        String groupFileName = groupTaskFile.getOriginalFilename();
-        File GroupFilePath = new File(taskGroupFilePath,groupFileName);
-        //判断路径是否存在，如果不存在就创建一个
-        if (!GroupFilePath.getParentFile().exists()) {
-            GroupFilePath.getParentFile().mkdirs();
-        }
-        //将上传文件保存到一个目标文件当中
-        File  TaskGroupFile = new File(taskGroupFilePath + groupFileName);
-        groupTaskFile.transferTo(TaskGroupFile);
-        //存储的路径（相对路径）
-        taskGroup.setTaskFilePath(CommonConstants.REPORTING_PATH + groupFileName);
-        //访问路径（uri）
-        taskGroup.setTaskFileUrl(CommonConstants.REPORTING_PATH + groupFileName);
-        log.info("上报文件保存路径："+TaskGroupFile.getAbsolutePath());
-        log.info("上报文件保存路径2："+ FileUtil.getHomePath() + CommonConstants.REPORTING_PATH + groupFileName);
-        log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + groupFileName);
         int addTaskGroupResult = taskMapper.insertGroup(taskGroup);
         if(addTaskGroupResult > 0){
             Integer groupId = taskGroup.getGroupId();
-            Integer taskType = taskDto.getTaskType();
             Integer taskState = taskDto.getTaskState();
             LocalDateTime  taskEndTime = taskDto.getTaskEndTime();
             List<String> taskCardIds = taskDto.getTaskCardIds();
             List<String> taskCopierIds = taskDto.getTaskCopierIds();
-            if(taskCardIds == null){
-                taskCardIds = new ArrayList<>();
-            }
-
             TaskDo executorTaskDo = TaskDo.builder().taskCardIds(taskCardIds).groupId(groupId).taskType(1).taskState(taskState).taskEndTime(taskEndTime).build();
             int addExecutorTaskResult = taskMapper.insertTask(executorTaskDo);
             if(addExecutorTaskResult == 0){
@@ -97,12 +87,14 @@ public class TaskServiceImpl implements TaskService {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return new BaseResp<>(ResultStatus.FAIL);
             }
-            TaskDo copierTaskDo = TaskDo.builder().taskCopierIds(taskCopierIds).groupId(groupId).taskType(2).taskState(taskState).taskEndTime(taskEndTime).build();
-            int addTaskCoperResult = taskMapper.insertCoperTask(copierTaskDo);
-            if(addTaskCoperResult == 0){
-                log.info("新增任务抄送人失败。");
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                //return new BaseResp<>(ResultStatus.FAIL);
+            if(taskCopierIds != null && taskCopierIds.size() > 0){
+                TaskDo copierTaskDo = TaskDo.builder().taskCopierIds(taskCopierIds).groupId(groupId).taskType(2).taskState(taskState).taskEndTime(taskEndTime).build();
+                int addTaskCoperResult = taskMapper.insertCoperTask(copierTaskDo);
+                if(addTaskCoperResult == 0){
+                    log.info("新增任务抄送人失败。");
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return new BaseResp<>(ResultStatus.FAIL);
+                }
             }
             return new BaseResp<>(ResultStatus.SUCCESS);
         }else {
@@ -133,8 +125,6 @@ public class TaskServiceImpl implements TaskService {
      * @param taskLog
      * @return
      */
-
-
     @Override
     public BaseResp<String> insertMyLog(TaskLog taskLog) {
         int resultNewLog = taskMapper.insertMyLog(taskLog);
