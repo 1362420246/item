@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>日志上报</title>
+</head>
+<body>
+<h2>文件上传</h2>
+    <form action="taskController/insertNewTask" enctype="multipart/form-data" method="post">
+    <table>
+        <tr>
+            <td>logType类型:</td>
+            <td><label>
+                <input type="text" name="groupId">
+            </label></td>
+        </tr>
+        <tr>
+            <td>groupId:</td>
+            <td><label>
+                <input type="text" name="creatorCardId">
+            </label></td>
+        </tr>
+        <tr>
+            <td>operationCardid:</td>
+            <td><label>
+                <input type="text" name="sheetTitle">
+            </label></td>
+        </tr>
+        <tr>
+            <td>描述:</td>
+            <td><label>
+                <input type="text" name="sheetDescribe">
+            </label></td>
+        </tr>
+		 <tr>
+            <td>请选择文件:</td>
+            <td><input type="file" name="groupTaskFile"></td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="上传"></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

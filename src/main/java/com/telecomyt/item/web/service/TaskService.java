@@ -7,7 +7,9 @@ import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.Task;
 import com.telecomyt.item.entity.TaskGroup;
 import com.telecomyt.item.entity.TaskLog;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public interface TaskService {
      * @return
      */
     //,MultipartFile grouptaskFile   throws IOException
-    BaseResp<String> addTask(TaskDto taskDto,MultipartFile groupTaskFile) throws IOException;
+    BaseResp<String> addTask(TaskDto taskDto, MultipartFile groupTaskFile) throws IOException;
 //    /**
 //     *
 //     */
