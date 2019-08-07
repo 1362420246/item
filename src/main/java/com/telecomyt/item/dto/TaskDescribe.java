@@ -30,5 +30,5 @@ public class TaskDescribe implements Serializable {
          private String  groupFileUrl;
          private LocalDateTime taskCreatTime;
          private List<TaskLog> taskLogs ;
-
+         private String sheetTitle;
 }

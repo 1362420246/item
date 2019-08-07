@@ -2,10 +2,7 @@
 
 package com.telecomyt.item.web.mapper;
 
-import com.telecomyt.item.dto.TaskDescribe;
-import com.telecomyt.item.dto.TaskIdState;
-import com.telecomyt.item.dto.TaskSelect;
-import com.telecomyt.item.dto.TaskVo;
+import com.telecomyt.item.dto.*;
 import com.telecomyt.item.entity.*;
 import org.apache.ibatis.annotations.Param;
 
@@ -88,6 +85,10 @@ public interface TaskMapper {
      * 查询任务详情
      */
     TaskDescribe queryTaskDetailed(Integer groupId);
+    /**
+     * g更改任务
+     */
+    int updateTask(TaskGroup taskGroup);
     /**
      *改变个人任务状态
      * @param taskCardId

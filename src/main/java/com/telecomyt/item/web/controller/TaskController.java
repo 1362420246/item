@@ -5,6 +5,7 @@ import com.telecomyt.item.constant.CommonConstants;
 import com.telecomyt.item.dto.TaskDescribe;
 import com.telecomyt.item.dto.TaskDto;
 import com.telecomyt.item.dto.resp.BaseResp;
+import com.telecomyt.item.entity.TaskGroup;
 import com.telecomyt.item.entity.TaskLog;
 import com.telecomyt.item.enums.ResultStatus;
 import com.telecomyt.item.utils.BeanValidator;
@@ -39,9 +40,9 @@ public class TaskController {
      */
     //,MultipartFile grouptaskFile  throws IOException
     @PostMapping("/insertNewTask")
-    public BaseResp<String> insertNewTask(@RequestBody TaskDto taskDto){
+    public BaseResp<String> insertNewTask(TaskDto taskDto,MultipartFile groupTaskFile) throws IOException {
         BeanValidator.check(taskDto);
-        return taskService.addTask(taskDto);
+        return taskService.addTask(taskDto,groupTaskFile);
     }
 
     /**
@@ -147,6 +148,14 @@ public class TaskController {
     @GetMapping("/getMyTaskLog")
     public BaseResp<List> queryMyTaskLog(Integer groupId){
         return taskService.queryMyTaskLog(groupId);
+    }
+
+    /**
+     * 修改任务
+     */
+    @PutMapping("/updateTask")
+    public BaseResp<String> updateTask (TaskGroup taskGroup) {
+        return taskService.updateTask(taskGroup);
     }
 
     /**
