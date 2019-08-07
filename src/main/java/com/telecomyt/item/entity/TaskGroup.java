@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ public class TaskGroup implements Serializable {
     private String creatorCardId;
     private String sheetTitle;
     private String sheetDescribe;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime taskEndTime;
     private String taskFileUrl;
     private String taskFilePath;
