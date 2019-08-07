@@ -10,6 +10,7 @@ import com.telecomyt.item.utils.BeanValidator;
 import com.telecomyt.item.utils.FileUtil;
 import com.telecomyt.item.web.service.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 日程控制层
@@ -90,10 +92,17 @@ public class ScheduleController {
             String path = FileUtil.getHomePath() + CommonConstants.REPORTING_PATH ;
             //上传文件名
             String filename = file.getOriginalFilename();
+            if(StringUtils.isEmpty(filename)){
+                filename = UUID.randomUUID().toString();
+            }
             File filepath = new File(path,filename);
             //判断路径是否存在，如果不存在就创建一个
             if (!filepath.getParentFile().exists()) {
-                filepath.getParentFile().mkdirs();
+                boolean mkResult = filepath.getParentFile().mkdirs();
+                if(!mkResult){
+                    log.info("路径[{}]创建失败",filepath.getParentFile().toString());
+                    return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"上报失败，上传路径不存在");
+                }
             }
             //将上传文件保存到一个目标文件当中
             File saveFile = new File(path + filename);
@@ -104,7 +113,6 @@ public class ScheduleController {
             scheduleLog.setFileUri(CommonConstants.REPORTING_PATH + filename);
             scheduleLog.setFileName(filename);
             log.info("上报文件保存路径："+saveFile.getAbsolutePath());
-            log.info("上报文件保存路径2："+ FileUtil.getHomePath() + CommonConstants.REPORTING_PATH + filename);
             log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + filename);
         }else if(logType == 4){
             scheduleLog.setLogRemarks(logRemarks);
