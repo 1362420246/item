@@ -16,7 +16,6 @@ public interface ScheduleInfoVoConverter {
     ScheduleInfoVoConverter INSTANCE = Mappers.getMapper(ScheduleInfoVoConverter.class);
 
     @Mappings({
-            @Mapping(source = "scheduleTitle", target = "title"),
             @Mapping(source = "id", target = "groupId")
     })
     ScheduleInfoVo scheduleGrouToVo (ScheduleGroup scheduleGroup);

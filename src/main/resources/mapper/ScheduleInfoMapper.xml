@@ -107,7 +107,7 @@
           g.id AS groupId,
           i.creator_cardid AS creatorCardid,
           i.affiliated_cardid AS cardid,
-          g.schedule_title AS title,
+          g.schedule_title AS scheduleTitle,
           g.schedule_describe AS scheduleDescribe,
           g.start_time AS startTime,
           g.end_time AS endTime ,
@@ -118,7 +118,9 @@
       WHERE i.affiliated_cardid = #{cardid}
       AND g.is_repeat = 0
       AND (g.start_time BETWEEN #{startTime} AND #{endTime}
-      OR g.end_Time BETWEEN #{startTime} AND #{endTime})
+      OR g.end_Time BETWEEN #{startTime} AND #{endTime}
+      OR #{startTime} BETWEEN g.start_time AND g.end_time
+      OR #{endTime} BETWEEN g.start_time AND g.end_time)
       AND i.is_delete = 0
   </select>
 

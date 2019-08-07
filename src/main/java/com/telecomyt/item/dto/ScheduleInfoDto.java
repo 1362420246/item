@@ -31,7 +31,7 @@ public class ScheduleInfoDto implements Serializable {
     /**
      * 标题
      */
-    private String title ;
+    private String scheduleTitle ;
     /**
      * 日程描述
      */

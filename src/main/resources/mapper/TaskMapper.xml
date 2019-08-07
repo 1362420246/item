@@ -158,21 +158,17 @@
     <!--按照身份证和时间去查询任务-->
     <select id="getTaskByCardIdAndDate" resultType="com.telecomyt.item.dto.TaskVo">
         SELECT
-            a.group_id,
-            a.task_type,
-            a.task_state,
-            a.task_main,
-            a.task_file,
-            a.task_endtime,
+            b.group_id,
+            b.task_endtime,
             b.sheet_title ,
-            b.sheet_describe
+            b.sheet_describe,
             b.task_creattime
         FROM
-            db_sheet_task a,
-            db_sheet_group b
-        WHERE a.group_id = b.group_id
-        AND (a.task_cardid = #{cardid} or a.task_copierid = #{cardid})
-        AND a.task_endtime BETWEEN #{startTime} AND #{endTime}
+            db_sheet_task a RIGHT join db_sheet_group b
+			on  a.group_id = b.group_id
+        WHERE
+	       (a.task_cardid = #{cardid} or a.task_copierid = #{cardid} or b.creator_cardid = #{cardid} )
+           AND b.task_endtime BETWEEN #{startTime} AND #{endTime}
      </select>
 
 

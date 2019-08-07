@@ -79,14 +79,64 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     /**
      * 查询日程列表
-     * TODO 存在问题先使用不重复
+     */
+    @Override
+    public BaseResp<Map> queryScheduleList(ScheduleListQuery scheduleListQuery) {
+        Map<String, Collection> resultMap = Maps.newHashMap();
+        //查询任务
+        List<TaskVo> taskList = taskMapper.getTaskByCardIdAndDate(scheduleListQuery.getCardid(),scheduleListQuery.getStartTime(),scheduleListQuery.getEndTime());
+        resultMap.put("taskList",taskList);
+        //不重复的  必查 按时间查
+        List<ScheduleInfoDto> noRepeatList = scheduleInfoMapper.queryScheduleListByNoRepeat(scheduleListQuery);
+        resultMap.put("noRepeatList",noRepeatList);
+        //哪些日子有  ： 只有月查询时候
+        Set<String> calendarSet = Sets.newTreeSet();
+        if(scheduleListQuery.getDateType() == 3){
+            //查询的范围
+            List<String> daysByDifference = DateUtil.getDaysByDifference(scheduleListQuery.getStartTime(), scheduleListQuery.getEndTime());
+                //如果有不重复
+                if(noRepeatList.size() > 0){
+                    Set<String> dnoRepeatSets = Sets.newHashSet();
+                    noRepeatList.forEach( info -> {
+                        LocalDateTime startTime = info.getStartTime();
+                        LocalDateTime endTime = info.getEndTime();
+                        List<String> noRepeatDates = DateUtil.getDaysByDifference(startTime, endTime);
+                        dnoRepeatSets.addAll(noRepeatDates);
+                    });
+                    for (String day : daysByDifference) {
+                        if (dnoRepeatSets.contains(day)) {
+                            calendarSet.add(day);
+                        }
+                    }
+                }
+                //任务
+                if(taskList.size() > 0){
+                    taskList.forEach(taskVo -> {
+                        LocalDateTime taskEndtime = taskVo.getTaskEndtime();
+                        String endStr = taskEndtime.toLocalDate().toString();
+                        calendarSet.add(endStr);
+                    });
+                }
+            }
+        resultMap.put("calendar",calendarSet);
+        return new BaseResp<>(ResultStatus.SUCCESS,resultMap);
+    }
+
+
+
+    /**
+     * 查询日程列表V2
+     * TODO 要考虑重复
      * TODO 1.周重复跨多周  月重复跨多月  即 周一到下下下周一   1号到下下下月1号
      * TODO 2.日重复 记录开始时间 + 执行时长 + 结束时间
      * TODO 3.月重复1-31号 2月咋办  是丢弃每个月没有的日期  还是加到最后一天
      * TODO 4.重复的时候 也要到开始时间才开始重复  ，不论日重复 周重复 月重复
+     *
+     *
+     * 关于重复： 记录 开始时间  + 时长
+     *
      */
-    @Override
-    public BaseResp<Map> queryScheduleList(ScheduleListQuery scheduleListQuery) {
+    public BaseResp<Map> queryScheduleListV2(ScheduleListQuery scheduleListQuery) {
         Map<String, Collection> resultMap = Maps.newHashMap();
         //查询任务
         List<TaskVo> taskList = taskMapper.getTaskByCardIdAndDate(scheduleListQuery.getCardid(),scheduleListQuery.getStartTime(),scheduleListQuery.getEndTime());
@@ -184,22 +234,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         resultMap.put("calendar",calendarSet);
         return new BaseResp<>(ResultStatus.SUCCESS,resultMap);
     }
-
-
-
-    /**
-     * 查询日程列表V2
-     * TODO 要考虑重复
-     * TODO 1.周重复跨多周  月重复跨多月  即 周一到下下下周一   1号到下下下月1号
-     * TODO 2.日重复 记录开始时间 + 执行时长 + 结束时间
-     * TODO 3.月重复1-31号 2月咋办  是丢弃每个月没有的日期  还是加到最后一天
-     * TODO 4.重复的时候 也要到开始时间才开始重复  ，不论日重复 周重复 月重复
-     *
-     *
-     * 关于重复： 记录 开始时间  + 时长
-     *
-     */
-
 
 
 

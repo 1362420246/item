@@ -21,7 +21,7 @@ public class ScheduleInfoVo implements Serializable {
     /**
      * 标题
      */
-    private String title ;
+    private String scheduleTitle ;
     /**
      * 日程描述
      */
@@ -60,5 +60,7 @@ public class ScheduleInfoVo implements Serializable {
      * 操作日志
      */
     private List<ScheduleLog> scheduleLogs;
+
+    private LocalDateTime createTime;
 
 }
