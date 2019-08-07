@@ -106,8 +106,8 @@ public class TaskController {
      * @return
      */
      @GetMapping("/getMyTaskById")
-     public  BaseResp<List> getMyTaskById(String taskCardId ,String tile){
-       return taskService.queryMyTaskById(taskCardId , tile);
+     public  BaseResp<List> getMyTaskById(String taskCardId ,String title){
+       return taskService.queryMyTaskById(taskCardId , title);
 
      }
 
