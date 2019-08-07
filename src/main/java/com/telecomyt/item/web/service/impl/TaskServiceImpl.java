@@ -56,7 +56,7 @@ public class TaskServiceImpl implements TaskService {
                 taskCardIds = new ArrayList<>();
             }
 
-            TaskDo executorTaskDo = TaskDo.builder().taskCardIds(taskCardIds).groupId(groupId).taskType(0).taskState(taskState).taskEndTime(taskEndTime).build();
+            TaskDo executorTaskDo = TaskDo.builder().taskCardIds(taskCardIds).groupId(groupId).taskType(1).taskState(taskState).taskEndTime(taskEndTime).build();
             int addExecutorTaskResult = taskMapper.insertTask(executorTaskDo);
             if(addExecutorTaskResult == 0){
                 //TODO 回滚
@@ -65,7 +65,7 @@ public class TaskServiceImpl implements TaskService {
                 return new BaseResp<>(ResultStatus.FAIL);
             }
             //TODO
-            TaskDo copierTaskDo = TaskDo.builder().taskCopierIds(taskCopierIds).groupId(groupId).taskType(1).taskState(taskState).taskEndTime(taskEndTime).build();
+            TaskDo copierTaskDo = TaskDo.builder().taskCopierIds(taskCopierIds).groupId(groupId).taskType(2).taskState(taskState).taskEndTime(taskEndTime).build();
             int addTaskCoperResult = taskMapper.insertCoperTask(copierTaskDo);
             if(addTaskCoperResult == 0){
                 //TODO 回滚

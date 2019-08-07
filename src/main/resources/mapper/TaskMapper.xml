@@ -48,11 +48,11 @@
 
     <!--查询创建任务列表-->
     <select id="queryMyCreatTask" resultType="com.telecomyt.item.dto.TaskSelect">
-        select creator_cardid,group_id,sheet_title,sheet_describe,task_endtime,task_type,task_creattime from db_sheet_group where creator_cardid = #{creatorCardId}
+        select group_id,sheet_title,sheet_describe,task_endtime,task_type,task_creattime from db_sheet_group where creator_cardid = #{creatorCardId}
     </select>
     <!--查询抄送任务列表-->
     <select id="queryMyAcceptTask" resultType="com.telecomyt.item.dto.TaskSelect">
-        select a.task_copierid,a.group_id,a.task_type,a.task_endtime,b.sheet_describe,b.sheet_title,b.task_creattime
+        select a.task_type,a.task_endtime,b.sheet_describe,b.sheet_title,b.task_creattime
         from db_sheet_task a,db_sheet_group b
         where a.group_id = b.group_id and a.task_copierid = #{taskCopierId}
     </select>

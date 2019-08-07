@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * @Author ZhangSF
@@ -21,9 +22,9 @@ public class TaskSelect implements Serializable {
     private static final long serialVersionUID = 704551513185815840L;
     private Integer groupId;
     private Integer taskType;
-    private Integer taskEndTime;
-    private Integer sheetDescribe;
-    private Integer sheetTitle;
+    private LocalDateTime taskEndTime;
+    private String sheetDescribe;
+    private String sheetTitle;
 
 
 
