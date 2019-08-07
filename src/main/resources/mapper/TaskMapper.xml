@@ -158,7 +158,7 @@
     <!--</select>-->
     <!--查询日志-->
     <select id="queryMyTaskLogById" resultType="com.telecomyt.item.entity.TaskLog">
-        select group_id,log_time,log_type,log_cardid,file_url,file_tagging from db_sheet_log where group_id = #{groupId}
+        select group_id,log_time,log_type,log_cardid,file_url,file_Name,file_tagging from db_sheet_log where group_id = #{groupId}
     </select>
     <!--更改个人任务状态 -->
     <update id="updateMyTaskByIdAndGroupId" parameterType="com.telecomyt.item.entity.Task">
