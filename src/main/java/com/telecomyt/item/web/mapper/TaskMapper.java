@@ -65,11 +65,12 @@ public interface TaskMapper {
     /**
      * 查询个人所有任务
      * @param creatorCardId
+     * @param title
      * @return
      */
-    List<TaskSelect> queryMyCreatTask(String creatorCardId);
-    List<TaskSelect> queryMyAcceptTask(String taskCopierId);
-    List<TaskSelect> queryMyCopperTask(String taskCardId);
+    List<TaskSelect> queryMyCreatTask(@Param("creatorCardId") String creatorCardId, @Param("tile")String title);
+    List<TaskSelect> queryMyAcceptTask(@Param("taskCopierId")String taskCopierId, @Param("tile")String title);
+    List<TaskSelect> queryMyCopperTask(@Param("taskCardId")String taskCardId, @Param("tile")String title);
 
     /**
      * 下两个为查询新增任务和其他任务

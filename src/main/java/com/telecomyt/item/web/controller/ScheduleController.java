@@ -53,7 +53,7 @@ public class ScheduleController {
     }
 
     /**
-     * 查询日程详情 （包含日志）
+     * 查询日程详情 （包含日志） TODO 需要文件名
      * @param groupId 组id
      */
     @ServiceLog("查询日程详情")
@@ -73,7 +73,7 @@ public class ScheduleController {
     @PostMapping("/reporting")
     public BaseResp<Object>  reporting(
             @RequestParam(value = "logType") Integer logType ,
-            @RequestParam("file") MultipartFile file ,
+            @RequestParam(value = "file" ,required = false) MultipartFile file ,
             @RequestParam("groupId") Integer groupId ,
             @RequestParam("operationCardid") String operationCardid ,
             String logRemarks ) throws IOException {

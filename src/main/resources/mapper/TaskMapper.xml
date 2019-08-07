@@ -48,19 +48,38 @@
 
     <!--查询创建任务列表-->
     <select id="queryMyCreatTask" resultType="com.telecomyt.item.dto.TaskSelect">
-        select group_id,sheet_title,sheet_describe,task_endtime,task_type,task_creattime from db_sheet_group where creator_cardid = #{creatorCardId}
+        select group_id,sheet_title,sheet_describe,task_endtime,task_type,task_creattime
+        from db_sheet_group
+        <where>
+             creator_cardid = #{creatorCardId}
+            <if test="tile != null and tile != ''">
+                and sheet_title like concat('%',#{title},'%')
+            </if>
+        </where>
     </select>
     <!--查询抄送任务列表-->
     <select id="queryMyAcceptTask" resultType="com.telecomyt.item.dto.TaskSelect">
         select a.task_type,a.task_endtime,b.sheet_describe,b.sheet_title,b.task_creattime
         from db_sheet_task a,db_sheet_group b
-        where a.group_id = b.group_id and a.task_copierid = #{taskCopierId}
+        <where>
+            a.group_id = b.group_id
+            and a.task_copierid = #{taskCopierId}
+            <if test="tile != null and tile != ''">
+                and b.sheet_title like concat('%',#{title},'%')
+            </if>
+        </where>
     </select>
     <!--查询执行任务列表-->
     <select id="queryMyCopperTask" resultType="com.telecomyt.item.dto.TaskSelect">
         select a.task_cardid,a.group_id,a.task_type,a.task_endtime,b.sheet_describe,b.sheet_title,b.task_creattime
         from db_sheet_task a,db_sheet_group b
-        where a.group_id = b.group_id and a.task_cardid = #{taskCardId}
+        <where>
+            a.group_id = b.group_id
+            and a.task_cardid = #{taskCardId}
+            <if test="tile != null and tile != ''">
+                and b.sheet_title like concat('%',#{title},'%')
+            </if>
+        </where>
     </select>
 
     <resultMap id="resultMap" type="com.telecomyt.item.dto.TaskDescribe" >

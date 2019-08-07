@@ -16,7 +16,9 @@ import com.telecomyt.item.web.mapper.ScheduleLogMapper;
 import com.telecomyt.item.web.mapper.TaskMapper;
 import com.telecomyt.item.web.service.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +46,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Autowired
     private TaskMapper taskMapper ;
+
+    @Value("${parameter.picture.ip}")
+    private String ip ;
 
     /**
      * 新增日程
@@ -252,6 +257,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<String> affiliatedCardids = scheduleInfoMapper.queryAffiliatedCardids(groupId);
         scheduleInfoVo.setAffiliatedCardids(affiliatedCardids);
         List<ScheduleLog> scheduleLogs = scheduleLogMapper.queryByGroupId(groupId);
+        scheduleLogs.stream().filter(scheduleLog -> StringUtils.isNotBlank(scheduleLog.getFileUri())).
+                forEach(scheduleLog -> scheduleLog.setFileUri( ip + scheduleLog.getFileUri()));
+        //添加名字和头像 TODO
         scheduleInfoVo.setScheduleLogs(scheduleLogs);
         return new BaseResp<>(ResultStatus.SUCCESS,scheduleInfoVo);
     }
