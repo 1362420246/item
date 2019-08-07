@@ -84,7 +84,7 @@ public interface TaskMapper {
      * @param groupId
      * @return
      */
-    List<TaskGroup> queryMyTaskLogById(Integer groupId);
+    List<TaskLog> queryMyTaskLogById(Integer groupId);
     /**
      * 查询任务详情
      */

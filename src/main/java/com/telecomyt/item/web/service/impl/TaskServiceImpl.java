@@ -145,6 +145,14 @@ public class TaskServiceImpl implements TaskService {
         if(describeResult == null){
             return new BaseResp<>(ResultStatus.FAIL);
         }
+        String groupFileUrl = describeResult.getGroupFileUrl();
+        if(StringUtils.isNotBlank(groupFileUrl)){
+            describeResult.setGroupFileUrl( ip + groupFileUrl);
+        }
+        List<TaskLog> taskLog = describeResult.getTaskLogs();
+        //上传的图片和文件添加ip
+        taskLog.stream().filter(log -> StringUtils.isNotBlank(log.getFileUrl())).
+                forEach(log -> log.setFileUrl( ip + log.getFileUrl()));
         List<TaskIdState> taskCardId = taskMapper.queryTaskCardId(groupId);
         describeResult.setTaskCardId(taskCardId);
         List<TaskIdState> taskCopierId = taskMapper.queryTaskCopierId(groupId);
@@ -246,13 +254,13 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public BaseResp<List> queryMyTaskLog(Integer groupId) {
-        List<TaskGroup> taskLog = taskMapper.queryMyTaskLogById(groupId);
+        List<TaskLog> taskLog = taskMapper.queryMyTaskLogById(groupId);
         if(taskLog == null) {
             return new BaseResp<>(ResultStatus.FAIL);
         }else{
             //上传的图片和文件添加ip
-            taskLog.stream().filter(log -> StringUtils.isNotBlank(log.getTaskFileUrl())).
-                    forEach(log -> log.setTaskFileUrl( ip + log.getTaskFileUrl()));
+            taskLog.stream().filter(log -> StringUtils.isNotBlank(log.getFileUrl())).
+                    forEach(log -> log.setFileUrl( ip + log.getFileUrl()));
             return new BaseResp<>(ResultStatus.SUCCESS,taskLog);
         }
     }

@@ -27,7 +27,8 @@
     <!--</insert>-->
     <!--新增日志，处理上传-->
     <insert id="insertMyLog" useGeneratedKeys="true" keyProperty="logId" keyColumn="log_id" parameterType="com.telecomyt.item.entity.TaskLog">
-        insert into db_sheet_log (group_id,log_time,log_cardid,log_type,file_path,file_url,file_tagging) values (#{groupId},#{logTime},#{logCardId},#{logType},#{filePath},#{fileUrl},#{fileTagging})
+        insert into db_sheet_log (group_id,log_time,log_cardid,log_type,file_path,file_url,file_Name,file_tagging)
+        values (#{groupId},#{logTime},#{logCardId},#{logType},#{filePath},#{fileUrl},#{fileName},#{fileTagging})
     </insert>
     <!--新增日志，未处理上传-->
     <insert id="insertLog" useGeneratedKeys="true" keyProperty="logId" keyColumn="log_id" parameterType="com.telecomyt.item.entity.TaskLog">
@@ -92,6 +93,7 @@
         <collection property="taskLogs" ofType="com.telecomyt.item.entity.TaskLog" >
             <id column="log_id" property="logId"/>
             <result column="file_url" property="fileUrl" />
+            <result column="file_name" property="fileName" />
             <result column="log_type" property="logType" />
             <result column="log_time" property="logTime" />
             <result column="log_cardid" property="logCardId" />
@@ -111,7 +113,8 @@
             d.log_time,
             d.log_cardid,
             d.log_type,
-            d.file_url
+            d.file_url,
+            d.file_name
         FROM
             db_sheet_group b left join
             db_sheet_log d

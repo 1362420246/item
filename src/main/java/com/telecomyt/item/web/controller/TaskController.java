@@ -85,6 +85,7 @@ public class TaskController {
             taskLog.setFilePath(CommonConstants.REPORTING_PATH + taskLogFilename);
             //访问路径（uri）
             taskLog.setFileUrl(CommonConstants.REPORTING_PATH + taskLogFilename);
+            taskLog.setFileName(taskLogFilename);
             log.info("上报文件保存路径："+saveTaskLogFile.getAbsolutePath());
             log.info("上报文件保存路径2："+ FileUtil.getHomePath() + CommonConstants.REPORTING_PATH + taskLogFilename);
             log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + taskLogFilename);

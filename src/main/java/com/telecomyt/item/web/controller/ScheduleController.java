@@ -53,7 +53,7 @@ public class ScheduleController {
     }
 
     /**
-     * 查询日程详情 （包含日志） TODO 需要文件名
+     * 查询日程详情 （包含日志）
      * @param groupId 组id
      */
     @ServiceLog("查询日程详情")
@@ -102,6 +102,7 @@ public class ScheduleController {
             scheduleLog.setFilePath(CommonConstants.REPORTING_PATH + filename);
             //访问路径（uri）
             scheduleLog.setFileUri(CommonConstants.REPORTING_PATH + filename);
+            scheduleLog.setFileName(filename);
             log.info("上报文件保存路径："+saveFile.getAbsolutePath());
             log.info("上报文件保存路径2："+ FileUtil.getHomePath() + CommonConstants.REPORTING_PATH + filename);
             log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + filename);
