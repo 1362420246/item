@@ -79,6 +79,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     /**
      * 查询日程列表
+     * TODO 存在问题先使用不重复
+     * TODO 1.周重复跨多周  月重复跨多月  即 周一到下下下周一   1号到下下下月1号
+     * TODO 2.日重复 记录开始时间 + 执行时长 + 结束时间
+     * TODO 3.月重复1-31号 2月咋办  是丢弃每个月没有的日期  还是加到最后一天
+     * TODO 4.重复的时候 也要到开始时间才开始重复  ，不论日重复 周重复 月重复
      */
     @Override
     public BaseResp<Map> queryScheduleList(ScheduleListQuery scheduleListQuery) {
@@ -179,6 +184,25 @@ public class ScheduleServiceImpl implements ScheduleService {
         resultMap.put("calendar",calendarSet);
         return new BaseResp<>(ResultStatus.SUCCESS,resultMap);
     }
+
+
+
+    /**
+     * 查询日程列表V2
+     * TODO 要考虑重复
+     * TODO 1.周重复跨多周  月重复跨多月  即 周一到下下下周一   1号到下下下月1号
+     * TODO 2.日重复 记录开始时间 + 执行时长 + 结束时间
+     * TODO 3.月重复1-31号 2月咋办  是丢弃每个月没有的日期  还是加到最后一天
+     * TODO 4.重复的时候 也要到开始时间才开始重复  ，不论日重复 周重复 月重复
+     *
+     *
+     * 关于重复： 记录 开始时间  + 时长
+     *
+     */
+
+
+
+
 
     /**
      * 查询日程详情 （包含日志）
