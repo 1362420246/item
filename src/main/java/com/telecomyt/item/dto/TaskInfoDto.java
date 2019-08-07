@@ -19,6 +19,5 @@ public class TaskInfoDto implements Serializable {
     private Integer groupId;
     private Integer taskType;
     private Integer taskState;
-    private Integer taskMain;
     private LocalDateTime taskEndtime;
 }

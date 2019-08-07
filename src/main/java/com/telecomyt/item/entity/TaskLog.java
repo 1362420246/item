@@ -21,14 +21,13 @@ import java.util.Date;
 @Builder
 public class TaskLog implements Serializable {
     private static final long serialVersionUID = -2244507047106889578L;
-    private String logId;
+    private Integer logId;
     private Integer groupId;
     private Date logTime;
     private String logCardId;
     private  Integer logType;
-    private String logPath;
-    private  String logUrl;
+    private String filePath;
+    private  String fileUrl;
     private  String fileTagging;
-
 
 }

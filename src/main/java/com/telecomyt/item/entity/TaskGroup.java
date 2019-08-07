@@ -27,6 +27,8 @@ public class TaskGroup implements Serializable {
     private LocalDateTime taskEndTime;
     private String taskFileUrl;
     private String taskFilePath;
+    private Integer taskType;
+    private LocalDateTime taskCreatTime;
 
 
 
@@ -35,5 +37,7 @@ public class TaskGroup implements Serializable {
         this.sheetDescribe = taskDto.getSheetDescribe();
         this.sheetTitle = taskDto.getSheetTitle();
         this.taskEndTime = taskDto.getTaskEndTime();
+        this .taskType = taskDto.getTaskType();
+        this.taskCreatTime = taskDto.getTaskCreatTime();
     }
 }

@@ -28,9 +28,7 @@ public class TaskDo implements Serializable {
     private Integer groupId;
     private Integer taskType;
     private Integer taskState;
-    private Integer taskMain;
     private LocalDateTime taskEndTime;
-    private String taskFile;
     private  List<String> taskCopierIds;
 
 

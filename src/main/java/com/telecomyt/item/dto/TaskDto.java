@@ -35,14 +35,12 @@ public class TaskDto implements Serializable {
      */
     @NotNull(message = "任务执行人不能为空")
     private List<String> taskCardIds;
-    @NotNull(message = "任务执行人不能为空")
     private List<String> taskCopierIds;
-    @NotNull(message = "任务类型不能为空")
     private Integer taskType;
     @NotNull(message = "任务状态不能为空")
     private Integer taskState;
-    @NotNull(message = "任务主从关系不能为空")
-    private Integer taskMain;
-
+    @NotNull(message = "任务创建时间不能为空")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime taskCreatTime;
 
 }

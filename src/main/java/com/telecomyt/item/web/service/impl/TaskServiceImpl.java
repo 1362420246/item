@@ -2,12 +2,13 @@
 
 package com.telecomyt.item.web.service.impl;
 
-import com.telecomyt.item.constant.CommonConstants;
+import com.telecomyt.item.dto.TaskDescribe;
 import com.telecomyt.item.dto.TaskDto;
+import com.telecomyt.item.dto.TaskIdState;
+import com.telecomyt.item.dto.TaskSelect;
 import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.*;
 import com.telecomyt.item.enums.ResultStatus;
-import com.telecomyt.item.utils.FileUtil;
 import com.telecomyt.item.web.mapper.TaskMapper;
 import com.telecomyt.item.web.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.web.multipart.MultipartFile;
-import java.io.File;
-import java.io.IOException;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,37 +39,16 @@ public class TaskServiceImpl implements TaskService {
      * @param taskDto
      * @return
      */
+//    ,MultipartFile groupTaskFile  throws IOException
     @Override
-    public BaseResp<String> addTask(TaskDto taskDto,MultipartFile groupTaskFile) throws IOException {
+    public BaseResp<String> addTask(TaskDto taskDto) {
         TaskGroup taskGroup = new TaskGroup(taskDto);
-        if(groupTaskFile.isEmpty()) {
-            return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"上传失败，请选择文件");
-        }
-        //上传文件路径
-        String taskGroupFilePath = FileUtil.getHomePath() + CommonConstants.REPORTING_PATH ;
-        //上传文件名
-        String groupFileName = groupTaskFile.getOriginalFilename();
-        File GroupFilePath = new File(taskGroupFilePath,groupFileName);
-        //判断路径是否存在，如果不存在就创建一个
-        if (!GroupFilePath.getParentFile().exists()) {
-            GroupFilePath.getParentFile().mkdirs();
-        }
-        //将上传文件保存到一个目标文件当中
-        File  TaskGroupFile = new File(taskGroupFilePath + groupFileName);
-        groupTaskFile.transferTo(TaskGroupFile);
-        //存储的路径（相对路径）
-        taskGroup.setTaskFilePath(CommonConstants.REPORTING_PATH + groupFileName);
-        //访问路径（uri）
-        taskGroup.setTaskFileUrl(CommonConstants.REPORTING_PATH + groupFileName);
-        log.info("上报文件保存路径："+TaskGroupFile.getAbsolutePath());
-        log.info("上报文件保存路径2："+ FileUtil.getHomePath() + CommonConstants.REPORTING_PATH + groupFileName);
-        log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + groupFileName);
+
         int addTaskGroupResult = taskMapper.insertGroup(taskGroup);
         if(addTaskGroupResult > 0){
             Integer groupId = taskGroup.getGroupId();
             Integer taskType = taskDto.getTaskType();
             Integer taskState = taskDto.getTaskState();
-            Integer taskMain = taskDto.getTaskMain();
             LocalDateTime  taskEndTime = taskDto.getTaskEndTime();
             List<String> taskCardIds = taskDto.getTaskCardIds();
             List<String> taskCopierIds = taskDto.getTaskCopierIds();
@@ -78,7 +56,7 @@ public class TaskServiceImpl implements TaskService {
                 taskCardIds = new ArrayList<>();
             }
 
-            TaskDo executorTaskDo = TaskDo.builder().taskCardIds(taskCardIds).groupId(groupId).taskType(1).taskState(taskState).taskMain(taskMain).taskEndTime(taskEndTime).build();
+            TaskDo executorTaskDo = TaskDo.builder().taskCardIds(taskCardIds).groupId(groupId).taskType(0).taskState(taskState).taskEndTime(taskEndTime).build();
             int addExecutorTaskResult = taskMapper.insertTask(executorTaskDo);
             if(addExecutorTaskResult == 0){
                 //TODO 回滚
@@ -87,7 +65,7 @@ public class TaskServiceImpl implements TaskService {
                 return new BaseResp<>(ResultStatus.FAIL);
             }
             //TODO
-            TaskDo copierTaskDo = TaskDo.builder().taskCopierIds(taskCopierIds).groupId(groupId).taskType(2).taskState(taskState).taskMain(taskMain).taskEndTime(taskEndTime).build();
+            TaskDo copierTaskDo = TaskDo.builder().taskCopierIds(taskCopierIds).groupId(groupId).taskType(1).taskState(taskState).taskEndTime(taskEndTime).build();
             int addTaskCoperResult = taskMapper.insertCoperTask(copierTaskDo);
             if(addTaskCoperResult == 0){
                 //TODO 回滚
@@ -135,6 +113,46 @@ public class TaskServiceImpl implements TaskService {
         }
         return new BaseResp<>(ResultStatus.FAIL);
     }
+
+    /**
+     * 查询与我有关的所有任务
+     * @param taskCardId
+     * @return
+     */
+    @Override
+    public BaseResp<List> queryMyTaskById(String taskCardId) {
+      List<TaskSelect> lists = new ArrayList<>();
+        String creatorCardId = taskCardId;
+        String taskCopierId = taskCardId;
+        List<TaskSelect> taskGroups = taskMapper.queryMyCreatTask(creatorCardId);
+        List<TaskSelect> copyId = taskMapper.queryMyCopperTask(taskCopierId);
+        List<TaskSelect> acceptId = taskMapper.queryMyAcceptTask(taskCardId);
+        lists.addAll(taskGroups);
+        lists.addAll(copyId);
+        lists.addAll(acceptId);
+        return new BaseResp<>(ResultStatus.SUCCESS,lists);
+    }
+
+    /**
+     * 查询任务详情
+     * @param groupId
+     * @return
+     */
+    @Override
+    public BaseResp<TaskDescribe> queryTaskDetailed(Integer groupId) {
+        TaskDescribe describeResult = taskMapper.queryTaskDetailed(groupId);
+        if(describeResult == null){
+            return new BaseResp<>(ResultStatus.FAIL);
+        }
+        List<TaskIdState> taskCardId = taskMapper.queryTaskCardId(groupId);
+        describeResult.setTaskCardId(taskCardId);
+        List<TaskIdState> taskCopierId = taskMapper.queryTaskCopierId(groupId);
+        describeResult.setTaskCopierId(taskCopierId);
+        return new BaseResp<>(ResultStatus.SUCCESS,describeResult);
+
+    }
+
+
 //    @Override
 //        public  BaseResp<String> insertMyLog(Integer groupId, Date logTime, MultipartFile logPicture, String logCardId, Integer logType,String fileTagging) throws IOException {
 //        if(logType == null || groupId == null || logCardId == null ){
@@ -177,18 +195,18 @@ public class TaskServiceImpl implements TaskService {
 //        return new BaseResp<>(ResultStatus.FAIL);
 //    }
 
-    /**
-     * 查询个人任务详情
-     */
-    @Override
-    public BaseResp<List> queryMyTaskById(String taskCardId,Integer groupId){
-        List<Task> allTesk = taskMapper.queryMyTaskById(taskCardId,groupId);
-        if(allTesk == null) {
-          return new BaseResp<>(ResultStatus.FAIL);
-        }else{
-          return new BaseResp<>(ResultStatus.SUCCESS,allTesk);
-        }
-    }
+//    /**
+//     * 查询个人任务详情
+//     */
+//    @Override
+//    public BaseResp<List> queryMyTaskById(String taskCardId,Integer groupId){
+//        List<Task> allTesk = taskMapper.queryMyTaskById(taskCardId,groupId);
+//        if(allTesk == null) {
+//          return new BaseResp<>(ResultStatus.FAIL);
+//        }else{
+//          return new BaseResp<>(ResultStatus.SUCCESS,allTesk);
+//        }
+//    }
 
     /**
      * 查询新增任务详情
@@ -226,8 +244,8 @@ public class TaskServiceImpl implements TaskService {
      * 任务详情
      */
     @Override
-    public BaseResp<TaskLog> queryMyTaskLog(Integer groupId) {
-        TaskLog taskLog = taskMapper.queryMyTaskLogById(groupId);
+    public BaseResp<List> queryMyTaskLog(Integer groupId) {
+        List<TaskGroup> taskLog = taskMapper.queryMyTaskLogById(groupId);
         if(taskLog == null) {
             return new BaseResp<>(ResultStatus.FAIL);
         }else{
@@ -284,3 +302,26 @@ public class TaskServiceImpl implements TaskService {
 
 
 }
+
+//        if(groupTaskFile.isEmpty()) {
+//            return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"上传失败，请选择文件");
+//        }
+//        //上传文件路径
+//        String taskGroupFilePath = FileUtil.getHomePath() + CommonConstants.REPORTING_PATH ;
+//        //上传文件名
+//        String groupFileName = groupTaskFile.getOriginalFilename();
+//        File GroupFilePath = new File(taskGroupFilePath,groupFileName);
+//        //判断路径是否存在，如果不存在就创建一个
+//        if (!GroupFilePath.getParentFile().exists()) {
+//            GroupFilePath.getParentFile().mkdirs();
+//        }
+//        //将上传文件保存到一个目标文件当中
+//        File  TaskGroupFile = new File(taskGroupFilePath + groupFileName);
+//        groupTaskFile.transferTo(TaskGroupFile);
+//        //存储的路径（相对路径）
+//        taskGroup.setTaskFilePath(CommonConstants.REPORTING_PATH + groupFileName);
+//        //访问路径（uri）
+//        taskGroup.setTaskFileUrl(CommonConstants.REPORTING_PATH + groupFileName);
+//        log.info("上报文件保存路径："+TaskGroupFile.getAbsolutePath());
+//        log.info("上报文件保存路径2："+ FileUtil.getHomePath() + CommonConstants.REPORTING_PATH + groupFileName);
+//        log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + groupFileName);

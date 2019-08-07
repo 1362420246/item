@@ -2,18 +2,16 @@
 
 package com.telecomyt.item.web.mapper;
 
+import com.telecomyt.item.dto.TaskDescribe;
+import com.telecomyt.item.dto.TaskIdState;
+import com.telecomyt.item.dto.TaskSelect;
 import com.telecomyt.item.dto.TaskVo;
-import com.telecomyt.item.entity.TaskDo;
-import com.telecomyt.item.entity.TaskGroup;
-import com.telecomyt.item.entity.TaskLog;
-import com.telecomyt.item.entity.Task;
+import com.telecomyt.item.entity.*;
 import org.apache.ibatis.annotations.Param;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author ZhangSF
@@ -57,14 +55,28 @@ public interface TaskMapper {
      * @return
      */
    int insertMyLog(TaskLog taskLog);
-   /**
-     *  查询任务列表
-     * @param taskCardId
+//   /**
+//     *  查询任务列表
+//     * @param taskCardId
+//     * @return
+//     */
+//   List<Task> queryMyTaskById(@Param("taskCardId") String taskCardId,@Param("groupId")Integer groupId);
+
+    /**
+     * 查询个人所有任务
+     * @param creatorCardId
      * @return
      */
-   List<Task> queryMyTaskById(@Param("taskCardId") String taskCardId,@Param("groupId")Integer groupId);
+    List<TaskSelect> queryMyCreatTask(String creatorCardId);
+    List<TaskSelect> queryMyAcceptTask(String taskCopierId);
+    List<TaskSelect> queryMyCopperTask(String taskCardId);
 
-
+    /**
+     * 下两个为查询新增任务和其他任务
+     * @param taskCardId
+     * @param groupId
+     * @return
+     */
    List<Task> queryNewTask(@Param("taskCardId") String taskCardId,@Param("groupId")Integer groupId);
    List<Task>queryOtherTask(@Param("taskCardId") String taskCardId,@Param("groupId")Integer groupId);
     /**
@@ -72,7 +84,11 @@ public interface TaskMapper {
      * @param groupId
      * @return
      */
-   TaskLog queryMyTaskLogById(Integer groupId);
+    List<TaskGroup> queryMyTaskLogById(Integer groupId);
+    /**
+     * 查询任务详情
+     */
+    TaskDescribe queryTaskDetailed(Integer groupId);
     /**
      *改变个人任务状态
      * @param taskCardId
@@ -108,6 +124,15 @@ public interface TaskMapper {
             @Param("cardid") String cardid, @Param("startTime") LocalDateTime startTime,
             @Param("endTime") LocalDateTime endTime);
 
+    /**
+     *  查询执行人身份照
+     */
+    List<TaskIdState> queryTaskCardId(Integer groupId);
+
+    /**
+     * 查询抄送人身份照
+     */
+    List<TaskIdState> queryTaskCopierId(Integer groupId);
 }
 
 

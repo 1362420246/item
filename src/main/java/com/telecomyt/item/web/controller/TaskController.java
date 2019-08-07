@@ -2,6 +2,7 @@
 package com.telecomyt.item.web.controller;
 
 import com.telecomyt.item.constant.CommonConstants;
+import com.telecomyt.item.dto.TaskDescribe;
 import com.telecomyt.item.dto.TaskDto;
 import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.TaskLog;
@@ -36,10 +37,11 @@ public class TaskController {
     /**
      * 新增组
      */
+    //,MultipartFile grouptaskFile  throws IOException
     @PostMapping("/insertNewTask")
-    public BaseResp<String> insertNewTask(@RequestBody TaskDto taskDto,MultipartFile grouptaskFile)throws IOException{
+    public BaseResp<String> insertNewTask(@RequestBody TaskDto taskDto){
         BeanValidator.check(taskDto);
-        return taskService.addTask(taskDto,grouptaskFile);
+        return taskService.addTask(taskDto);
     }
 
     /**
@@ -80,9 +82,9 @@ public class TaskController {
             File saveTaskLogFile = new File(taskLogPath + taskLogFilename);
             logFile.transferTo(saveTaskLogFile);
             //存储的路径（相对路径）
-            taskLog.setLogPath(CommonConstants.REPORTING_PATH + taskLogFilename);
+            taskLog.setFilePath(CommonConstants.REPORTING_PATH + taskLogFilename);
             //访问路径（uri）
-            taskLog.setLogUrl(CommonConstants.REPORTING_PATH + taskLogFilename);
+            taskLog.setFileUrl(CommonConstants.REPORTING_PATH + taskLogFilename);
             log.info("上报文件保存路径："+saveTaskLogFile.getAbsolutePath());
             log.info("上报文件保存路径2："+ FileUtil.getHomePath() + CommonConstants.REPORTING_PATH + taskLogFilename);
             log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + taskLogFilename);
@@ -96,23 +98,27 @@ public class TaskController {
         return taskService.insertMyLog(taskLog);
     }
 
-    /**
-     * 得到个人任务列表
-     */
-    @GetMapping("/getTaskList")
-    public BaseResp<List> getTaskList(String taskCardId,Integer groupId){
-        return  taskService.queryMyTaskById(taskCardId,groupId);
-//        Map<String, Object> modleMap = new HashMap<>();
-//        List<Task> task = taskService.queryMyTaskById(taskCardid);
-//        return new BaseResp<>(ResultStatus.SUCCESS,task);
-//        if(task != null) {
-//            modleMap.put("task",task);
-//        }else {
-//            modleMap.put("task","0");
-//        }
-//        return modleMap;
-    }
 
+    /**
+     * 查询个人有关的所有任务
+     * @param taskCardId
+     * @return
+     */
+     @GetMapping("/getMyTaskById")
+     public  BaseResp<List> getMyTaskById(String taskCardId){
+       return taskService.queryMyTaskById(taskCardId);
+
+     }
+
+    /**
+     * 得到任务详情
+     * @param groupId
+     * @return
+     */
+     @GetMapping("/getTaskDetailed")
+     public BaseResp<TaskDescribe> getMyTaskDetailed(Integer groupId){
+         return taskService.queryTaskDetailed(groupId);
+     }
     /**
      * 查询新增任务（可进行拒绝或者点击开始操作）
      * @param taskCardId
@@ -139,7 +145,7 @@ public class TaskController {
      * 查询任务日志
      */
     @GetMapping("/getMyTaskLog")
-    public BaseResp<TaskLog> queryMyTaskLog(Integer groupId){
+    public BaseResp<List> queryMyTaskLog(Integer groupId){
         return taskService.queryMyTaskLog(groupId);
     }
 
@@ -160,3 +166,21 @@ public class TaskController {
     }
 
 }
+
+
+//    /**
+//     * 得到个人任务列表
+//     */
+//    @GetMapping("/getTaskList")
+//    public BaseResp<List> getTaskList(String taskCardId,Integer groupId){
+//        return  taskService.queryMyTaskById(taskCardId,groupId);
+//        Map<String, Object> modleMap = new HashMap<>();
+//        List<Task> task = taskService.queryMyTaskById(taskCardid);
+//        return new BaseResp<>(ResultStatus.SUCCESS,task);
+//        if(task != null) {
+//            modleMap.put("task",task);
+//        }else {
+//            modleMap.put("task","0");
+//        }
+//        return modleMap;
+//}

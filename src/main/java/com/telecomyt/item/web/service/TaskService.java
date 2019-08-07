@@ -1,6 +1,7 @@
 
 package com.telecomyt.item.web.service;
 
+import com.telecomyt.item.dto.TaskDescribe;
 import com.telecomyt.item.dto.TaskDto;
 import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.Task;
@@ -24,7 +25,8 @@ public interface TaskService {
      * @param taskDto
      * @return
      */
-    BaseResp<String> addTask(TaskDto taskDto,MultipartFile grouptaskFile) throws IOException;
+    //,MultipartFile grouptaskFile   throws IOException
+    BaseResp<String> addTask(TaskDto taskDto);
 //    /**
 //     *
 //     */
@@ -46,12 +48,17 @@ public interface TaskService {
     BaseResp<String> insertLog(Integer groupId, Date logTime, String logPicture, String logCardId,Integer logType);
     BaseResp<String> insertMyLog(TaskLog taskLog);
 
-    /**
-     * 查询个人任务列表
-     * @param taskCardId
-     * @return
-     */
-    BaseResp<List> queryMyTaskById(String taskCardId,Integer groupId);
+//    /**
+//     * 查询个人任务列表
+//     * @param taskCardId
+//     * @return
+//     */
+//    BaseResp<sLit> queryMyTaskById(String taskCardId,Integer groupId);
+    //查询个人所有任务
+      BaseResp<List> queryMyTaskById(String taskCardId);
+      //查询任务详情
+      BaseResp<TaskDescribe>  queryTaskDetailed(Integer groupId);
+
 
     /**
      * 查询新增加任务
@@ -73,7 +80,7 @@ public interface TaskService {
      * @param groupId
      * @return
      */
-    BaseResp<TaskLog> queryMyTaskLog(Integer groupId);
+    BaseResp<List> queryMyTaskLog(Integer groupId);
 
 
     /**
