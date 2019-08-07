@@ -58,6 +58,11 @@ public class ScheduleLog implements Serializable {
     private String fileUri;
 
     /**
+     *   * 文件名称
+     */
+    private String fileName;
+
+    /**
      *   * 
      */
     private LocalDateTime createTime;

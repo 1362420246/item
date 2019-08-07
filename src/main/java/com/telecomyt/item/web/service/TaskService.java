@@ -7,9 +7,7 @@ import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.Task;
 import com.telecomyt.item.entity.TaskGroup;
 import com.telecomyt.item.entity.TaskLog;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -55,10 +53,16 @@ public interface TaskService {
 //     * @return
 //     */
 //    BaseResp<sLit> queryMyTaskById(String taskCardId,Integer groupId);
-    //查询个人所有任务
-      BaseResp<List> queryMyTaskById(String taskCardId);
-      //查询任务详情
-      BaseResp<TaskDescribe>  queryTaskDetailed(Integer groupId);
+
+    /**
+     * 查询个人所有任务
+     */
+    BaseResp<List> queryMyTaskById(String taskCardId, String tile);
+
+    /**
+     * 查询任务详情
+     */
+    BaseResp<TaskDescribe>  queryTaskDetailed(Integer groupId);
 
 
     /**

@@ -10,11 +10,12 @@
     <result column="log_remarks" jdbcType="VARCHAR" property="logRemarks" />
     <result column="file_path" jdbcType="VARCHAR" property="filePath" />
     <result column="file_uri" jdbcType="VARCHAR" property="fileUri" />
+    <result column="file_Name" jdbcType="VARCHAR" property="fileName" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, group_id, operation_cardid, log_type, log_details, log_remarks, file_path, file_uri, 
+    id, group_id, operation_cardid, log_type, log_details, log_remarks, file_path, file_uri, file_Name,
     create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -64,6 +65,9 @@
       <if test="fileUri != null">
         file_uri,
       </if>
+      <if test="fileName != null">
+        file_Name,
+      </if>
       <if test="createTime != null">
         create_time,
       </if>
@@ -95,6 +99,9 @@
       </if>
       <if test="fileUri != null">
         #{fileUri,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null">
+        #{fileName,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},

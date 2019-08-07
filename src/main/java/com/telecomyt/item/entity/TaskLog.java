@@ -24,6 +24,7 @@ public class TaskLog implements Serializable {
     private  Integer logType;
     private String filePath;
     private  String fileUrl;
+    private  String fileName;
     private  String fileTagging;
 
 }

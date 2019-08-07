@@ -73,7 +73,7 @@ public class ScheduleController {
     @PostMapping("/reporting")
     public BaseResp<Object>  reporting(
             @RequestParam(value = "logType") Integer logType ,
-            @RequestParam("file") MultipartFile file ,
+            @RequestParam(value = "file" ,required = false) MultipartFile file ,
             @RequestParam("groupId") Integer groupId ,
             @RequestParam("operationCardid") String operationCardid ,
             String logRemarks ) throws IOException {
@@ -102,6 +102,7 @@ public class ScheduleController {
             scheduleLog.setFilePath(CommonConstants.REPORTING_PATH + filename);
             //访问路径（uri）
             scheduleLog.setFileUri(CommonConstants.REPORTING_PATH + filename);
+            scheduleLog.setFileName(filename);
             log.info("上报文件保存路径："+saveFile.getAbsolutePath());
             log.info("上报文件保存路径2："+ FileUtil.getHomePath() + CommonConstants.REPORTING_PATH + filename);
             log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + filename);

@@ -67,17 +67,17 @@ public class TaskController {
 
        if(logType == 0 || logType == 1){
             //如果文件不为空，写入上传路径
-            if(logFile.isEmpty()) {
+            if(logFile == null || logFile.isEmpty()) {
                 return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"任务上报失败，请选择文件");
             }
             //上传文件路径
             String taskLogPath = FileUtil.getHomePath() + CommonConstants.REPORTING_PATH ;
             //上传文件名
             String taskLogFilename = logFile.getOriginalFilename();
-            File LogPath = new File(taskLogPath,taskLogFilename);
+            File logPath = new File(taskLogPath,taskLogFilename);
             //判断路径是否存在，如果不存在就创建一个
-            if (!LogPath.getParentFile().exists()) {
-                LogPath.getParentFile().mkdirs();
+            if (!logPath.getParentFile().exists()) {
+                logPath.getParentFile().mkdirs();
             }
             //将上传文件保存到一个目标文件当中
             File saveTaskLogFile = new File(taskLogPath + taskLogFilename);
@@ -86,6 +86,7 @@ public class TaskController {
             taskLog.setFilePath(CommonConstants.REPORTING_PATH + taskLogFilename);
             //访问路径（uri）
             taskLog.setFileUrl(CommonConstants.REPORTING_PATH + taskLogFilename);
+            taskLog.setFileName(taskLogFilename);
             log.info("上报文件保存路径："+saveTaskLogFile.getAbsolutePath());
             log.info("上报文件保存路径2："+ FileUtil.getHomePath() + CommonConstants.REPORTING_PATH + taskLogFilename);
             log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + taskLogFilename);
@@ -106,8 +107,8 @@ public class TaskController {
      * @return
      */
      @GetMapping("/getMyTaskById")
-     public  BaseResp<List> getMyTaskById(String taskCardId){
-       return taskService.queryMyTaskById(taskCardId);
+     public  BaseResp<List> getMyTaskById(String taskCardId ,String tile){
+       return taskService.queryMyTaskById(taskCardId , tile);
 
      }
 

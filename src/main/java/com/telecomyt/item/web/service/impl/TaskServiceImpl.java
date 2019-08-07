@@ -14,7 +14,9 @@ import com.telecomyt.item.utils.FileUtil;
 import com.telecomyt.item.web.mapper.TaskMapper;
 import com.telecomyt.item.web.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -40,6 +42,10 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private TaskMapper taskMapper;
+
+    @Value("${parameter.picture.ip}")
+    private String ip ;
+
     /**
      * 新增组
      * @param taskDto
@@ -87,16 +93,13 @@ public class TaskServiceImpl implements TaskService {
             TaskDo executorTaskDo = TaskDo.builder().taskCardIds(taskCardIds).groupId(groupId).taskType(1).taskState(taskState).taskEndTime(taskEndTime).build();
             int addExecutorTaskResult = taskMapper.insertTask(executorTaskDo);
             if(addExecutorTaskResult == 0){
-                //TODO 回滚
                 log.info("新增任务执行人失败。");
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return new BaseResp<>(ResultStatus.FAIL);
             }
-            //TODO
             TaskDo copierTaskDo = TaskDo.builder().taskCopierIds(taskCopierIds).groupId(groupId).taskType(2).taskState(taskState).taskEndTime(taskEndTime).build();
             int addTaskCoperResult = taskMapper.insertCoperTask(copierTaskDo);
             if(addTaskCoperResult == 0){
-                //TODO 回滚
                 log.info("新增任务抄送人失败。");
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 //return new BaseResp<>(ResultStatus.FAIL);
@@ -116,7 +119,6 @@ public class TaskServiceImpl implements TaskService {
     public  BaseResp<String> insertLog(Integer groupId, Date logTime, String logPicture, String logCardId,Integer logType) {
         int flag = taskMapper.insertLog(groupId,logTime,logPicture,logCardId,logType);
         if(flag == 0){
-            //TODO 回滚
             log.info("新增日志失败");
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return new BaseResp<>(ResultStatus.FAIL);
@@ -145,16 +147,15 @@ public class TaskServiceImpl implements TaskService {
     /**
      * 查询与我有关的所有任务
      * @param taskCardId
+     * @param title 标题模糊搜索
      * @return
      */
     @Override
-    public BaseResp<List> queryMyTaskById(String taskCardId) {
-      List<TaskSelect> lists = new ArrayList<>();
-        String creatorCardId = taskCardId;
-        String taskCopierId = taskCardId;
-        List<TaskSelect> taskGroups = taskMapper.queryMyCreatTask(creatorCardId);
-        List<TaskSelect> copyId = taskMapper.queryMyCopperTask(taskCopierId);
-        List<TaskSelect> acceptId = taskMapper.queryMyAcceptTask(taskCardId);
+    public BaseResp<List> queryMyTaskById(String taskCardId, String title) {
+        List<TaskSelect> lists = new ArrayList<>();
+        List<TaskSelect> taskGroups = taskMapper.queryMyCreatTask(taskCardId,title);
+        List<TaskSelect> copyId = taskMapper.queryMyCopperTask(taskCardId,title);
+        List<TaskSelect> acceptId = taskMapper.queryMyAcceptTask(taskCardId,title);
         lists.addAll(taskGroups);
         lists.addAll(copyId);
         lists.addAll(acceptId);
@@ -172,6 +173,14 @@ public class TaskServiceImpl implements TaskService {
         if(describeResult == null){
             return new BaseResp<>(ResultStatus.FAIL);
         }
+        String groupFileUrl = describeResult.getGroupFileUrl();
+        if(StringUtils.isNotBlank(groupFileUrl)){
+            describeResult.setGroupFileUrl( ip + groupFileUrl);
+        }
+        List<TaskLog> taskLog = describeResult.getTaskLogs();
+        //上传的图片和文件添加ip
+        taskLog.stream().filter(log -> StringUtils.isNotBlank(log.getFileUrl())).
+                forEach(log -> log.setFileUrl( ip + log.getFileUrl()));
         List<TaskIdState> taskCardId = taskMapper.queryTaskCardId(groupId);
         describeResult.setTaskCardId(taskCardId);
         List<TaskIdState> taskCopierId = taskMapper.queryTaskCopierId(groupId);
@@ -229,10 +238,13 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public BaseResp<List> queryMyTaskLog(Integer groupId) {
-        List<TaskGroup> taskLog = taskMapper.queryMyTaskLogById(groupId);
+        List<TaskLog> taskLog = taskMapper.queryMyTaskLogById(groupId);
         if(taskLog == null) {
             return new BaseResp<>(ResultStatus.FAIL);
         }else{
+            //上传的图片和文件添加ip
+            taskLog.stream().filter(log -> StringUtils.isNotBlank(log.getFileUrl())).
+                    forEach(log -> log.setFileUrl( ip + log.getFileUrl()));
             return new BaseResp<>(ResultStatus.SUCCESS,taskLog);
         }
     }
