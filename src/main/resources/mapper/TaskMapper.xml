@@ -3,23 +3,23 @@
 <mapper namespace="com.telecomyt.item.web.mapper.TaskMapper">
     <!--新增组，处理附件-->
     <insert id="insertGroup" useGeneratedKeys="true" keyProperty="groupId" keyColumn="group_id" parameterType="com.telecomyt.item.entity.TaskGroup">
-        insert into db_sheet_group (creator_cardid,sheet_title,sheet_describe,task_endtime,group_fileurl,group_filepath,task_creattime)
-        values (#{creatorCardId},#{sheetTitle},#{sheetDescribe},#{taskEndTime},#{taskFileUrl},#{taskFilePath},#{taskCreatTime})
+        insert into db_sheet_group (creator_cardid,sheet_title,sheet_describe,task_endtime,group_fileurl,group_filepath,group_filename,task_creattime)
+        values (#{creatorCardId},#{sheetTitle},#{sheetDescribe},#{taskEndTime},#{groupFileurl},#{groupFilepath},#{groupFilename},#{taskCreatTime})
     </insert>
     <!--批量插入-->
     <insert id="insertTask" parameterType="com.telecomyt.item.entity.TaskDo">
-        insert into db_sheet_task (task_cardid, group_id, task_type, task_state, task_endtime)
+        insert into db_sheet_task (task_cardid, group_id, task_type, task_endtime)
         values
         <foreach collection="taskCardIds" separator="," item="taskCardId" >
-            (#{taskCardId},#{groupId},#{taskType},#{taskState},#{taskEndTime})
+            (#{taskCardId},#{groupId},#{taskType},#{taskEndTime})
         </foreach>
     </insert>
     <!--批量插入-->
     <insert id="insertCoperTask" parameterType="com.telecomyt.item.entity.TaskDo">
-        insert into db_sheet_task (task_cardid, group_id, task_type, task_state, task_endtime)
+        insert into db_sheet_task (task_copierid , group_id, task_type, task_endtime)
         values
         <foreach collection="taskCopierIds" separator="," item="taskCopierId" >
-            (#{taskCopierId},#{groupId},#{taskType},#{taskState},#{taskEndTime})
+            (#{taskCopierId},#{groupId},#{taskType},#{taskEndTime})
         </foreach>
     </insert>
     <!--&lt;!&ndash;新增任务&ndash;&gt;-->
@@ -50,34 +50,43 @@
 
     <!--查询创建任务列表-->
     <select id="queryMyCreatTask" resultType="com.telecomyt.item.dto.TaskSelect">
-        select group_id,sheet_title,sheet_describe,task_endtime,task_type,task_creattime
+        select group_id,sheet_title,sheet_describe,task_endtime,task_type,task_creattime,is_overdue
         from db_sheet_group
         <where>
              creator_cardid = #{creatorCardId}
+             and group_status = #{groupStatus}
+             and is_delete = 0
             <if test="tile != null and tile != ''">
                 and sheet_title like concat('%',#{title},'%')
             </if>
         </where>
     </select>
-    <!--查询抄送任务列表-->
+
+    <!--查询执行任务列表-->
     <select id="queryMyAcceptTask" resultType="com.telecomyt.item.dto.TaskSelect">
-        select a.task_type,a.task_endtime,b.sheet_describe,b.sheet_title,b.task_creattime
+        select a.group_id,a.task_type,b.task_endtime,b.sheet_describe,b.sheet_title,b.task_creattime ,b.is_overdue
         from db_sheet_task a,db_sheet_group b
         <where>
             a.group_id = b.group_id
-            and a.task_copierid = #{taskCopierId}
+            and a.task_cardid = #{taskCardId}
+            and b.group_status = #{groupStatus}
+            and b.is_delete = 0
+            and a.task_state != 2
             <if test="tile != null and tile != ''">
                 and b.sheet_title like concat('%',#{title},'%')
             </if>
         </where>
     </select>
-    <!--查询执行任务列表-->
+
+    <!--查询抄送任务列表-->
     <select id="queryMyCopperTask" resultType="com.telecomyt.item.dto.TaskSelect">
-        select a.task_cardid,a.group_id,a.task_type,a.task_endtime,b.sheet_describe,b.sheet_title,b.task_creattime
+        select a.group_id,a.task_type,b.task_endtime,b.sheet_describe,b.sheet_title,b.task_creattime,b.is_overdue
         from db_sheet_task a,db_sheet_group b
         <where>
             a.group_id = b.group_id
-            and a.task_cardid = #{taskCardId}
+            and a.task_copierid = #{taskCopierId}
+            and b.group_status = #{groupStatus}
+            and b.is_delete = 0
             <if test="tile != null and tile != ''">
                 and b.sheet_title like concat('%',#{title},'%')
             </if>
@@ -90,6 +99,7 @@
         <result column="creator_cardid" property="creatorCardId" />
         <result column="task_endtime" property="taskEndTime" />
         <result column="group_fileurl" property="groupFileUrl" />
+        <result column="group_filename" property="groupFileName" />
         <result column="task_creattime" property="taskCreatTime" />
         <result column="sheet_title" property="sheetTitle" />
         <collection property="taskLogs" ofType="com.telecomyt.item.entity.TaskLog" >
@@ -99,6 +109,7 @@
             <result column="log_type" property="logType" />
             <result column="log_time" property="logTime" />
             <result column="log_cardid" property="logCardId" />
+            <result column="file_tagging" property="fileTagging" />
         </collection>
     </resultMap>
 
@@ -111,13 +122,15 @@
             b.creator_cardid,
             b.task_creattime,
             b.group_fileurl,
+            b.group_filename,
             b.sheet_title,
             d.log_id,
             d.log_time,
             d.log_cardid,
             d.log_type,
             d.file_url,
-            d.file_name
+            d.file_name,
+            d.file_tagging
         FROM
             db_sheet_group b left join
             db_sheet_log d
@@ -128,7 +141,7 @@
 
     <!--查询执行人身份照-->
     <select id="queryTaskCardId" resultType="com.telecomyt.item.dto.TaskIdState" >
-        SELECT task_cardid, task_state
+        SELECT task_cardid as cardId , task_state
         FROM db_sheet_task
         WHERE group_id = #{groupId}
         and not ISNULL(task_cardid)
@@ -136,7 +149,7 @@
 
     <!--查询抄送人身份照-->
     <select id="queryTaskCopierId" resultType="com.telecomyt.item.dto.TaskIdState" >
-        SELECT task_copierid,task_state
+        SELECT task_copierid as cardId ,task_state
         FROM db_sheet_task
         WHERE group_id = #{groupId}
         and not ISNULL(task_copierid)
@@ -163,6 +176,7 @@
     <select id="queryMyTaskLogById" resultType="com.telecomyt.item.entity.TaskLog">
         select group_id,log_time,log_type,log_cardid,file_url,file_Name,file_tagging,file_name from db_sheet_log where group_id = #{groupId}
     </select>
+
      <!--更改任务-->
     <update id="updateTask" parameterType="com.telecomyt.item.entity.TaskGroup">
         update db_sheet_group
@@ -170,34 +184,28 @@
             <if test="sheetTitle!=null">sheet_title=#{sheetTitle},</if>
             <if test="sheetDescribe!=null">sheet_describe=#{sheetDescribe},</if>
             <if test="taskEndTime!=null">task_endtime=#{taskEndTime},</if>
-            <if test="taskFileUrl!=null">task_fileurl=#{taskFileUrl},</if>
-            <if test="taskFilePath!=null">task_filepath=#{taskFilePath},</if>
-            <if test="taskType!=null">task_type=#{taskType},</if>
+            <if test="groupFileurl!=null">group_fileurl=#{groupFileurl},</if>
+            <if test="groupFilepath!=null">group_filepath=#{groupFilepath},</if>
         </set>
         where creator_cardid=#{creatorCardId} and group_id=#{groupId}
     </update>
 
-
     <!--更改个人任务状态 -->
     <update id="updateMyTaskByIdAndGroupId" parameterType="com.telecomyt.item.entity.Task">
         update db_sheet_task
-        <set>
-            <if test="taskState!=null">task_state=#{taskState},</if>
-        </set>
+        set task_state=#{taskState}
         where task_cardid=#{taskCardId} and group_id=#{groupId}
     </update>
-    <!--更改任务状态（创建人修改） -->
-    <update id="updateTaskByIdAndGroupId" parameterType="com.telecomyt.item.entity.Task">
-        update db_sheet_task
-        <set>
-            <if test="taskState!=null">task_state=#{taskState},</if>
-        </set>
+    <!--更改任务状态（创建人结束任务） -->
+    <update id="updateTaskByIdAndGroupId" >
+        update db_sheet_group
+        set group_status = 1
         where group_id=#{groupId}
     </update>
     <!--删除任务-->
-    <delete id="deleteTask">
-    delete from db_sheet_group where creator_cardid=#{creatorCardId} and group_id=#{groupId}
-    </delete>
+    <update id="deleteTask">
+        update db_sheet_group set is_delete = 1 where group_id = #{groupId}
+    </update>
     <!--删除任务日志-->
     <delete id="deleteTaskLog">
     delete from db_sheet_log where group_id=#{groupId}
@@ -206,7 +214,7 @@
     <!--按照身份证和时间去查询任务-->
     <select id="getTaskByCardIdAndDate" resultType="com.telecomyt.item.dto.TaskVo">
         SELECT
-            b.group_id,
+            distinct b.group_id,
             b.task_endtime,
             b.sheet_title ,
             b.sheet_describe,
@@ -214,10 +222,25 @@
         FROM
             db_sheet_task a RIGHT join db_sheet_group b
 			on  a.group_id = b.group_id
+			and b.is_delete = 0
         WHERE
 	       (a.task_cardid = #{cardid} or a.task_copierid = #{cardid} or b.creator_cardid = #{cardid} )
+	       AND b.is_delete = 0
            AND b.task_endtime BETWEEN #{startTime} AND #{endTime}
      </select>
 
+    <!--通过 组id 查询任务组-->
+    <select id="getTaskGroupByGroupId" resultType="com.telecomyt.item.entity.TaskGroup">
+        SELECT group_id , creator_cardid ,sheet_title , sheet_describe , task_endtime , group_fileurl ,group_filepath ,group_filename ,task_type , task_creattime ,group_status , is_delete , is_overdue
+        FROM db_sheet_group
+        WHERE group_id = #{groupId}
+    </select>
+
+    <!--修改逾期-->
+    <update id="updateOverdue">
+        update db_sheet_group
+        set is_overdue = 1
+        WHERE group_id = #{groupId}
+    </update>
 
 </mapper>

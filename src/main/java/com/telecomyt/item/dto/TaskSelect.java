@@ -25,10 +25,10 @@ public class TaskSelect implements Serializable {
     private LocalDateTime taskEndTime;
     private String sheetDescribe;
     private String sheetTitle;
-
-
-
-
-
+    private String taskCreattime;
+    /**
+     * 是否被逾期 0：否  1：是逾期
+     */
+    private Integer isOverdue ;
 
 }

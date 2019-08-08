@@ -10,7 +10,6 @@ import java.io.Serializable;
 
 @Data
 public class TaskIdState implements Serializable {
-
-    private String taskCardId;
-    private String taskCopierId;
+    private String cardId;
+    private Integer taskState;
 }

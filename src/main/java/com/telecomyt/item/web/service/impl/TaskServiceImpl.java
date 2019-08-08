@@ -12,12 +12,14 @@ import com.telecomyt.item.entity.*;
 import com.telecomyt.item.enums.ResultStatus;
 import com.telecomyt.item.utils.FileUtil;
 import com.telecomyt.item.web.mapper.TaskMapper;
+import com.telecomyt.item.web.service.TaskAsynService;
 import com.telecomyt.item.web.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,10 +27,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @Author ZhangSF
  * @Date 2019/8/2
@@ -41,6 +44,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private TaskMapper taskMapper;
+
+    @Autowired
+    private TaskAsynService taskAsynService;
 
     @Value("${parameter.picture.ip}")
     private String ip ;
@@ -67,28 +73,28 @@ public class TaskServiceImpl implements TaskService {
             File  taskGroupFile = new File(taskGroupFilePath + groupFileName);
             groupTaskFile.transferTo(taskGroupFile);
             //存储的路径（相对路径）
-            taskGroup.setTaskFilePath(CommonConstants.REPORTING_PATH + groupFileName);
+            taskGroup.setGroupFilepath(CommonConstants.REPORTING_PATH + groupFileName);
             //访问路径（uri）
-            taskGroup.setTaskFileUrl(CommonConstants.REPORTING_PATH + groupFileName);
+            taskGroup.setGroupFileurl(CommonConstants.REPORTING_PATH + groupFileName);
+            taskGroup.setGroupFilename(groupFileName);
             log.info("上报文件保存路径："+taskGroupFile.getAbsolutePath());
             log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + groupFileName);
         }
         int addTaskGroupResult = taskMapper.insertGroup(taskGroup);
         if(addTaskGroupResult > 0){
             Integer groupId = taskGroup.getGroupId();
-            Integer taskState = taskDto.getTaskState();
             LocalDateTime  taskEndTime = taskDto.getTaskEndTime();
             List<String> taskCardIds = taskDto.getTaskCardIds();
-            List<String> taskCopierIds = taskDto.getTaskCopierIds();
-            TaskDo executorTaskDo = TaskDo.builder().taskCardIds(taskCardIds).groupId(groupId).taskType(1).taskState(taskState).taskEndTime(taskEndTime).build();
+            TaskDo executorTaskDo = TaskDo.builder().taskCardIds(taskCardIds).groupId(groupId).taskType(1).taskEndTime(taskEndTime).build();
             int addExecutorTaskResult = taskMapper.insertTask(executorTaskDo);
             if(addExecutorTaskResult == 0){
                 log.info("新增任务执行人失败。");
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return new BaseResp<>(ResultStatus.FAIL);
             }
+            List<String> taskCopierIds = taskDto.getTaskCopierIds();
             if(taskCopierIds != null && taskCopierIds.size() > 0){
-                TaskDo copierTaskDo = TaskDo.builder().taskCopierIds(taskCopierIds).groupId(groupId).taskType(2).taskState(taskState).taskEndTime(taskEndTime).build();
+                TaskDo copierTaskDo = TaskDo.builder().taskCopierIds(taskCopierIds).groupId(groupId).taskType(2).taskEndTime(taskEndTime).build();
                 int addTaskCoperResult = taskMapper.insertCoperTask(copierTaskDo);
                 if(addTaskCoperResult == 0){
                     log.info("新增任务抄送人失败。");
@@ -135,20 +141,40 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * 查询与我有关的所有任务
-     * @param taskCardId
+     * 查询个人有关的所有任务
+     * @param taskCardId 身份证号
      * @param title 标题模糊搜索
-     * @return
+     * @param groupStatus 任务组状态状态 正常0 结束1
+     * @param type  1：我创建的 2.我执行的 3.我是抄送人
      */
     @Override
-    public BaseResp<List> queryMyTaskById(String taskCardId, String title) {
+    public BaseResp<List> queryMyTaskById(String taskCardId, String title, Integer groupStatus, List<Integer> type) {
         List<TaskSelect> lists = new ArrayList<>();
-        List<TaskSelect> taskGroups = taskMapper.queryMyCreatTask(taskCardId,title);
-        List<TaskSelect> copyId = taskMapper.queryMyCopperTask(taskCardId,title);
-        List<TaskSelect> acceptId = taskMapper.queryMyAcceptTask(taskCardId,title);
-        lists.addAll(taskGroups);
-        lists.addAll(copyId);
-        lists.addAll(acceptId);
+        if(type.contains(1)){
+            List<TaskSelect> taskGroups = taskMapper.queryMyCreatTask(taskCardId ,title ,groupStatus);
+            lists.addAll(taskGroups);
+        }
+        if(type.contains(2)){
+            List<TaskSelect> acceptId = taskMapper.queryMyAcceptTask(taskCardId ,title ,groupStatus);
+            lists.addAll(acceptId);
+        }
+        if(type.contains(3)){
+            List<TaskSelect> copyId = taskMapper.queryMyCopperTask(taskCardId ,title , groupStatus);
+            lists.addAll(copyId);
+        }
+        if(lists.size() > 0){
+            List<Integer> overdues = new ArrayList<>();
+            lists.forEach(taskSelect -> {
+                if(taskSelect.getIsOverdue() == 0){
+                    LocalDateTime taskEndTime = taskSelect.getTaskEndTime();
+                    if (taskEndTime.isBefore(LocalDateTime.now())) {
+                        taskSelect.setIsOverdue(1);
+                        overdues.add(taskSelect.getGroupId());
+                    }
+                }
+            });
+            taskAsynService.updateOverdue(overdues);
+        }
         return new BaseResp<>(ResultStatus.SUCCESS,lists);
     }
 
@@ -167,9 +193,9 @@ public class TaskServiceImpl implements TaskService {
         if(StringUtils.isNotBlank(groupFileUrl)){
             describeResult.setGroupFileUrl( ip + groupFileUrl);
         }
-        List<TaskLog> taskLog = describeResult.getTaskLogs();
+        List<TaskLog> taskLogs = describeResult.getTaskLogs();
         //上传的图片和文件添加ip
-        taskLog.stream().filter(log -> StringUtils.isNotBlank(log.getFileUrl())).
+        taskLogs.stream().filter(log -> StringUtils.isNotBlank(log.getFileUrl())).
                 forEach(log -> log.setFileUrl( ip + log.getFileUrl()));
         List<TaskIdState> taskCardId = taskMapper.queryTaskCardId(groupId);
         describeResult.setTaskCardId(taskCardId);
@@ -256,24 +282,30 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public BaseResp<String> updateMyTaskByIdAndGroupId(String taskCardId,Integer groupId, Integer taskState) {
-
         int flag = taskMapper.updateMyTaskByIdAndGroupId(taskCardId,groupId,taskState);
         if(flag > 0){
             return new BaseResp<>(ResultStatus.SUCCESS);
         }else{
             return new BaseResp<>(ResultStatus.FAIL);
-
         }
-
     }
     /**
-     * 更改任务状态（创建人）
+     * 更改任务状态（创建人结束任务）
      */
     @Override
-    public BaseResp<String> updateTaskByIdAndGroupId( Integer groupId, Integer taskState) {
-
-        int flag = taskMapper.updateTaskByIdAndGroupId(groupId,taskState);
+    @Transactional(transactionManager = "transactionManager" ,propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public BaseResp<String> updateTaskByIdAndGroupId( Integer groupId) {
+        int flag = taskMapper.updateTaskByIdAndGroupId(groupId);
         if(flag > 0){
+            TaskGroup taskGroup = taskMapper.getTaskGroupByGroupId(groupId);
+            if(taskGroup.getTaskEndTime().isBefore(LocalDateTime.now())){
+                int result = taskMapper.updateOverdue(groupId);
+                if(result == 0){
+                    log.info("修改逾期失败。事务回滚");
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return new BaseResp<>(ResultStatus.FAIL);
+                }
+            }
             return new BaseResp<>(ResultStatus.SUCCESS);
         }else{
             return new BaseResp<>(ResultStatus.FAIL);
@@ -287,16 +319,14 @@ public class TaskServiceImpl implements TaskService {
      * 删除任务
      */
     @Override
-    public BaseResp<String> deleteTask(String creatorCardId,Integer groupId) {
-        int taskResult = taskMapper.deleteTask(creatorCardId, groupId);
+    public BaseResp<String> deleteTask(Integer groupId) {
+        int taskResult = taskMapper.deleteTask(groupId);
         if(taskResult > 0){
-           int LogResult = taskMapper.deleteTaskLog(groupId);
-           if(LogResult > 0){
-                return new BaseResp<>(ResultStatus.SUCCESS);
-           }
+            return new BaseResp<>(ResultStatus.SUCCESS);
         }
         return new BaseResp<>(ResultStatus.FAIL);
     }
+
 //    @Override
 //    public boolean insertGroup(String creatorCardid, String sheetTitle, String sheetDescribe, Date endTime) {
 //        return false;

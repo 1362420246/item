@@ -4,7 +4,6 @@ package com.telecomyt.item.web.service;
 import com.telecomyt.item.dto.TaskDescribe;
 import com.telecomyt.item.dto.TaskDto;
 import com.telecomyt.item.dto.resp.BaseResp;
-import com.telecomyt.item.entity.Task;
 import com.telecomyt.item.entity.TaskGroup;
 import com.telecomyt.item.entity.TaskLog;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,10 +55,15 @@ public interface TaskService {
 //     */
 //    BaseResp<sLit> queryMyTaskById(String taskCardId,Integer groupId);
 
+
     /**
-     * 查询个人所有任务
+     * 查询个人有关的所有任务
+     * @param taskCardId 身份证号
+     * @param title 标题模糊搜索
+     * @param groupStatus 任务组状态状态
+     * @param type   1：我创建的 2.我执行的 3.我是抄送人
      */
-    BaseResp<List> queryMyTaskById(String taskCardId, String tile);
+    BaseResp<List> queryMyTaskById(String taskCardId, String title, Integer groupStatus, List<Integer> type);
 
     /**
      * 查询任务详情
@@ -102,17 +106,15 @@ public interface TaskService {
      */
     BaseResp<String> updateMyTaskByIdAndGroupId(String taskCardId, Integer groupId, Integer taskState);
     /**
-     * 更改任务状态（创建者）
+     * 更改任务状态（创建人结束任务）
      */
-    BaseResp<String> updateTaskByIdAndGroupId( Integer groupId, Integer taskState);
+    BaseResp<String> updateTaskByIdAndGroupId( Integer groupId);
     /**
      *
      * 删除任务
-     * @param creatorCardId
      * @param groupId
      * @return
      */
-    BaseResp<String> deleteTask(String creatorCardId, Integer groupId);
-
+    BaseResp<String> deleteTask(Integer groupId);
 
 }

@@ -60,14 +60,29 @@ public interface TaskMapper {
 //   List<Task> queryMyTaskById(@Param("taskCardId") String taskCardId,@Param("groupId")Integer groupId);
 
     /**
-     * 查询个人所有任务
-     * @param creatorCardId
-     * @param title
-     * @return
+     * 查询个人有关的所有任务
+     * @param creatorCardId 身份证号
+     * @param title 标题模糊搜索
+     * @param groupStatus 任务组状态状态
      */
-    List<TaskSelect> queryMyCreatTask(@Param("creatorCardId") String creatorCardId, @Param("tile")String title);
-    List<TaskSelect> queryMyAcceptTask(@Param("taskCopierId")String taskCopierId, @Param("tile")String title);
-    List<TaskSelect> queryMyCopperTask(@Param("taskCardId")String taskCardId, @Param("tile")String title);
+    List<TaskSelect> queryMyCreatTask(@Param("creatorCardId") String creatorCardId, @Param("tile") String title,@Param("groupStatus") Integer groupStatus);
+
+    /**
+     * 查询个人有关的执行的任务
+     * @param taskCardId 身份证号
+     * @param title 标题模糊搜索
+     * @param groupStatus 状态
+     */
+    List<TaskSelect> queryMyAcceptTask(@Param("taskCardId") String taskCardId, @Param("tile") String title,@Param("groupStatus") Integer groupStatus);
+
+    /**
+     * 查询个人有关的抄送的任务
+     * @param taskCopierId 身份证号
+     * @param title 标题模糊搜索
+     * @param groupStatus 状态
+     */
+    List<TaskSelect> queryMyCopperTask(@Param("taskCopierId") String taskCopierId, @Param("tile") String title,@Param("groupStatus") Integer groupStatus);
+
 
     /**
      * 下两个为查询新增任务和其他任务
@@ -99,16 +114,15 @@ public interface TaskMapper {
      */
     int updateMyTaskByIdAndGroupId(@Param("taskCardId") String taskCardId, @Param("groupId") Integer groupId, @Param("taskState") Integer taskState);
     /**
-     * g更改任务状态（创建者）
+     * g更改任务状态（创建人结束任务）
      */
-    int updateTaskByIdAndGroupId ( @Param("groupId") Integer groupId, @Param("taskState") Integer taskState);
+    int updateTaskByIdAndGroupId ( @Param("groupId") Integer groupId);
     /**
      *删除任务
-     * @param creatorCardId
      * @param groupId
      * @return
      */
-   int deleteTask(@Param("creatorCardId") String creatorCardId,@Param("groupId") Integer groupId);
+   int deleteTask(@Param("groupId") Integer groupId);
 
     /**
      * 删除任务日志
@@ -137,6 +151,19 @@ public interface TaskMapper {
      * 查询抄送人身份照
      */
     List<TaskIdState> queryTaskCopierId(Integer groupId);
+
+    /**
+     * 通过 组id 查询任务组
+     * @param groupId 组id
+     * @return
+     */
+    TaskGroup getTaskGroupByGroupId(Integer groupId);
+
+    /**
+     * 修改逾期
+     * @param groupId 组id
+     */
+    int updateOverdue(Integer groupId);
 }
 
 

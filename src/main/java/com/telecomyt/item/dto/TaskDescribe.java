@@ -28,6 +28,7 @@ public class TaskDescribe implements Serializable {
          private LocalDateTime taskEndTime;
          private List<TaskIdState> taskCopierId;
          private String  groupFileUrl;
+         private String  groupFileName;
          private LocalDateTime taskCreatTime;
          private List<TaskLog> taskLogs ;
          private String sheetTitle;

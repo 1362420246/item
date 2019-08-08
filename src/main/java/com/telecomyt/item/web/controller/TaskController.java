@@ -12,6 +12,7 @@ import com.telecomyt.item.utils.BeanValidator;
 import com.telecomyt.item.utils.FileUtil;
 import com.telecomyt.item.web.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -54,16 +56,20 @@ public class TaskController {
 
     /**
      * 新增任务日志（处理上传）
-     * @param
+     * @param logType 上传类型 0-图片 1-文档 2-文字描述
      * @return
      */
    @PostMapping("/insertMyLog")
-    public  BaseResp<String> insertMyLog(Integer groupId,@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date logTime, MultipartFile logFile, String logCardId, Integer logType,String fileTagging) throws IOException {
-        if(logType == null || groupId == null || logCardId == null ){
+    public  BaseResp<String> insertMyLog(
+            @RequestParam("groupId") Integer groupId,
+            @RequestParam("logCardId") String logCardId,
+            @RequestParam("logType") Integer logType,
+            String fileTagging ,
+            MultipartFile logFile ) throws IOException {
+       if(logType == null || groupId == null || logCardId == null ){
             return new BaseResp<>(ResultStatus.INVALID_PARAM);
        }
-       TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(logTime).logCardId(logCardId).logType(logType).build();
-
+       TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(new Date()).logCardId(logCardId).logType(logType).build();
        if(logType == 0 || logType == 1){
             //如果文件不为空，写入上传路径
             if(logFile == null || logFile.isEmpty()) {
@@ -78,36 +84,37 @@ public class TaskController {
             if (!logPath.getParentFile().exists()) {
                 logPath.getParentFile().mkdirs();
             }
-            //将上传文件保存到一个目标文件当中
-            File saveTaskLogFile = new File(taskLogPath + taskLogFilename);
-            logFile.transferTo(saveTaskLogFile);
+            logFile.transferTo(logPath);
             //存储的路径（相对路径）
             taskLog.setFilePath(CommonConstants.REPORTING_PATH + taskLogFilename);
             //访问路径（uri）
             taskLog.setFileUrl(CommonConstants.REPORTING_PATH + taskLogFilename);
             taskLog.setFileName(taskLogFilename);
-            log.info("上报文件保存路径："+saveTaskLogFile.getAbsolutePath());
-            log.info("上报文件保存路径2："+ FileUtil.getHomePath() + CommonConstants.REPORTING_PATH + taskLogFilename);
+            log.info("上报文件保存路径："+ logPath.getAbsolutePath());
             log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + taskLogFilename);
         }else if(logType == 2){
             taskLog.setFileTagging(fileTagging);
         }else{
             return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"上报失败，上报类型错误");
         }
-
-
         return taskService.insertMyLog(taskLog);
     }
 
 
     /**
      * 查询个人有关的所有任务
-     * @param taskCardId
-     * @return
+     * @param taskCardId 身份证号
+     * @param title 标题模糊搜索
+     * @param groupStatus 任务组状态状态  正常0 结束1
+     * @param type   1：我创建的 2.我执行的 3.我是抄送人
      */
      @GetMapping("/getMyTaskById")
-     public  BaseResp<List> getMyTaskById(String taskCardId ,String title){
-       return taskService.queryMyTaskById(taskCardId , title);
+     public  BaseResp<List> getMyTaskById(
+             @RequestParam(name = "taskCardId") String taskCardId ,
+             @RequestParam(name = "groupStatus") Integer groupStatus ,
+             @RequestParam(name = "type[]" ) List<Integer> type ,
+             String title ){
+       return taskService.queryMyTaskById(taskCardId , title , groupStatus ,type);
 
      }
 
@@ -117,7 +124,8 @@ public class TaskController {
      * @return
      */
      @GetMapping("/getTaskDetailed")
-     public BaseResp<TaskDescribe> getMyTaskDetailed(Integer groupId){
+     public BaseResp<TaskDescribe> getMyTaskDetailed(
+             @RequestParam("groupId") Integer groupId){
          return taskService.queryTaskDetailed(groupId);
      }
     /**
@@ -153,50 +161,62 @@ public class TaskController {
     /**
      * 修改任务（创建人修改）
      */
-    @PutMapping("/updateTask")
-    public BaseResp<String> updateTask (TaskGroup taskGroup) {
+    @PostMapping("/updateTask")
+    public BaseResp<String> updateTask (TaskGroup taskGroup ,MultipartFile groupTaskFile) throws IOException {
+        if(StringUtils.isEmpty(taskGroup.getCreatorCardId()) || taskGroup.getGroupId() == null){
+            return new BaseResp<>(ResultStatus.INVALID_PARAM);
+        }
+        if(groupTaskFile != null && !groupTaskFile.isEmpty()) {
+            //上传文件路径
+            String taskGroupFilePath = FileUtil.getHomePath() + CommonConstants.REPORTING_PATH ;
+            //上传文件名
+            String groupFileName = groupTaskFile.getOriginalFilename();
+            File groupFilePath = new File(taskGroupFilePath,groupFileName);
+            //判断路径是否存在，如果不存在就创建一个
+            if (!groupFilePath.getParentFile().exists()) {
+                groupFilePath.getParentFile().mkdirs();
+            }
+            //将上传文件保存到一个目标文件当中
+            groupTaskFile.transferTo(groupFilePath);
+            //存储的路径（相对路径）
+            taskGroup.setGroupFilepath(CommonConstants.REPORTING_PATH + groupFileName);
+            //访问路径（uri）
+            taskGroup.setGroupFileurl(CommonConstants.REPORTING_PATH + groupFileName);
+            log.info("上报文件保存路径："+groupFilePath.getAbsolutePath());
+            log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + groupFileName);
+        }
+
         return taskService.updateTask(taskGroup);
     }
 
     /**
      * 修改个人在任务中的状态
+     * @param taskCardId  执行人id
+     * @param groupId 组id
+     * @param taskState 0未开始 1进行中 2拒绝 3已完成  4逾期
+     * @return
      */
     @PutMapping("/updateMyTaskState")
-    public BaseResp<String> updateMyTaskState (String taskCardId, Integer groupId, Integer taskState) {
+    public BaseResp<String> updateMyTaskState (
+            @RequestParam("taskCardId") String taskCardId,
+            @RequestParam("groupId")Integer groupId,
+            @RequestParam("taskState")Integer taskState) {
         return taskService.updateMyTaskByIdAndGroupId(taskCardId, groupId, taskState);
     }
 
     /**
-     * 修改任务中的状态(执行人修改)
+     * 修改任务中的状态(创建人结束任务)
      */
     @PutMapping("/updateTaskState")
-    public BaseResp<String> updateTaskState ( Integer groupId, Integer taskState) {
-        return taskService.updateTaskByIdAndGroupId( groupId, taskState);
+    public BaseResp<String> updateTaskState (@RequestParam("groupId") Integer groupId) {
+        return taskService.updateTaskByIdAndGroupId( groupId );
     }
     /**
-     * 删除任务同时删除日志
+     * 删除任务同时删除日志(任务创建人 撤回)
      */
     @DeleteMapping("/deleteMyTask")
-    public BaseResp<String> deleteMyTask(String creatorCardId,Integer groupId){
-        return taskService.deleteTask(creatorCardId,groupId);
+    public BaseResp<String> deleteMyTask(@RequestParam("groupId") Integer groupId){
+        return taskService.deleteTask(groupId);
     }
 
 }
-
-
-//    /**
-//     * 得到个人任务列表
-//     */
-//    @GetMapping("/getTaskList")
-//    public BaseResp<List> getTaskList(String taskCardId,Integer groupId){
-//        return  taskService.queryMyTaskById(taskCardId,groupId);
-//        Map<String, Object> modleMap = new HashMap<>();
-//        List<Task> task = taskService.queryMyTaskById(taskCardid);
-//        return new BaseResp<>(ResultStatus.SUCCESS,task);
-//        if(task != null) {
-//            modleMap.put("task",task);
-//        }else {
-//            modleMap.put("task","0");
-//        }
-//        return modleMap;
-//}
