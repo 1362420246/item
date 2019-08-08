@@ -151,7 +151,7 @@ public class TaskController {
     }
 
     /**
-     * 修改任务
+     * 修改任务（创建人修改）
      */
     @PutMapping("/updateTask")
     public BaseResp<String> updateTask (TaskGroup taskGroup) {
@@ -165,14 +165,12 @@ public class TaskController {
     public BaseResp<String> updateMyTaskState (String taskCardId, Integer groupId, Integer taskState) {
         return taskService.updateMyTaskByIdAndGroupId(taskCardId, groupId, taskState);
     }
+
     /**
-     * 人物创建人员结束任务
-     */
-    /**
-     * 修改个人在任务中的状态(执行人修改)
+     * 修改任务中的状态(执行人修改)
      */
     @PutMapping("/updateTaskState")
-    public BaseResp<String> updateTaskState (  Integer groupId, Integer taskState) {
+    public BaseResp<String> updateTaskState ( Integer groupId, Integer taskState) {
         return taskService.updateTaskByIdAndGroupId( groupId, taskState);
     }
     /**
