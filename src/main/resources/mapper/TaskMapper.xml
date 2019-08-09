@@ -56,7 +56,7 @@
              creator_cardid = #{creatorCardId}
              and group_status = #{groupStatus}
              and is_delete = 0
-            <if test="tile != null and tile != ''">
+            <if test="title != null and title != ''">
                 and sheet_title like concat('%',#{title},'%')
             </if>
         </where>
@@ -72,7 +72,7 @@
             and b.group_status = #{groupStatus}
             and b.is_delete = 0
             and a.task_state != 2
-            <if test="tile != null and tile != ''">
+            <if test="title != null and title != ''">
                 and b.sheet_title like concat('%',#{title},'%')
             </if>
         </where>
@@ -87,7 +87,7 @@
             and a.task_copierid = #{taskCopierId}
             and b.group_status = #{groupStatus}
             and b.is_delete = 0
-            <if test="tile != null and tile != ''">
+            <if test="title != null and title != ''">
                 and b.sheet_title like concat('%',#{title},'%')
             </if>
         </where>

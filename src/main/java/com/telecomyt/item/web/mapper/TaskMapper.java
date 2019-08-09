@@ -65,7 +65,7 @@ public interface TaskMapper {
      * @param title 标题模糊搜索
      * @param groupStatus 任务组状态状态
      */
-    List<TaskSelect> queryMyCreatTask(@Param("creatorCardId") String creatorCardId, @Param("tile") String title,@Param("groupStatus") Integer groupStatus);
+    List<TaskSelect> queryMyCreatTask(@Param("creatorCardId") String creatorCardId, @Param("title") String title,@Param("groupStatus") Integer groupStatus);
 
     /**
      * 查询个人有关的执行的任务
@@ -73,7 +73,7 @@ public interface TaskMapper {
      * @param title 标题模糊搜索
      * @param groupStatus 状态
      */
-    List<TaskSelect> queryMyAcceptTask(@Param("taskCardId") String taskCardId, @Param("tile") String title,@Param("groupStatus") Integer groupStatus);
+    List<TaskSelect> queryMyAcceptTask(@Param("taskCardId") String taskCardId, @Param("title") String title,@Param("groupStatus") Integer groupStatus);
 
     /**
      * 查询个人有关的抄送的任务
@@ -81,7 +81,7 @@ public interface TaskMapper {
      * @param title 标题模糊搜索
      * @param groupStatus 状态
      */
-    List<TaskSelect> queryMyCopperTask(@Param("taskCopierId") String taskCopierId, @Param("tile") String title,@Param("groupStatus") Integer groupStatus);
+    List<TaskSelect> queryMyCopperTask(@Param("taskCopierId") String taskCopierId, @Param("title") String title,@Param("groupStatus") Integer groupStatus);
 
 
     /**
