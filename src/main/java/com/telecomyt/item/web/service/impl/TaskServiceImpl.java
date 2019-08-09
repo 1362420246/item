@@ -30,7 +30,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author ZhangSF
@@ -102,6 +101,10 @@ public class TaskServiceImpl implements TaskService {
                     return new BaseResp<>(ResultStatus.FAIL);
                 }
             }
+            //添加日志
+            TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(new Date()).
+                    logCardId(taskGroup.getCreatorCardId()).logType(3).build();
+            taskMapper.insertMyLog(taskLog);
             return new BaseResp<>(ResultStatus.SUCCESS);
         }else {
             log.info("新增任务组失败。");
@@ -278,12 +281,37 @@ public class TaskServiceImpl implements TaskService {
         }
     }
     /**
-     * 更改个人任务状态
+     * 修改个人在任务中的状态
+     * @param taskCardId  执行人id
+     * @param groupId 组id
+     * @param taskState 0未开始 1进行中 2拒绝 3已完成  4逾期
+     * @param reason  拒绝理由 可以不写
      */
     @Override
-    public BaseResp<String> updateMyTaskByIdAndGroupId(String taskCardId,Integer groupId, Integer taskState) {
+    public BaseResp<String> updateMyTaskByIdAndGroupId(String taskCardId, Integer groupId, Integer taskState, String reason) {
         int flag = taskMapper.updateMyTaskByIdAndGroupId(taskCardId,groupId,taskState);
         if(flag > 0){
+            //  6.开始任务（执行者 ） 7.完成任务（执行者 ） 8.拒绝任务（执行者，可以带理由 ）
+            int logType ;
+            switch (taskState){
+                case 1:
+                    logType = 6;
+                    break;
+                case 2:
+                    logType = 8;
+                    break;
+                case 3:
+                    logType = 7;
+                    break;
+                default:
+                    logType = 0;
+                    break;
+            }
+            if(logType != 0){
+                TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(new Date()).
+                        logCardId(taskCardId).logType(logType).fileTagging(reason).build();
+                taskMapper.insertMyLog(taskLog);
+            }
             return new BaseResp<>(ResultStatus.SUCCESS);
         }else{
             return new BaseResp<>(ResultStatus.FAIL);
@@ -306,6 +334,9 @@ public class TaskServiceImpl implements TaskService {
                     return new BaseResp<>(ResultStatus.FAIL);
                 }
             }
+            TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(new Date()).
+                    logCardId(taskGroup.getCreatorCardId()).logType(4).build();
+            taskMapper.insertMyLog(taskLog);
             return new BaseResp<>(ResultStatus.SUCCESS);
         }else{
             return new BaseResp<>(ResultStatus.FAIL);
@@ -314,14 +345,17 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
-
     /**
      * 删除任务
      */
     @Override
-    public BaseResp<String> deleteTask(Integer groupId) {
+    public BaseResp<String> deleteTask(Integer groupId, String reason) {
         int taskResult = taskMapper.deleteTask(groupId);
         if(taskResult > 0){
+            TaskGroup taskGroup = taskMapper.getTaskGroupByGroupId( groupId);
+            TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(new Date()).
+                    logCardId(taskGroup.getCreatorCardId()).logType(5).fileTagging(reason).build();
+            taskMapper.insertMyLog(taskLog);
             return new BaseResp<>(ResultStatus.SUCCESS);
         }
         return new BaseResp<>(ResultStatus.FAIL);

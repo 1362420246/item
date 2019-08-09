@@ -160,9 +160,10 @@ public class TaskController {
 
     /**
      * 修改任务（创建人修改）
+     * @param state 为1的时候 删除源文件
      */
     @PostMapping("/updateTask")
-    public BaseResp<String> updateTask (TaskGroup taskGroup ,MultipartFile groupTaskFile) throws IOException {
+    public BaseResp<String> updateTask (TaskGroup taskGroup ,MultipartFile groupTaskFile ,Integer state) throws IOException {
         if(StringUtils.isEmpty(taskGroup.getCreatorCardId()) || taskGroup.getGroupId() == null){
             return new BaseResp<>(ResultStatus.INVALID_PARAM);
         }
@@ -182,10 +183,16 @@ public class TaskController {
             taskGroup.setGroupFilepath(CommonConstants.REPORTING_PATH + groupFileName);
             //访问路径（uri）
             taskGroup.setGroupFileurl(CommonConstants.REPORTING_PATH + groupFileName);
+            taskGroup.setGroupFilename(groupFileName);
             log.info("上报文件保存路径："+groupFilePath.getAbsolutePath());
             log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + groupFileName);
+        }else {
+            if( state == 1){
+                taskGroup.setGroupFilepath("");
+                taskGroup.setGroupFileurl("");
+                taskGroup.setGroupFilename("");
+            }
         }
-
         return taskService.updateTask(taskGroup);
     }
 
@@ -194,14 +201,16 @@ public class TaskController {
      * @param taskCardId  执行人id
      * @param groupId 组id
      * @param taskState 0未开始 1进行中 2拒绝 3已完成  4逾期
+     * @param reason  拒绝理由 可以不写
      * @return
      */
     @PutMapping("/updateMyTaskState")
     public BaseResp<String> updateMyTaskState (
             @RequestParam("taskCardId") String taskCardId,
             @RequestParam("groupId")Integer groupId,
-            @RequestParam("taskState")Integer taskState) {
-        return taskService.updateMyTaskByIdAndGroupId(taskCardId, groupId, taskState);
+            @RequestParam("taskState")Integer taskState,
+            String reason) {
+        return taskService.updateMyTaskByIdAndGroupId(taskCardId, groupId, taskState,reason);
     }
 
     /**
@@ -213,10 +222,11 @@ public class TaskController {
     }
     /**
      * 删除任务同时删除日志(任务创建人 撤回)
+     * @param reason 撤回理由 可以没有
      */
     @DeleteMapping("/deleteMyTask")
-    public BaseResp<String> deleteMyTask(@RequestParam("groupId") Integer groupId){
-        return taskService.deleteTask(groupId);
+    public BaseResp<String> deleteMyTask(@RequestParam("groupId") Integer groupId ,String reason){
+        return taskService.deleteTask(groupId ,reason);
     }
 
 }

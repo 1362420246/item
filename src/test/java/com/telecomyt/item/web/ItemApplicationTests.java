@@ -61,6 +61,9 @@ public class ItemApplicationTests {
         System.out.println(quote2);
 
     }
+    @Test
+    public void redisAdd() {
 
+    }
 
 }

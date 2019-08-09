@@ -55,9 +55,9 @@ spring:
           # 最小空闲连接数 默认0
           min-idle: 0
       # 0号数据库
-      database: 0
-
+      database: 3
 
 parameter:
   picture:
+    #图片访问的ip和端口
     ip: http://39.106.33.10:8083

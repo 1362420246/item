@@ -181,11 +181,12 @@
     <update id="updateTask" parameterType="com.telecomyt.item.entity.TaskGroup">
         update db_sheet_group
         <set>
-            <if test="sheetTitle!=null">sheet_title=#{sheetTitle},</if>
-            <if test="sheetDescribe!=null">sheet_describe=#{sheetDescribe},</if>
-            <if test="taskEndTime!=null">task_endtime=#{taskEndTime},</if>
-            <if test="groupFileurl!=null">group_fileurl=#{groupFileurl},</if>
-            <if test="groupFilepath!=null">group_filepath=#{groupFilepath},</if>
+            <if test="sheetTitle != null">sheet_title=#{sheetTitle},</if>
+            <if test="sheetDescribe != null">sheet_describe=#{sheetDescribe},</if>
+            <if test="taskEndTime != null">task_endtime=#{taskEndTime},</if>
+            <if test="groupFileurl != null">group_fileurl=#{groupFileurl},</if>
+            <if test="groupFilepath != null">group_filepath=#{groupFilepath},</if>
+            <if test="groupFilename != null ">group_filename=#{groupFilename},</if>
         </set>
         where creator_cardid=#{creatorCardId} and group_id=#{groupId}
     </update>

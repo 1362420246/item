@@ -25,7 +25,7 @@ CREATE TABLE `db_sheet_log`  (
   `group_id` int(255) NULL DEFAULT NULL COMMENT '任务组id',
   `log_time` datetime(0) NULL DEFAULT NULL COMMENT '上传任务进度时间',
   `log_cardid` char(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '上传人',
-  `log_type` int(11) NULL DEFAULT NULL COMMENT '上传类型 0-图片 1-文档 2-文字描述',
+  `log_type` int(11) DEFAULT NULL COMMENT '操作类型： 0-图片 1-文档 2-文字描述   3.创建任务（发布者）   4.结束任务（发布者） 5.撤回任务（发布者，可以带理由） 6.开始任务（执行者 ） 7.完成任务（执行者 ） 8.拒绝任务（执行者，可以带理由 ）',
   `file_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件存储路径',
   `file_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件访问路径',
   `file_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件名称',

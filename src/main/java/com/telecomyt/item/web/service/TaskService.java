@@ -98,13 +98,13 @@ public interface TaskService {
      */
     BaseResp<String> updateTask(TaskGroup taskGroup);
     /**
-     * 更改个人任务状态
-     * @param taskCardId
-     * @param groupId
-     * @param taskState
-     * @return
+     * 修改个人在任务中的状态
+     * @param taskCardId  执行人id
+     * @param groupId 组id
+     * @param taskState 0未开始 1进行中 2拒绝 3已完成  4逾期
+     * @param reason  拒绝理由 可以不写
      */
-    BaseResp<String> updateMyTaskByIdAndGroupId(String taskCardId, Integer groupId, Integer taskState);
+    BaseResp<String> updateMyTaskByIdAndGroupId(String taskCardId, Integer groupId, Integer taskState, String reason);
     /**
      * 更改任务状态（创建人结束任务）
      */
@@ -112,9 +112,8 @@ public interface TaskService {
     /**
      *
      * 删除任务
-     * @param groupId
-     * @return
+     *  @param reason 撤回理由 可以没有
      */
-    BaseResp<String> deleteTask(Integer groupId);
+    BaseResp<String> deleteTask(Integer groupId, String reason);
 
 }
