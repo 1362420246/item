@@ -35,4 +35,14 @@ public class TaskVo implements Serializable {
      */
     private String groupId ;
 
+    /**
+     *  正常0 结束1
+     */
+    private Integer groupStatus;
+
+    /**
+     * 是否被逾期 0：否  1：是逾期
+     */
+    private Integer isOverdue;
+
 }

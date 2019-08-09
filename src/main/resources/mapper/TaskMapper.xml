@@ -226,11 +226,12 @@
             b.task_endtime,
             b.sheet_title ,
             b.sheet_describe,
-            b.task_creattime
+            b.task_creattime,
+            b.group_status,
+            b.is_overdue
         FROM
             db_sheet_task a RIGHT join db_sheet_group b
 			on  a.group_id = b.group_id
-			and b.is_delete = 0
         WHERE
 	       (a.task_cardid = #{cardid} or a.task_copierid = #{cardid} or b.creator_cardid = #{cardid} )
 	       AND b.is_delete = 0
