@@ -102,6 +102,8 @@
         <result column="group_filename" property="groupFileName" />
         <result column="task_creattime" property="taskCreatTime" />
         <result column="sheet_title" property="sheetTitle" />
+        <result column="is_overdue" property="is0verdue" />
+        <result column="group_status" property="groupStatus" />
         <collection property="taskLogs" ofType="com.telecomyt.item.entity.TaskLog" >
             <id column="log_id" property="logId"/>
             <result column="file_url" property="fileUrl" />
@@ -124,6 +126,8 @@
             b.group_fileurl,
             b.group_filename,
             b.sheet_title,
+            b.is_overdue,
+            b.group_status,
             d.log_id,
             d.log_time,
             d.log_cardid,

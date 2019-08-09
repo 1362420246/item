@@ -9,6 +9,7 @@ import com.telecomyt.item.entity.ScheduleInfoDo;
 import com.telecomyt.item.entity.ScheduleLog;
 import com.telecomyt.item.enums.ResultStatus;
 import com.telecomyt.item.utils.DateUtil;
+import com.telecomyt.item.utils.OperationUtils;
 import com.telecomyt.item.utils.converter.ScheduleInfoVoConverter;
 import com.telecomyt.item.web.mapper.ScheduleGroupMapper;
 import com.telecomyt.item.web.mapper.ScheduleInfoMapper;
@@ -254,12 +255,21 @@ public class ScheduleServiceImpl implements ScheduleService {
             return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"日程不存在");
         }
         ScheduleInfoVo scheduleInfoVo = ScheduleInfoVoConverter.INSTANCE.scheduleGrouToVo(scheduleGroup);
+        String creatorCardid = scheduleInfoVo.getCreatorCardid();
+        UserVo creatorUser = OperationUtils.getUserByCardId(creatorCardid);
+        scheduleInfoVo.setCreatorUser(creatorUser);
         List<String> affiliatedCardids = scheduleInfoMapper.queryAffiliatedCardids(groupId);
         scheduleInfoVo.setAffiliatedCardids(affiliatedCardids);
+        List<UserVo> affiliatedUsers = OperationUtils.getUsersByCardIds(affiliatedCardids);
+        scheduleInfoVo.setAffiliatedUsers(affiliatedUsers);
         List<ScheduleLog> scheduleLogs = scheduleLogMapper.queryByGroupId(groupId);
         scheduleLogs.stream().filter(scheduleLog -> StringUtils.isNotBlank(scheduleLog.getFileUri())).
                 forEach(scheduleLog -> scheduleLog.setFileUri( ip + scheduleLog.getFileUri()));
-        //添加名字和头像 TODO
+        //添加名字和头像
+        scheduleLogs.forEach(log -> {
+            UserVo operationUser = OperationUtils.getUserByCardId(log.getOperationCardid());
+            log.setOperationUser(operationUser);
+        });
         scheduleInfoVo.setScheduleLogs(scheduleLogs);
         return new BaseResp<>(ResultStatus.SUCCESS,scheduleInfoVo);
     }

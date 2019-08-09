@@ -204,22 +204,30 @@ public class ImageUtils {
      */
     public void generateAvatar(String name,String imageName)throws Exception{
         BufferedImage image = AvatarUtils.generateImg(name, 120, 120);
-        ImageIO.write(image,"png",new File("C:\\Users\\qbk\\Desktop\\"+imageName+".png"));
+        ImageIO.write(image,"png",new File("C:\\Users\\qbk\\Desktop\\头像缩略图\\头像\\"+imageName+".png"));
     }
 
 
     public static void main(String[] args) throws Exception{
+
         ImageUtils imageUtils = new ImageUtils();
         //生成头像
         imageUtils.generateAvatar("曲博卡","qbk");
+        imageUtils.generateAvatar("张凯","zk");
+        imageUtils.generateAvatar("江滨","jb");
+        imageUtils.generateAvatar("郭钊","gz");
+        imageUtils.generateAvatar("张盛飞","zsf");
 
-        String path = "C:\\Users\\qbk\\Desktop\\m.jpg";
-        String substring = path.substring(path.lastIndexOf(".")+1);
-        System.out.println(substring);
 
-        String targetDir = "C:\\Users\\qbk\\Desktop\\";
-        //缩略图
-        imageUtils.zoom(path,targetDir,"m" + ".png" );
+
+////
+////        String path = "C:\\Users\\qbk\\Desktop\\m.jpg";
+////        String substring = path.substring(path.lastIndexOf(".")+1);
+////        System.out.println(substring);
+////
+////        String targetDir = "C:\\Users\\qbk\\Desktop\\";
+////        //缩略图
+////        imageUtils.zoom(path,targetDir,"m" + ".png" );
 
 
 

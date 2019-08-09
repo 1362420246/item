@@ -63,4 +63,16 @@ public class ScheduleInfoVo implements Serializable {
 
     private LocalDateTime createTime;
 
+    /**
+     * 创建人用户信息
+     */
+    private UserVo creatorUser ;
+
+    /**
+     * 关联人的用户信息数据
+     */
+    private List<UserVo> affiliatedUsers ;
+
+
+
 }

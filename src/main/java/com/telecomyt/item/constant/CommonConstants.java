@@ -10,4 +10,9 @@ public interface CommonConstants {
      */
     String REPORTING_PATH = "/reporting/" ;
 
+    /**
+     * 缓存用户的key
+     */
+    String CACHE_USER_KEY = "CacheUser" ;
+
 }

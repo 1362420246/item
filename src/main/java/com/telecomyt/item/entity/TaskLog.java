@@ -5,6 +5,7 @@
  */
 
 package com.telecomyt.item.entity;
+import com.telecomyt.item.dto.UserVo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,10 +22,14 @@ public class TaskLog implements Serializable {
     private Integer groupId;
     private Date logTime;
     private String logCardId;
-    private  Integer logType;
+    private Integer logType;
     private String filePath;
-    private  String fileUrl;
-    private  String fileName;
-    private  String fileTagging;
+    private String fileUrl;
+    private String fileName;
+    private String fileTagging;
+    /**
+     * 操作者用户信息
+     */
+    private UserVo logUser;
 
 }

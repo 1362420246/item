@@ -3,14 +3,12 @@
 package com.telecomyt.item.web.service.impl;
 
 import com.telecomyt.item.constant.CommonConstants;
-import com.telecomyt.item.dto.TaskDescribe;
-import com.telecomyt.item.dto.TaskDto;
-import com.telecomyt.item.dto.TaskIdState;
-import com.telecomyt.item.dto.TaskSelect;
+import com.telecomyt.item.dto.*;
 import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.*;
 import com.telecomyt.item.enums.ResultStatus;
 import com.telecomyt.item.utils.FileUtil;
+import com.telecomyt.item.utils.OperationUtils;
 import com.telecomyt.item.web.mapper.TaskMapper;
 import com.telecomyt.item.web.service.TaskAsynService;
 import com.telecomyt.item.web.service.TaskService;
@@ -30,6 +28,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author ZhangSF
@@ -200,13 +199,30 @@ public class TaskServiceImpl implements TaskService {
         //上传的图片和文件添加ip
         taskLogs.stream().filter(log -> StringUtils.isNotBlank(log.getFileUrl())).
                 forEach(log -> log.setFileUrl( ip + log.getFileUrl()));
+        taskLogs.forEach(log ->{
+            UserVo user = OperationUtils.getUserByCardId(log.getLogCardId());
+            log.setLogUser(user);
+        });
+        //查询执行者
         List<TaskIdState> taskCardId = taskMapper.queryTaskCardId(groupId);
         describeResult.setTaskCardId(taskCardId);
+        //查询抄送者
         List<TaskIdState> taskCopierId = taskMapper.queryTaskCopierId(groupId);
         describeResult.setTaskCopierId(taskCopierId);
+        //获取创建的用户信息
+        String creatorCardId = describeResult.getCreatorCardId();
+        UserVo creatorUser = OperationUtils.getUserByCardId(creatorCardId);
+        describeResult.setCreatorUser(creatorUser);
+        //抄送的用户信息
+        List<String> taskCopierIds = taskCopierId.stream().map(TaskIdState::getCardId).collect(Collectors.toList());
+        List<UserVo> taskCopierUsers = OperationUtils.getUsersByCardIds(taskCopierIds);
+        describeResult.setTaskCopierUsers(taskCopierUsers);
+        //获取执行的用户信息
+        List<UserVo> taskCardUsers = OperationUtils.getUsersByTaskIdState(taskCardId);
+        describeResult.setTaskCardUsers(taskCardUsers);
         return new BaseResp<>(ResultStatus.SUCCESS,describeResult);
-
     }
+
 //    /**
 //     * 查询个人任务详情
 //     */

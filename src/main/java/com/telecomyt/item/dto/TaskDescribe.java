@@ -20,16 +20,39 @@ import java.util.List;
 
 
 public class TaskDescribe implements Serializable {
-    private static final long serialVersionUID = 344789766099230866L;
-         private Integer groupId ;
-         private String sheetDescribe;
-         private String creatorCardId;
-         private List<TaskIdState> taskCardId;
-         private LocalDateTime taskEndTime;
-         private List<TaskIdState> taskCopierId;
-         private String  groupFileUrl;
-         private String  groupFileName;
-         private LocalDateTime taskCreatTime;
-         private List<TaskLog> taskLogs ;
-         private String sheetTitle;
+     private static final long serialVersionUID = 344789766099230866L;
+     private Integer groupId ;
+     private String sheetDescribe;
+     private String creatorCardId;
+     private List<TaskIdState> taskCardId;
+     private LocalDateTime taskEndTime;
+     private List<TaskIdState> taskCopierId;
+     private String  groupFileUrl;
+     private String  groupFileName;
+     private LocalDateTime taskCreatTime;
+     private List<TaskLog> taskLogs ;
+     private String sheetTitle;
+
+     /**
+      * 是否逾期
+      */
+     private Integer is0verdue;
+     /**
+      *  任务组状态
+      */
+     private Integer groupStatus;
+
+     /**
+      * 创建人用户信息
+      */
+     private UserVo creatorUser;
+     /**
+      * 执行人用户信息
+      */
+     private List<UserVo> taskCardUsers;
+     /**
+      * 抄送人用户信息
+      */
+     private List<UserVo> taskCopierUsers;
+
 }
