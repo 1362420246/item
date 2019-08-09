@@ -10,6 +10,12 @@ public interface CommonConstants {
      */
     String REPORTING_PATH = "/reporting/" ;
 
+
+    /**
+     * 上报的图片的缩略图地址
+     */
+    String REPORTING_PICTURE_ZOOM_PATH = "/reporting/306_306/" ;
+
     /**
      * 缓存用户的key
      */

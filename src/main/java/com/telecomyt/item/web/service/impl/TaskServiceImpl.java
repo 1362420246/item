@@ -199,6 +199,8 @@ public class TaskServiceImpl implements TaskService {
         //上传的图片和文件添加ip
         taskLogs.stream().filter(log -> StringUtils.isNotBlank(log.getFileUrl())).
                 forEach(log -> log.setFileUrl( ip + log.getFileUrl()));
+        taskLogs.stream().filter(log -> StringUtils.isNotBlank(log.getFileZoomUrl())).
+                forEach(log -> log.setFileZoomUrl( ip + log.getFileZoomUrl()));
         taskLogs.forEach(log ->{
             UserVo user = OperationUtils.getUserByCardId(log.getLogCardId());
             log.setLogUser(user);

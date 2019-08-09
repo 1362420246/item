@@ -10,6 +10,7 @@ import com.telecomyt.item.entity.TaskLog;
 import com.telecomyt.item.enums.ResultStatus;
 import com.telecomyt.item.utils.BeanValidator;
 import com.telecomyt.item.utils.FileUtil;
+import com.telecomyt.item.utils.ImageUtils;
 import com.telecomyt.item.web.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -46,13 +47,13 @@ public class TaskController {
         return taskService.addTask(taskDto,groupTaskFile);
     }
 
-    /**
-     * 新增任务日志（未处理上传）
-     */
-    @PostMapping("/insertNewLog")
-    public  BaseResp<String> insertNewLog(Integer groupId, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")  Date logTime, String logPicture, String logCardId, Integer logType){
-        return taskService.insertLog(groupId,logTime,logPicture,logCardId,logType);
-    }
+//    /**
+//     * 新增任务日志（未处理上传）
+//     */
+//    @PostMapping("/insertNewLog")
+//    public  BaseResp<String> insertNewLog(Integer groupId, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")  Date logTime, String logPicture, String logCardId, Integer logType){
+//        return taskService.insertLog(groupId,logTime,logPicture,logCardId,logType);
+//    }
 
     /**
      * 新增任务日志（处理上传）
@@ -65,7 +66,7 @@ public class TaskController {
             @RequestParam("logCardId") String logCardId,
             @RequestParam("logType") Integer logType,
             String fileTagging ,
-            MultipartFile logFile ) throws IOException {
+            MultipartFile logFile ) throws Exception {
        if(logType == null || groupId == null || logCardId == null ){
             return new BaseResp<>(ResultStatus.INVALID_PARAM);
        }
@@ -92,6 +93,17 @@ public class TaskController {
             taskLog.setFileName(taskLogFilename);
             log.info("上报文件保存路径："+ logPath.getAbsolutePath());
             log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + taskLogFilename);
+          if(logType == 0){
+              String zoomPath = FileUtil.getHomePath() + CommonConstants.REPORTING_PICTURE_ZOOM_PATH ;
+              File zoomFile = new File(zoomPath);
+              //判断路径是否存在，如果不存在就创建一个
+              if (!zoomFile.exists()) {
+                  zoomFile.mkdirs();
+              }
+              ImageUtils.zoomFixedSize(logPath.getAbsolutePath() ,zoomPath , taskLogFilename);
+              taskLog.setFileZoomPath(CommonConstants.REPORTING_PICTURE_ZOOM_PATH  + taskLogFilename);
+              taskLog.setFileZoomUrl(CommonConstants.REPORTING_PICTURE_ZOOM_PATH  + taskLogFilename );
+          }
         }else if(logType == 2){
             taskLog.setFileTagging(fileTagging);
         }else{

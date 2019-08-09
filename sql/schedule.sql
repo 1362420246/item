@@ -39,7 +39,9 @@ CREATE TABLE `tb_schedule_log`  (
   `log_remarks` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '任务标注',
   `file_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '文件存储路径（相对路径）',
   `file_uri` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '文件访问路径（相对路径）',
-   `file_name` varchar(255) COLLATE utf8mb4 DEFAULT '' COMMENT '文件名称',
+  `file_zoom_path` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '图片缩略图存储路径',
+  `file_zoom_url` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '图片缩略图访问路径',
+  `file_name` varchar(255) COLLATE utf8mb4 DEFAULT '' COMMENT '文件名称',
   `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
   PRIMARY KEY (`id`) USING BTREE

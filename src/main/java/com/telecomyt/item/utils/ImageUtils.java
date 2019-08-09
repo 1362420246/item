@@ -93,7 +93,7 @@ public class ImageUtils {
      * @return void
      * @throws 
      */
-    public void zoom(String source,String dir,String fileName,int width,int height)throws Exception{
+    public static void zoom(String source,String dir,String fileName,int width,int height)throws Exception{
         Thumbnails.Builder<File> fileBuilder = Thumbnails.of(source).scale(1.0).outputQuality(1.0);
         BufferedImage bufferedImage = fileBuilder.asBufferedImage();
         int imageHeight = bufferedImage.getHeight();
@@ -153,7 +153,7 @@ public class ImageUtils {
      * @return void
      * @throws
      */
-    public void cropping(String source,int width,int height,String target)throws Exception{
+    public static void cropping(String source,int width,int height,String target)throws Exception{
         Thumbnails.of(source)
                   .sourceRegion(Positions.CENTER, width, height)
                   .size(width, height)
@@ -207,27 +207,36 @@ public class ImageUtils {
         ImageIO.write(image,"png",new File("C:\\Users\\qbk\\Desktop\\头像缩略图\\头像\\"+imageName+".png"));
     }
 
+    /**
+     *  生成306*306的缩略图
+     * @param path 原图路径
+     * @param dir 缩略图保存地址
+     * @param fileName 生成的缩略图的名称
+     */
+    public static void zoomFixedSize (String path ,String dir, String fileName) throws Exception {
+        zoom(path,dir,fileName,ImageConstant.SUGGEST_IMAGE_THIRD_WIDTH,ImageConstant.SUGGEST_IMAGE_THIRD_HEIGHT);
+    }
 
     public static void main(String[] args) throws Exception{
 
         ImageUtils imageUtils = new ImageUtils();
-        //生成头像
-        imageUtils.generateAvatar("曲博卡","qbk");
-        imageUtils.generateAvatar("张凯","zk");
-        imageUtils.generateAvatar("江滨","jb");
-        imageUtils.generateAvatar("郭钊","gz");
-        imageUtils.generateAvatar("张盛飞","zsf");
+//        //生成头像
+//        imageUtils.generateAvatar("曲博卡","qbk");
+//        imageUtils.generateAvatar("张凯","zk");
+//        imageUtils.generateAvatar("江滨","jb");
+//        imageUtils.generateAvatar("郭钊","gz");
+//        imageUtils.generateAvatar("张盛飞","zsf");
 
 
 
-////
-////        String path = "C:\\Users\\qbk\\Desktop\\m.jpg";
-////        String substring = path.substring(path.lastIndexOf(".")+1);
-////        System.out.println(substring);
-////
-////        String targetDir = "C:\\Users\\qbk\\Desktop\\";
-////        //缩略图
-////        imageUtils.zoom(path,targetDir,"m" + ".png" );
+
+        String path = "C:\\Users\\qbk\\Desktop\\mm.jpg";
+        String substring = path.substring(path.lastIndexOf(".")+1);
+        System.out.println(substring);
+
+        String targetDir = "C:\\Users\\qbk\\Desktop\\";
+        //缩略图
+         zoomFixedSize(path,targetDir,"m" + ".png" );
 
 
 

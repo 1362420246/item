@@ -77,4 +77,14 @@ public class ScheduleLog implements Serializable {
      * 操作人的用户信息
      */
     private UserVo operationUser;
+
+    /**
+     * 缩略图地址
+     */
+    private String fileZoomPath;
+
+    /**
+     * 缩略图访问路径
+     */
+    private String fileZoomUrl;
 }

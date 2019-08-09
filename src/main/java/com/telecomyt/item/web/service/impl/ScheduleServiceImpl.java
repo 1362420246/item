@@ -265,6 +265,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<ScheduleLog> scheduleLogs = scheduleLogMapper.queryByGroupId(groupId);
         scheduleLogs.stream().filter(scheduleLog -> StringUtils.isNotBlank(scheduleLog.getFileUri())).
                 forEach(scheduleLog -> scheduleLog.setFileUri( ip + scheduleLog.getFileUri()));
+        scheduleLogs.stream().filter(scheduleLog -> StringUtils.isNotBlank(scheduleLog.getFileZoomUrl())).
+                forEach(scheduleLog -> scheduleLog.setFileZoomUrl( ip + scheduleLog.getFileZoomUrl()));
         //添加名字和头像
         scheduleLogs.forEach(log -> {
             UserVo operationUser = OperationUtils.getUserByCardId(log.getOperationCardid());

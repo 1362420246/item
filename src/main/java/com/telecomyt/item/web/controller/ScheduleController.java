@@ -8,6 +8,7 @@ import com.telecomyt.item.entity.ScheduleLog;
 import com.telecomyt.item.enums.ResultStatus;
 import com.telecomyt.item.utils.BeanValidator;
 import com.telecomyt.item.utils.FileUtil;
+import com.telecomyt.item.utils.ImageUtils;
 import com.telecomyt.item.web.service.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -78,7 +79,7 @@ public class ScheduleController {
             @RequestParam(value = "file" ,required = false) MultipartFile file ,
             @RequestParam("groupId") Integer groupId ,
             @RequestParam("operationCardid") String operationCardid ,
-            String logRemarks ) throws IOException {
+            String logRemarks ) throws Exception {
         if(logType == null || groupId == null || operationCardid == null ){
             return new BaseResp<>(ResultStatus.INVALID_PARAM);
         }
@@ -114,6 +115,18 @@ public class ScheduleController {
             scheduleLog.setFileName(filename);
             log.info("上报文件保存路径："+saveFile.getAbsolutePath());
             log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + filename);
+            if(logType ==2){
+                String zoomPath = FileUtil.getHomePath() + CommonConstants.REPORTING_PICTURE_ZOOM_PATH ;
+                File zoomFile = new File(zoomPath);
+                //判断路径是否存在，如果不存在就创建一个
+                if (!zoomFile.exists()) {
+                    zoomFile.mkdirs();
+                }
+                ImageUtils.zoomFixedSize(saveFile.getAbsolutePath() ,zoomPath , filename);
+                scheduleLog.setFileZoomPath(CommonConstants.REPORTING_PICTURE_ZOOM_PATH  + filename);
+                scheduleLog.setFileZoomUrl(CommonConstants.REPORTING_PICTURE_ZOOM_PATH  + filename );
+            }
+
         }else if(logType == 4){
             scheduleLog.setLogRemarks(logRemarks);
         }else{

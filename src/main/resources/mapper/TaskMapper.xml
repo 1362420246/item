@@ -28,9 +28,10 @@
     <!--</insert>-->
     <!--新增日志，处理上传-->
     <insert id="insertMyLog" useGeneratedKeys="true" keyProperty="logId" keyColumn="log_id" parameterType="com.telecomyt.item.entity.TaskLog">
-        insert into db_sheet_log (group_id,log_time,log_cardid,log_type,file_path,file_url,file_Name,file_tagging)
-        values (#{groupId},#{logTime},#{logCardId},#{logType},#{filePath},#{fileUrl},#{fileName},#{fileTagging})
+        insert into db_sheet_log (group_id,log_time,log_cardid,log_type,file_path,file_url,file_Name,file_tagging,file_zoom_path,file_zoom_url)
+        values (#{groupId},#{logTime},#{logCardId},#{logType},#{filePath},#{fileUrl},#{fileName},#{fileTagging},#{fileZoomPath},#{fileZoomUrl})
     </insert>
+
     <!--新增日志，未处理上传-->
     <insert id="insertLog" useGeneratedKeys="true" keyProperty="logId" keyColumn="log_id" parameterType="com.telecomyt.item.entity.TaskLog">
         insert into db_sheet_log (group_id,log_time,log_picture,log_cardid,log_type) values (#{groupId},#{logTime},#{logPicture},#{logCardId},#{logType})
@@ -112,6 +113,7 @@
             <result column="log_time" property="logTime" />
             <result column="log_cardid" property="logCardId" />
             <result column="file_tagging" property="fileTagging" />
+            <result column="file_zoom_url" property="fileZoomUrl" />
         </collection>
     </resultMap>
 
@@ -134,6 +136,7 @@
             d.log_type,
             d.file_url,
             d.file_name,
+            d.file_zoom_url,
             d.file_tagging
         FROM
             db_sheet_group b left join

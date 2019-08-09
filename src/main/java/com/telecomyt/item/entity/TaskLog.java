@@ -26,6 +26,14 @@ public class TaskLog implements Serializable {
     private String filePath;
     private String fileUrl;
     private String fileName;
+    /**
+     * 缩略图地址
+     */
+    private String fileZoomPath;
+    /**
+     * 缩略图访问路径
+     */
+    private String fileZoomUrl;
     private String fileTagging;
     /**
      * 操作者用户信息

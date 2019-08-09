@@ -11,11 +11,12 @@
     <result column="file_path" jdbcType="VARCHAR" property="filePath" />
     <result column="file_uri" jdbcType="VARCHAR" property="fileUri" />
     <result column="file_Name" jdbcType="VARCHAR" property="fileName" />
+    <result column="file_zoom_url" jdbcType="VARCHAR" property="fileZoomUrl" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, group_id, operation_cardid, log_type, log_details, log_remarks, file_path, file_uri, file_Name,
+    id, group_id, operation_cardid, log_type, log_details, log_remarks, file_path, file_uri, file_Name,file_zoom_url,
     create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -74,6 +75,12 @@
       <if test="updateTime != null">
         update_time,
       </if>
+      <if test="fileZoomPath != null">
+        file_zoom_path,
+      </if>
+      <if test="fileZoomUrl != null">
+        file_zoom_url,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -108,6 +115,12 @@
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fileZoomPath != null">
+        #{fileZoomPath},
+      </if>
+      <if test="fileZoomUrl != null">
+        #{fileZoomUrl},
       </if>
     </trim>
   </insert>
