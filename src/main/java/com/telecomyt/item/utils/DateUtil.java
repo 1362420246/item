@@ -3,10 +3,7 @@ package com.telecomyt.item.utils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
@@ -20,6 +17,10 @@ import java.util.Set;
 public class DateUtil {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    private static final String DATE_FORMAT = "yyyyMMddHHmmssSSS";
+
+    private static final DateTimeFormatter FORMATTER_DATE_TIME = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
     /**
      * 日期转换成：年-月
@@ -179,6 +180,15 @@ public class DateUtil {
        return Integer.valueOf(date.split("-")[2]) ;
     }
 
+    /**
+     * 获取当前时间
+     */
+    public static String getNow(){
+        LocalDateTime date = LocalDateTime.now();
+        return date.format(FORMATTER_DATE_TIME);
+    }
+
+
     public static void main(String[] args) {
 //        LocalDateTime start = LocalDateTime.of(2019,7,29,11,11,11);
 //        LocalDateTime now = LocalDateTime.now();
@@ -186,15 +196,17 @@ public class DateUtil {
 //                start.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth());
 //        System.out.println(daysOfMonth);
 
-        LocalDateTime startDate = LocalDateTime.of(2019,7,29,11,11,11);
+//        LocalDateTime startDate = LocalDateTime.of(2019,7,29,11,11,11);
 //        LocalDateTime endDate = LocalDateTime.of(2019,8,2,11,11,11);
 //        List<String> daysByDifference = DateUtil.getDaysByDifference(startDate, endDate);
 //        System.out.println(daysByDifference);
 //        Integer s = getDayByString(daysByDifference.get(3));
 //        System.out.println(s);
-        String s = startDate.toLocalDate().toString();
-        System.out.println(s);
-        System.out.println("2019-07-29".equals(s));
-
+//        String s = startDate.toLocalDate().toString();
+//        System.out.println(s);
+//        System.out.println("2019-07-29".equals(s));
+        Long milliSecond = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        System.out.println(milliSecond);
+        System.out.println(getNow());
     }
 }

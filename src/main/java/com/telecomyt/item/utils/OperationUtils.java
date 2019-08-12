@@ -1,7 +1,7 @@
 package com.telecomyt.item.utils;
 
 import cn.hutool.json.JSONUtil;
-import com.telecomyt.item.constant.CommonConstants;
+import com.telecomyt.item.constant.CommonConstant;
 import com.telecomyt.item.dto.TaskIdState;
 import com.telecomyt.item.dto.UserVo;
 import com.telecomyt.item.entity.CacheUser;
@@ -33,7 +33,7 @@ public class OperationUtils {
      * 通过身份证号获取用户信息
      */
     public static UserVo getUserByCardId(String cardId){
-        String cacheUserStr = (String)redisTemplate.opsForHash().get(CommonConstants.CACHE_USER_KEY, cardId);
+        String cacheUserStr = (String)redisTemplate.opsForHash().get(CommonConstant.CACHE_USER_KEY, cardId);
         CacheUser cacheUser = JSONUtil.toBean(cacheUserStr, CacheUser.class);
         return UserVo.builder().cardId(cardId).name(cacheUser.getName()).headPortrait(cacheUser.getAvatar()).build();
     }
@@ -41,9 +41,19 @@ public class OperationUtils {
     /**
      * 通过身份证号获取用户信息
      */
+    public static CacheUser getCacheUserrByCardId(String cardId){
+        String cacheUserStr = (String)redisTemplate.opsForHash().get(CommonConstant.CACHE_USER_KEY, cardId);
+        return JSONUtil.toBean(cacheUserStr, CacheUser.class);
+    }
+
+
+
+    /**
+     * 通过身份证号获取用户信息
+     */
     public static List<UserVo> getUsersByCardIds(List<String> cardIds){
         return cardIds.stream().map(cardId -> {
-            String cacheUserStr = (String) redisTemplate.opsForHash().get(CommonConstants.CACHE_USER_KEY, cardId);
+            String cacheUserStr = (String) redisTemplate.opsForHash().get(CommonConstant.CACHE_USER_KEY, cardId);
             CacheUser cacheUser = JSONUtil.toBean(cacheUserStr, CacheUser.class);
             return UserVo.builder().cardId(cardId).name(cacheUser.getName()).headPortrait(cacheUser.getAvatar()).build();
         }).collect(Collectors.toList());
@@ -56,7 +66,7 @@ public class OperationUtils {
         return taskIdStates.stream().map( taskIdState -> {
             String cardId = taskIdState.getCardId();
             Integer taskState = taskIdState.getTaskState();
-            String cacheUserStr = (String) redisTemplate.opsForHash().get(CommonConstants.CACHE_USER_KEY, cardId);
+            String cacheUserStr = (String) redisTemplate.opsForHash().get(CommonConstant.CACHE_USER_KEY, cardId);
             CacheUser cacheUser = JSONUtil.toBean(cacheUserStr, CacheUser.class);
             return UserVo.builder().cardId(cardId).name(cacheUser.getName()).headPortrait(cacheUser.getAvatar()).taskState(taskState).build();
         }).collect(Collectors.toList());

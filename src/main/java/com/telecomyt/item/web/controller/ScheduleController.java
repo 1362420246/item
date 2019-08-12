@@ -1,7 +1,7 @@
 package com.telecomyt.item.web.controller;
 
 import com.telecomyt.item.annotation.ServiceLog;
-import com.telecomyt.item.constant.CommonConstants;
+import com.telecomyt.item.constant.CommonConstant;
 import com.telecomyt.item.dto.*;
 import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.ScheduleLog;
@@ -90,7 +90,7 @@ public class ScheduleController {
                 return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"上报失败，请选择文件");
             }
             //上传文件路径
-            String path = FileUtil.getHomePath() + CommonConstants.REPORTING_PATH ;
+            String path = FileUtil.getHomePath() + CommonConstant.REPORTING_PATH ;
             //上传文件名
             String filename = file.getOriginalFilename();
             if(StringUtils.isEmpty(filename)){
@@ -109,22 +109,22 @@ public class ScheduleController {
             File saveFile = new File(path + filename);
             file.transferTo(saveFile);
             //存储的路径（相对路径）
-            scheduleLog.setFilePath(CommonConstants.REPORTING_PATH + filename);
+            scheduleLog.setFilePath(CommonConstant.REPORTING_PATH + filename);
             //访问路径（uri）
-            scheduleLog.setFileUri(CommonConstants.REPORTING_PATH + filename);
+            scheduleLog.setFileUri(CommonConstant.REPORTING_PATH + filename);
             scheduleLog.setFileName(filename);
             log.info("上报文件保存路径："+saveFile.getAbsolutePath());
-            log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + filename);
+            log.info("上报文件访问uri："+ CommonConstant.REPORTING_PATH + filename);
             if(logType ==2){
-                String zoomPath = FileUtil.getHomePath() + CommonConstants.REPORTING_PICTURE_ZOOM_PATH ;
+                String zoomPath = FileUtil.getHomePath() + CommonConstant.REPORTING_PICTURE_ZOOM_PATH ;
                 File zoomFile = new File(zoomPath);
                 //判断路径是否存在，如果不存在就创建一个
                 if (!zoomFile.exists()) {
                     zoomFile.mkdirs();
                 }
                 ImageUtils.zoomFixedSize(saveFile.getAbsolutePath() ,zoomPath , filename);
-                scheduleLog.setFileZoomPath(CommonConstants.REPORTING_PICTURE_ZOOM_PATH  + filename);
-                scheduleLog.setFileZoomUrl(CommonConstants.REPORTING_PICTURE_ZOOM_PATH  + filename );
+                scheduleLog.setFileZoomPath(CommonConstant.REPORTING_PICTURE_ZOOM_PATH  + filename);
+                scheduleLog.setFileZoomUrl(CommonConstant.REPORTING_PICTURE_ZOOM_PATH  + filename );
             }
 
         }else if(logType == 4){

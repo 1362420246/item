@@ -64,5 +64,6 @@ public class TaskGroup implements Serializable {
         this.sheetTitle = taskDto.getSheetTitle();
         this.taskEndTime = taskDto.getTaskEndTime();
         this.taskCreatTime = LocalDateTime.now();
+        this.groupStatus = 0;
     }
 }

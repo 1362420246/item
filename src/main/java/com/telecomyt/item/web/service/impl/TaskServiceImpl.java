@@ -2,19 +2,23 @@
 
 package com.telecomyt.item.web.service.impl;
 
-import com.telecomyt.item.constant.CommonConstants;
+import com.telecomyt.item.bus.DxytPush;
+import com.telecomyt.item.constant.CommonConstant;
+import com.telecomyt.item.constant.PushConstant;
 import com.telecomyt.item.dto.*;
 import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.*;
 import com.telecomyt.item.enums.ResultStatus;
 import com.telecomyt.item.utils.FileUtil;
 import com.telecomyt.item.utils.OperationUtils;
+import com.telecomyt.item.utils.SpringContextHolder;
 import com.telecomyt.item.web.mapper.TaskMapper;
 import com.telecomyt.item.web.service.TaskAsynService;
 import com.telecomyt.item.web.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -59,7 +63,7 @@ public class TaskServiceImpl implements TaskService {
         TaskGroup taskGroup = new TaskGroup(taskDto);
         if(groupTaskFile != null && !groupTaskFile.isEmpty()) {
             //上传文件路径
-            String taskGroupFilePath = FileUtil.getHomePath() + CommonConstants.REPORTING_PATH ;
+            String taskGroupFilePath = FileUtil.getHomePath() + CommonConstant.REPORTING_PATH ;
             //上传文件名
             String groupFileName = groupTaskFile.getOriginalFilename();
             File groupFilePath = new File(taskGroupFilePath,groupFileName);
@@ -71,12 +75,12 @@ public class TaskServiceImpl implements TaskService {
             File  taskGroupFile = new File(taskGroupFilePath + groupFileName);
             groupTaskFile.transferTo(taskGroupFile);
             //存储的路径（相对路径）
-            taskGroup.setGroupFilepath(CommonConstants.REPORTING_PATH + groupFileName);
+            taskGroup.setGroupFilepath(CommonConstant.REPORTING_PATH + groupFileName);
             //访问路径（uri）
-            taskGroup.setGroupFileurl(CommonConstants.REPORTING_PATH + groupFileName);
+            taskGroup.setGroupFileurl(CommonConstant.REPORTING_PATH + groupFileName);
             taskGroup.setGroupFilename(groupFileName);
             log.info("上报文件保存路径："+taskGroupFile.getAbsolutePath());
-            log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + groupFileName);
+            log.info("上报文件访问uri："+ CommonConstant.REPORTING_PATH + groupFileName);
         }
         int addTaskGroupResult = taskMapper.insertGroup(taskGroup);
         if(addTaskGroupResult > 0){
@@ -104,6 +108,15 @@ public class TaskServiceImpl implements TaskService {
             TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(new Date()).
                     logCardId(taskGroup.getCreatorCardId()).logType(3).build();
             taskMapper.insertMyLog(taskLog);
+            //事项通知
+            try {
+                DxytPush dxytPush = SpringContextHolder.getBean(DxytPush.class);
+                if(dxytPush != null){
+                    dxytPush.publishingTasks(taskGroup ,taskCardIds ,taskCopierIds);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return new BaseResp<>(ResultStatus.SUCCESS);
         }else {
             log.info("新增任务组失败。");
@@ -293,6 +306,15 @@ public class TaskServiceImpl implements TaskService {
     public BaseResp<String> updateTask(TaskGroup taskGroup) {
         int flag = taskMapper.updateTask(taskGroup);
         if (flag > 0) {
+            //事项通知
+            try {
+                DxytPush dxytPush = SpringContextHolder.getBean(DxytPush.class);
+                if(dxytPush != null){
+                    dxytPush.creatorBehavior(taskGroup.getGroupId(), PushConstant.MODIFY_TASK);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return new BaseResp<>(ResultStatus.SUCCESS);
         } else {
             return new BaseResp<>(ResultStatus.FAIL);
@@ -330,6 +352,31 @@ public class TaskServiceImpl implements TaskService {
                         logCardId(taskCardId).logType(logType).fileTagging(reason).build();
                 taskMapper.insertMyLog(taskLog);
             }
+
+
+            //事项通知
+            try {
+                DxytPush dxytPush = SpringContextHolder.getBean(DxytPush.class);
+                String pushConstant = null ;
+                switch (taskState){
+                    case 1:
+                        pushConstant = PushConstant.START_TASK;
+                        break;
+                    case 2:
+                        pushConstant = PushConstant.ABANDON_TASK ;
+                        break;
+                    case 3:
+                        pushConstant = PushConstant. COMPLETE_TASK;
+                        break;
+                    default:
+                        break;
+                }
+                if(dxytPush != null && pushConstant != null){
+                    dxytPush.executorBehavior(groupId ,pushConstant ,taskCardId);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return new BaseResp<>(ResultStatus.SUCCESS);
         }else{
             return new BaseResp<>(ResultStatus.FAIL);
@@ -355,6 +402,15 @@ public class TaskServiceImpl implements TaskService {
             TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(new Date()).
                     logCardId(taskGroup.getCreatorCardId()).logType(4).build();
             taskMapper.insertMyLog(taskLog);
+            //事项通知
+            try {
+                DxytPush dxytPush = SpringContextHolder.getBean(DxytPush.class);
+                if(dxytPush != null){
+                    dxytPush.creatorBehavior(groupId, PushConstant.END_TASK);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return new BaseResp<>(ResultStatus.SUCCESS);
         }else{
             return new BaseResp<>(ResultStatus.FAIL);
@@ -374,6 +430,15 @@ public class TaskServiceImpl implements TaskService {
             TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(new Date()).
                     logCardId(taskGroup.getCreatorCardId()).logType(5).fileTagging(reason).build();
             taskMapper.insertMyLog(taskLog);
+            //事项通知
+            try {
+                DxytPush dxytPush = SpringContextHolder.getBean(DxytPush.class);
+                if(dxytPush != null){
+                    dxytPush.creatorBehavior(groupId, PushConstant.WITHDRAWAL_TASK);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return new BaseResp<>(ResultStatus.SUCCESS);
         }
         return new BaseResp<>(ResultStatus.FAIL);
@@ -403,7 +468,7 @@ public class TaskServiceImpl implements TaskService {
 //            return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"上传失败，请选择文件");
 //        }
 //        //上传文件路径
-//        String taskGroupFilePath = FileUtil.getHomePath() + CommonConstants.REPORTING_PATH ;
+//        String taskGroupFilePath = FileUtil.getHomePath() + CommonConstant.REPORTING_PATH ;
 //        //上传文件名
 //        String groupFileName = groupTaskFile.getOriginalFilename();
 //        File GroupFilePath = new File(taskGroupFilePath,groupFileName);
@@ -415,9 +480,9 @@ public class TaskServiceImpl implements TaskService {
 //        File  TaskGroupFile = new File(taskGroupFilePath + groupFileName);
 //        groupTaskFile.transferTo(TaskGroupFile);
 //        //存储的路径（相对路径）
-//        taskGroup.setTaskFilePath(CommonConstants.REPORTING_PATH + groupFileName);
+//        taskGroup.setTaskFilePath(CommonConstant.REPORTING_PATH + groupFileName);
 //        //访问路径（uri）
-//        taskGroup.setTaskFileUrl(CommonConstants.REPORTING_PATH + groupFileName);
+//        taskGroup.setTaskFileUrl(CommonConstant.REPORTING_PATH + groupFileName);
 //        log.info("上报文件保存路径："+TaskGroupFile.getAbsolutePath());
-//        log.info("上报文件保存路径2："+ FileUtil.getHomePath() + CommonConstants.REPORTING_PATH + groupFileName);
-//        log.info("上报文件访问uri："+ CommonConstants.REPORTING_PATH + groupFileName);
+//        log.info("上报文件保存路径2："+ FileUtil.getHomePath() + CommonConstant.REPORTING_PATH + groupFileName);
+//        log.info("上报文件访问uri："+ CommonConstant.REPORTING_PATH + groupFileName);

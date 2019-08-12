@@ -24,6 +24,8 @@ import java.io.Serializable;
 @Builder
 public class CacheUser implements Serializable {
 
+
+    private static final long serialVersionUID = 6034250364055896943L;
     /**
      *
      */

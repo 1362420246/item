@@ -3,7 +3,7 @@ package com.telecomyt.item.constant;
 /**
  * 通用常量
  */
-public interface CommonConstants {
+public interface CommonConstant {
 
     /**
      * 上报路径 & 静态资源映射路径
