@@ -54,15 +54,14 @@ public class FileUtil {
         BufferedOutputStream output = null;
         try {
             //获取原文件名
-            URL url = new URL(urlStr);
-            String path = url.getPath();
+            String path = new URL(urlStr).getPath();
             String fileName = path.substring(path.lastIndexOf("/") + 1);
             //解决中文/空格 转码
             urlStr = URLUtil.encode(urlStr);
             //获取二进制
             byte[] bytes = IOUtils.toByteArray(new URL(urlStr));
             //设置文件ContentType类型
-//            response.setContentType("multipart/form-data;charset=GBK");
+            response.setContentType("multipart/form-data;charset=GBK");
             //文件名转码
             fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), "ISO8859-1");
             //设置文件头：最后一个参数是设置下载文件名
