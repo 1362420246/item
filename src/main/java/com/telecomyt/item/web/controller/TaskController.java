@@ -8,6 +8,7 @@ import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.TaskGroup;
 import com.telecomyt.item.entity.TaskLog;
 import com.telecomyt.item.enums.ResultStatus;
+import com.telecomyt.item.exception.BasicException;
 import com.telecomyt.item.utils.BeanValidator;
 import com.telecomyt.item.utils.FileUtil;
 import com.telecomyt.item.utils.ImageUtils;
@@ -19,6 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
