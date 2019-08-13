@@ -62,25 +62,22 @@ public class TaskServiceImpl implements TaskService {
     public BaseResp<String> addTask(TaskDto taskDto, MultipartFile groupTaskFile) throws IOException {
         TaskGroup taskGroup = new TaskGroup(taskDto);
         if(groupTaskFile != null && !groupTaskFile.isEmpty()) {
-            //上传文件路径
-            String taskGroupFilePath = FileUtil.getHomePath() + CommonConstant.REPORTING_PATH ;
             //上传文件名
             String groupFileName = groupTaskFile.getOriginalFilename();
+            //上传文件路径
+            String taskGroupFilePath = FileUtil.getUpload( CommonConstant.TASK_FILE_PATH,taskGroup.getCreatorCardId()); ;
             File groupFilePath = new File(taskGroupFilePath,groupFileName);
             //判断路径是否存在，如果不存在就创建一个
             if (!groupFilePath.getParentFile().exists()) {
                 groupFilePath.getParentFile().mkdirs();
             }
-            //将上传文件保存到一个目标文件当中
-            File  taskGroupFile = new File(taskGroupFilePath + groupFileName);
-            groupTaskFile.transferTo(taskGroupFile);
+            groupTaskFile.transferTo(groupFilePath);
             //存储的路径（相对路径）
-            taskGroup.setGroupFilepath(CommonConstant.REPORTING_PATH + groupFileName);
+            taskGroup.setGroupFilepath(FileUtil.getRelativePath(groupFilePath.getAbsolutePath()));
             //访问路径（uri）
-            taskGroup.setGroupFileurl(CommonConstant.REPORTING_PATH + groupFileName);
+            taskGroup.setGroupFileurl(FileUtil.getRelativePath(groupFilePath.getAbsolutePath()));
             taskGroup.setGroupFilename(groupFileName);
-            log.info("上报文件保存路径："+taskGroupFile.getAbsolutePath());
-            log.info("上报文件访问uri："+ CommonConstant.REPORTING_PATH + groupFileName);
+            log.info("上报文件保存路径："+groupFilePath.getAbsolutePath());
         }
         int addTaskGroupResult = taskMapper.insertGroup(taskGroup);
         if(addTaskGroupResult > 0){

@@ -80,4 +80,4 @@ dxyt:
       FFMC: notice.createPushByUsername
       PACKAGE_NAME: com.telecomyt.item
       FWQQ_SJSJLX: service_request
-      URL: http://39.106.33.10:8083/taskDetail?valueType=%d&groupId=%s&groupStatus=%d&type=notice&current=false
+      URL:  http://20.1.11.5:80/item/app/#/taskDetail?valueType=%d&groupId=%s&groupStatus=%d&type=notice&current=false

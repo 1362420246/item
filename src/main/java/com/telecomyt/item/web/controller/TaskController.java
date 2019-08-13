@@ -76,10 +76,15 @@ public class TaskController {
             if(logFile == null || logFile.isEmpty()) {
                 return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"任务上报失败，请选择文件");
             }
-            //上传文件路径
-            String taskLogPath = FileUtil.getHomePath() + CommonConstant.REPORTING_PATH ;
-            //上传文件名
-            String taskLogFilename = logFile.getOriginalFilename();
+           //上传文件名
+           String taskLogFilename = logFile.getOriginalFilename();
+           //上传文件路径
+           String taskLogPath = null ;
+            if(logType == 0 ){
+                taskLogPath = FileUtil.getUpload( CommonConstant.TASK_LOG_PICTURE_PATH,logCardId);
+            }else {
+                taskLogPath = FileUtil.getUpload( CommonConstant.TASK_LOG_FILE_PATH,logCardId);
+            }
             File logPath = new File(taskLogPath,taskLogFilename);
             //判断路径是否存在，如果不存在就创建一个
             if (!logPath.getParentFile().exists()) {
@@ -87,22 +92,21 @@ public class TaskController {
             }
             logFile.transferTo(logPath);
             //存储的路径（相对路径）
-            taskLog.setFilePath(CommonConstant.REPORTING_PATH + taskLogFilename);
+            taskLog.setFilePath(FileUtil.getRelativePath(logPath.getAbsolutePath()));
             //访问路径（uri）
-            taskLog.setFileUrl(CommonConstant.REPORTING_PATH + taskLogFilename);
+            taskLog.setFileUrl(FileUtil.getRelativePath(logPath.getAbsolutePath()));
             taskLog.setFileName(taskLogFilename);
             log.info("上报文件保存路径："+ logPath.getAbsolutePath());
-            log.info("上报文件访问uri："+ CommonConstant.REPORTING_PATH + taskLogFilename);
           if(logType == 0){
-              String zoomPath = FileUtil.getHomePath() + CommonConstant.REPORTING_PICTURE_ZOOM_PATH ;
+              String zoomPath = FileUtil.getUpload( CommonConstant.TASK_LOG_PICTURE_ZOOM_PATH,logCardId);
               File zoomFile = new File(zoomPath);
               //判断路径是否存在，如果不存在就创建一个
               if (!zoomFile.exists()) {
                   zoomFile.mkdirs();
               }
               ImageUtils.zoomFixedSize(logPath.getAbsolutePath() ,zoomPath , taskLogFilename);
-              taskLog.setFileZoomPath(CommonConstant.REPORTING_PICTURE_ZOOM_PATH  + taskLogFilename);
-              taskLog.setFileZoomUrl(CommonConstant.REPORTING_PICTURE_ZOOM_PATH  + taskLogFilename );
+              taskLog.setFileZoomPath( FileUtil.getRelativePath(zoomPath)  + taskLogFilename);
+              taskLog.setFileZoomUrl( FileUtil.getRelativePath(zoomPath) + taskLogFilename );
           }
         }else if(logType == 2){
             taskLog.setFileTagging(fileTagging);
@@ -180,10 +184,9 @@ public class TaskController {
             return new BaseResp<>(ResultStatus.INVALID_PARAM);
         }
         if(groupTaskFile != null && !groupTaskFile.isEmpty()) {
-            //上传文件路径
-            String taskGroupFilePath = FileUtil.getHomePath() + CommonConstant.REPORTING_PATH ;
             //上传文件名
             String groupFileName = groupTaskFile.getOriginalFilename();
+            String taskGroupFilePath = FileUtil.getUpload( CommonConstant.TASK_FILE_PATH,taskGroup.getCreatorCardId()); ;
             File groupFilePath = new File(taskGroupFilePath,groupFileName);
             //判断路径是否存在，如果不存在就创建一个
             if (!groupFilePath.getParentFile().exists()) {
@@ -192,12 +195,11 @@ public class TaskController {
             //将上传文件保存到一个目标文件当中
             groupTaskFile.transferTo(groupFilePath);
             //存储的路径（相对路径）
-            taskGroup.setGroupFilepath(CommonConstant.REPORTING_PATH + groupFileName);
+            taskGroup.setGroupFilepath(FileUtil.getRelativePath(groupFilePath.getAbsolutePath()));
             //访问路径（uri）
-            taskGroup.setGroupFileurl(CommonConstant.REPORTING_PATH + groupFileName);
+            taskGroup.setGroupFileurl(FileUtil.getRelativePath(groupFilePath.getAbsolutePath()));
             taskGroup.setGroupFilename(groupFileName);
             log.info("上报文件保存路径："+groupFilePath.getAbsolutePath());
-            log.info("上报文件访问uri："+ CommonConstant.REPORTING_PATH + groupFileName);
         }else {
             if( state == 1){
                 taskGroup.setGroupFilepath("");

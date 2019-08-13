@@ -95,7 +95,7 @@ public class BusPushUtils {
             obj.put("FWQQ_NR",data);
             String paramsJson = GsonUtil.toJson(obj);
             log.info("推送总线参数:{}",paramsJson);
-            String response = "end" ;//HttpPost.addJson(sendNoticeByUsernameUrl,paramsJson,"utf-8");
+            String response = HttpPost.addJson(sendNoticeByUsernameUrl,paramsJson,"utf-8");
             log.info("推送总线成功，返回信息为:{}",response);
             return response;
         }catch(Exception e){

@@ -10,7 +10,7 @@ spring:
         druid:
           url: jdbc:mysql://20.1.11.184:3306/item?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
           username: root
-          password: dxyt123
+          password: dxyt123=-
           driver-class-name: com.mysql.cj.jdbc.Driver
           # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
           filters: stat,wall
@@ -80,4 +80,4 @@ dxyt:
       FFMC: notice.createPushByUsername
       PACKAGE_NAME: com.telecomyt.item
       FWQQ_SJSJLX: service_request
-      URL: http://39.106.33.10:8083/taskDetail?valueType=%d&groupId=%s&groupStatus=%d&type=notice&current=false
+      URL: http://20.1.11.5:80/item/app/#/taskDetail?valueType=%d&groupId=%s&groupStatus=%d&type=notice&current=false

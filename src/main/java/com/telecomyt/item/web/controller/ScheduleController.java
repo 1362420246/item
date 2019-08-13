@@ -89,12 +89,17 @@ public class ScheduleController {
             if(file.isEmpty()) {
                 return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"上报失败，请选择文件");
             }
-            //上传文件路径
-            String path = FileUtil.getHomePath() + CommonConstant.REPORTING_PATH ;
             //上传文件名
             String filename = file.getOriginalFilename();
             if(StringUtils.isEmpty(filename)){
                 filename = UUID.randomUUID().toString();
+            }
+            //上传文件路径
+            String path = null ;
+            if(logType ==2){
+                path = FileUtil.getUpload( CommonConstant.SCHEDULE_LOG_PICTURE_PATH,operationCardid);
+            }else {
+                path = FileUtil.getUpload( CommonConstant.SCHEDULE_LOG_FILE_PATH,operationCardid);
             }
             File filepath = new File(path,filename);
             //判断路径是否存在，如果不存在就创建一个
@@ -105,28 +110,24 @@ public class ScheduleController {
                     return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"上报失败，上传路径不存在");
                 }
             }
-            //将上传文件保存到一个目标文件当中
-            File saveFile = new File(path + filename);
-            file.transferTo(saveFile);
+            file.transferTo(filepath);
             //存储的路径（相对路径）
-            scheduleLog.setFilePath(CommonConstant.REPORTING_PATH + filename);
+            scheduleLog.setFilePath(FileUtil.getRelativePath(filepath.getAbsolutePath()));
             //访问路径（uri）
-            scheduleLog.setFileUri(CommonConstant.REPORTING_PATH + filename);
+            scheduleLog.setFileUri(FileUtil.getRelativePath(filepath.getAbsolutePath()));
             scheduleLog.setFileName(filename);
-            log.info("上报文件保存路径："+saveFile.getAbsolutePath());
-            log.info("上报文件访问uri："+ CommonConstant.REPORTING_PATH + filename);
+            log.info("上报文件保存路径："+filepath.getAbsolutePath());
             if(logType ==2){
-                String zoomPath = FileUtil.getHomePath() + CommonConstant.REPORTING_PICTURE_ZOOM_PATH ;
+                String zoomPath = FileUtil.getUpload( CommonConstant.SCHEDULE_LOG_PICTURE_ZOOM_PATH,operationCardid);
                 File zoomFile = new File(zoomPath);
                 //判断路径是否存在，如果不存在就创建一个
                 if (!zoomFile.exists()) {
                     zoomFile.mkdirs();
                 }
-                ImageUtils.zoomFixedSize(saveFile.getAbsolutePath() ,zoomPath , filename);
-                scheduleLog.setFileZoomPath(CommonConstant.REPORTING_PICTURE_ZOOM_PATH  + filename);
-                scheduleLog.setFileZoomUrl(CommonConstant.REPORTING_PICTURE_ZOOM_PATH  + filename );
+                ImageUtils.zoomFixedSize(filepath.getAbsolutePath() ,zoomPath , filename);
+                scheduleLog.setFileZoomPath( FileUtil.getRelativePath(zoomPath)  + filename);
+                scheduleLog.setFileZoomUrl( FileUtil.getRelativePath(zoomPath)  + filename );
             }
-
         }else if(logType == 4){
             scheduleLog.setLogRemarks(logRemarks);
         }else{
