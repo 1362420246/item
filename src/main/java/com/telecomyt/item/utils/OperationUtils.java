@@ -46,8 +46,6 @@ public class OperationUtils {
         return JSONUtil.toBean(cacheUserStr, CacheUser.class);
     }
 
-
-
     /**
      * 通过身份证号获取用户信息
      */
@@ -71,4 +69,5 @@ public class OperationUtils {
             return UserVo.builder().cardId(cardId).name(cacheUser.getName()).headPortrait(cacheUser.getAvatar()).taskState(taskState).build();
         }).collect(Collectors.toList());
     }
+
 }

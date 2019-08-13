@@ -252,4 +252,11 @@
         WHERE group_id = #{groupId}
     </update>
 
+    <!--根据组id 获取执行人-->
+    <select id="getExecutorByGroupId" resultType="java.lang.String">
+        SELECT task_cardid
+        FROM db_sheet_task
+        WHERE group_id = #{groupId} and task_type = 1
+    </select>
+
 </mapper>

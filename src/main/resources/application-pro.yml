@@ -61,7 +61,7 @@ spring:
           # 最小空闲连接数 默认0
           min-idle: 0
       # 0号数据库
-      database: 3
+      database: 4
 
 parameter:
   picture:

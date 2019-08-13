@@ -36,7 +36,7 @@ CREATE TABLE `tb_schedule_log`  (
   `operation_cardid` char(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '操作日身份证',
   `log_type` int(1) NOT NULL COMMENT '1:开始  2:上传照片 3:上传附件 4:任务标注 5:删除 6:结束',
   `log_details` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '操作日志',
-  `log_remarks` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '任务标注',
+  `log_remarks` varchar(1500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '任务标注',
   `file_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '文件存储路径（相对路径）',
   `file_uri` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '文件访问路径（相对路径）',
   `file_zoom_path` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '图片缩略图存储路径',

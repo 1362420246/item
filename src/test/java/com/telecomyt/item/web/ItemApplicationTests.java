@@ -1,8 +1,10 @@
 package com.telecomyt.item.web;
 
 import cn.hutool.json.JSONUtil;
+import com.telecomyt.item.dto.UserVo;
 import com.telecomyt.item.entity.CacheUser;
 import com.telecomyt.item.utils.ImageUtils;
+import com.telecomyt.item.utils.OperationUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,7 @@ public class ItemApplicationTests {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate ;
+
 
     @Test
     public void redisTest() {
@@ -115,7 +118,21 @@ public class ItemApplicationTests {
         String cacheUser = (String)stringRedisTemplate.opsForHash().get("CacheUser", "13022119904140051");
         CacheUser cacheUser1 = JSONUtil.toBean(cacheUser, CacheUser.class);
         System.out.println(cacheUser1);
+    }
 
+    @Test
+    public void operationUtils() {
+        /*
+        110101199910101239
+        110110199910101237
+        110226198909281411
+        130425199712205532
+        130828114211303796
+         */
+        UserVo userByCardId = OperationUtils.getUserByCardId("110226197908170010");
+        CacheUser cacheUserrByCardId = OperationUtils.getCacheUserrByCardId("110226197908170010");
+        System.out.println(userByCardId);
+        System.out.println(cacheUserrByCardId);
     }
 
 }

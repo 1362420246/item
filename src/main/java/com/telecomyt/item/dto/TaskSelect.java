@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @Author ZhangSF
@@ -26,6 +27,7 @@ public class TaskSelect implements Serializable {
     private String sheetDescribe;
     private String sheetTitle;
     private String taskCreattime;
+    private List<String> taskCardIds;
     /**
      * 是否被逾期 0：否  1：是逾期
      */

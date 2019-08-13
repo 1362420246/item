@@ -32,6 +32,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -177,6 +178,10 @@ public class TaskServiceImpl implements TaskService {
         if(lists.size() > 0){
             List<Integer> overdues = new ArrayList<>();
             lists.forEach(taskSelect -> {
+                List<String> taskCardIds = taskMapper.getExecutorByGroupId(taskSelect.getGroupId());
+                List<UserVo> usersByCardIds = OperationUtils.getUsersByCardIds(taskCardIds);
+                List<String> names = usersByCardIds.stream().map(UserVo::getName).filter(Objects::nonNull).collect(Collectors.toList());
+                taskSelect.setTaskCardIds(names);
                 if(taskSelect.getIsOverdue() == 0){
                     LocalDateTime taskEndTime = taskSelect.getTaskEndTime();
                     if (taskEndTime.isBefore(LocalDateTime.now())) {

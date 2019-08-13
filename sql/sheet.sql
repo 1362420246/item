@@ -31,7 +31,7 @@ CREATE TABLE `db_sheet_log`  (
   `file_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件名称',
   `file_zoom_path` varchar(255) DEFAULT NULL COMMENT '图片缩略图存储路径',
   `file_zoom_url` varchar(255) DEFAULT NULL COMMENT '图片缩略图访问路径',
-  `file_tagging` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '上传标注',
+  `file_tagging` varchar(1500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '上传标注',
   PRIMARY KEY (`log_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 

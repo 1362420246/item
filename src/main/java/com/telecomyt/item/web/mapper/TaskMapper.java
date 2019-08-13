@@ -164,6 +164,11 @@ public interface TaskMapper {
      * @param groupId 组id
      */
     int updateOverdue(Integer groupId);
+
+    /**
+     * 根据组id 获取执行人
+     */
+    List<String> getExecutorByGroupId(Integer groupId);
 }
 
 
