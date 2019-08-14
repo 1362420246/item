@@ -169,6 +169,11 @@ public interface TaskMapper {
      * 根据组id 获取执行人
      */
     List<String> getExecutorByGroupId(Integer groupId);
+
+    /**
+     * 查询执行者拒绝的任务
+     */
+    List<String> getDeleteTask(String cardid, LocalDateTime startTime, LocalDateTime endTime);
 }
 
 

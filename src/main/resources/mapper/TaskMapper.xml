@@ -231,12 +231,26 @@
             b.is_overdue
         FROM
             db_sheet_task a RIGHT join db_sheet_group b
-			on  a.group_id = b.group_id
+			on a.group_id = b.group_id
         WHERE
 	       (a.task_cardid = #{cardid} or a.task_copierid = #{cardid} or b.creator_cardid = #{cardid} )
 	       AND b.is_delete = 0
            AND b.task_endtime BETWEEN #{startTime} AND #{endTime}
      </select>
+
+    <!--查询执行者拒绝的任务-->
+    <select id="getDeleteTask" resultType="java.lang.String">
+        SELECT
+             b.group_id
+        FROM
+            db_sheet_task a RIGHT join db_sheet_group b
+			on a.group_id = b.group_id
+        WHERE
+	       a.task_cardid = #{cardid}
+	       AND b.is_delete = 0
+	       AND a.task_state = 2
+           AND b.task_endtime BETWEEN #{startTime} AND #{endTime}
+    </select>
 
     <!--通过 组id 查询任务组-->
     <select id="getTaskGroupByGroupId" resultType="com.telecomyt.item.entity.TaskGroup">

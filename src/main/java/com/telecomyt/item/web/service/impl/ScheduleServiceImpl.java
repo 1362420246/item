@@ -91,6 +91,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         Map<String, Collection> resultMap = Maps.newHashMap();
         //查询任务
         List<TaskVo> taskList = taskMapper.getTaskByCardIdAndDate(scheduleListQuery.getCardid(),scheduleListQuery.getStartTime(),scheduleListQuery.getEndTime());
+        List<String> groupIds = taskMapper.getDeleteTask(scheduleListQuery.getCardid(),scheduleListQuery.getStartTime(),scheduleListQuery.getEndTime());
+        taskList.removeIf(taskVo -> groupIds.contains(taskVo.getGroupId()) );
         resultMap.put("taskList",taskList);
         //不重复的  必查 按时间查
         List<ScheduleInfoDto> noRepeatList = scheduleInfoMapper.queryScheduleListByNoRepeat(scheduleListQuery);
