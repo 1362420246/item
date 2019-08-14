@@ -22,6 +22,8 @@ public class DateUtil {
 
     private static final DateTimeFormatter FORMATTER_DATE_TIME = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
+    public static final DateTimeFormatter DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     /**
      * 日期转换成：年-月
      */

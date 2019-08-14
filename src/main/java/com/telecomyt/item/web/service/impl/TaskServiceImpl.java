@@ -10,6 +10,7 @@ import com.telecomyt.item.dto.*;
 import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.*;
 import com.telecomyt.item.enums.ResultStatus;
+import com.telecomyt.item.utils.DateUtil;
 import com.telecomyt.item.utils.FileUtil;
 import com.telecomyt.item.utils.OperationUtils;
 import com.telecomyt.item.utils.SpringContextHolder;
@@ -28,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -191,6 +193,19 @@ public class TaskServiceImpl implements TaskService {
             });
             taskAsynService.updateOverdue(overdues);
         }
+        //按照创建时间倒序
+        lists.sort((task1, task2) -> {
+            LocalDateTime date1 = LocalDateTime.parse(task1.getTaskCreattime(), DateUtil.DATE_TIME);
+            LocalDateTime date2 = LocalDateTime.parse(task2.getTaskCreattime(), DateUtil.DATE_TIME);
+            Duration result = Duration.between(date1, date2);
+            if(result.toMillis() > 0){
+                return 1;
+            }else if (result.toMillis() == 0){
+                return 0;
+            }else {
+                return -1;
+            }
+        });
         return new BaseResp<>(ResultStatus.SUCCESS,lists);
     }
 
