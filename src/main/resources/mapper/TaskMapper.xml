@@ -65,7 +65,7 @@
 
     <!--查询执行任务列表-->
     <select id="queryMyAcceptTask" resultType="com.telecomyt.item.dto.TaskSelect">
-        select a.group_id,a.task_type,b.task_endtime,b.sheet_describe,b.sheet_title,b.task_creattime ,b.is_overdue
+        select a.group_id,a.task_type,b.task_endtime,b.sheet_describe,b.sheet_title,b.task_creattime ,b.is_overdue,a.task_state
         from db_sheet_task a,db_sheet_group b
         <where>
             a.group_id = b.group_id
