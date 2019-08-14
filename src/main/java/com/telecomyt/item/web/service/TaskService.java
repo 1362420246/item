@@ -68,7 +68,7 @@ public interface TaskService {
     /**
      * 查询任务详情
      */
-    BaseResp<TaskDescribe>  queryTaskDetailed(Integer groupId);
+    BaseResp<TaskDescribe>  queryTaskDetailed(Integer groupId, String cardid);
 
 
     /**

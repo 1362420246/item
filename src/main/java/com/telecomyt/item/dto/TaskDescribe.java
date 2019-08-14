@@ -55,4 +55,9 @@ public class TaskDescribe implements Serializable {
       */
      private List<UserVo> taskCopierUsers;
 
+     /**
+      *  0-创建者1-接受任务  2-抄送任务
+      */
+     private Integer taskType;
+
 }

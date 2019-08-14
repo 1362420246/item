@@ -143,8 +143,9 @@ public class TaskController {
      */
      @GetMapping("/getTaskDetailed")
      public BaseResp<TaskDescribe> getMyTaskDetailed(
-             @RequestParam("groupId") Integer groupId){
-         return taskService.queryTaskDetailed(groupId);
+             @RequestParam("groupId") Integer groupId ,
+             @RequestParam("cardid") String cardid){
+         return taskService.queryTaskDetailed(groupId , cardid);
      }
     /**
      * 查询新增任务（可进行拒绝或者点击开始操作）

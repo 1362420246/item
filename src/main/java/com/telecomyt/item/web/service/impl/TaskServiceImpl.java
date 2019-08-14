@@ -18,7 +18,6 @@ import com.telecomyt.item.web.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -197,11 +196,10 @@ public class TaskServiceImpl implements TaskService {
 
     /**
      * 查询任务详情
-     * @param groupId
-     * @return
+     *
      */
     @Override
-    public BaseResp<TaskDescribe> queryTaskDetailed(Integer groupId) {
+    public BaseResp<TaskDescribe> queryTaskDetailed(Integer groupId, String cardid) {
         TaskDescribe describeResult = taskMapper.queryTaskDetailed(groupId);
         if(describeResult == null){
             return new BaseResp<>(ResultStatus.FAIL);
@@ -237,6 +235,16 @@ public class TaskServiceImpl implements TaskService {
         //获取执行的用户信息
         List<UserVo> taskCardUsers = OperationUtils.getUsersByTaskIdState(taskCardId);
         describeResult.setTaskCardUsers(taskCardUsers);
+        if(cardid.equals(describeResult.getCreatorCardId())){
+            describeResult.setTaskType(0);
+        }else {
+            List<String> collect = taskCardId.stream().map(TaskIdState::getCardId).collect(Collectors.toList());
+            if(collect.contains(cardid)){
+                describeResult.setTaskType(1);
+            }else {
+                describeResult.setTaskType(2);
+            }
+        }
         return new BaseResp<>(ResultStatus.SUCCESS,describeResult);
     }
 
