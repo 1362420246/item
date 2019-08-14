@@ -2,6 +2,7 @@
 
 package com.telecomyt.item.web.service.impl;
 
+import com.google.common.collect.Maps;
 import com.telecomyt.item.bus.DxytPush;
 import com.telecomyt.item.constant.CommonConstant;
 import com.telecomyt.item.constant.PushConstant;
@@ -28,10 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -59,7 +57,7 @@ public class TaskServiceImpl implements TaskService {
      * @return
      */
     @Override
-    public BaseResp<String> addTask(TaskDto taskDto, MultipartFile groupTaskFile) throws IOException {
+    public BaseResp<Map> addTask(TaskDto taskDto, MultipartFile groupTaskFile) throws IOException {
         TaskGroup taskGroup = new TaskGroup(taskDto);
         if(groupTaskFile != null && !groupTaskFile.isEmpty()) {
             //上传文件名
@@ -114,7 +112,9 @@ public class TaskServiceImpl implements TaskService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return new BaseResp<>(ResultStatus.SUCCESS);
+            Map<String,Integer> result = Maps.newHashMap();
+            result.put("groupId",taskGroup.getGroupId());
+            return new BaseResp<>(ResultStatus.SUCCESS,result);
         }else {
             log.info("新增任务组失败。");
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

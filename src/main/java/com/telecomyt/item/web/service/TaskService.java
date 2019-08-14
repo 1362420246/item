@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author ZhangSF
@@ -26,7 +27,7 @@ public interface TaskService {
      * @return
      */
     //,MultipartFile grouptaskFile   throws IOException
-    BaseResp<String> addTask(TaskDto taskDto, MultipartFile groupTaskFile) throws IOException;
+    BaseResp<Map> addTask(TaskDto taskDto, MultipartFile groupTaskFile) throws IOException;
 //    /**
 //     *
 //     */

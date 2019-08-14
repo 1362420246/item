@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author ZhangSF
@@ -44,7 +45,7 @@ public class TaskController {
      * 新增组
      */
     @PostMapping("/insertNewTask")
-    public BaseResp<String> insertNewTask(TaskDto taskDto,MultipartFile groupTaskFile) throws IOException {
+    public BaseResp<Map> insertNewTask(TaskDto taskDto, MultipartFile groupTaskFile) throws IOException {
         BeanValidator.check(taskDto);
         return taskService.addTask(taskDto,groupTaskFile);
     }
