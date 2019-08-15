@@ -331,6 +331,10 @@ public class TaskServiceImpl implements TaskService {
     public BaseResp<String> updateTask(TaskGroup taskGroup) {
         int flag = taskMapper.updateTask(taskGroup);
         if (flag > 0) {
+            //添加日志
+            TaskLog taskLog = TaskLog.builder().groupId(taskGroup.getGroupId()).logTime(new Date()).
+                    logCardId(taskGroup.getCreatorCardId()).logType(9).build();
+            taskMapper.insertMyLog(taskLog);
             //事项通知
             try {
                 DxytPush dxytPush = SpringContextHolder.getBean(DxytPush.class);

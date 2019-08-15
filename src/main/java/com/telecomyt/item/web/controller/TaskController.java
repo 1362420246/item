@@ -183,7 +183,7 @@ public class TaskController {
      * @param state 为1的时候 删除源文件
      */
     @PostMapping("/updateTask")
-    public BaseResp<String> updateTask (TaskGroup taskGroup ,MultipartFile groupTaskFile ,Integer state) throws IOException {
+    public BaseResp<String> updateTask (TaskGroup taskGroup ,MultipartFile groupTaskFile ,@RequestParam(value = "state",defaultValue = "0")  Integer state) throws IOException {
         if(StringUtils.isEmpty(taskGroup.getCreatorCardId()) || taskGroup.getGroupId() == null){
             return new BaseResp<>(ResultStatus.INVALID_PARAM);
         }
