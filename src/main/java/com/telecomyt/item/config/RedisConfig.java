@@ -15,8 +15,8 @@ public class RedisConfig {
      * application.yml配置基本信息后,springboot2.x  RedisAutoConfiguration能够自动装配
      * LettuceConnectionFactory 和 RedisConnectionFactory 及其 RedisTemplate
      */
-    @Bean(name ="redisTemplate")
-    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory redisConnectionFactory){
+    @Bean(name = "redisTemplate")
+    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
@@ -26,3 +26,4 @@ public class RedisConfig {
         return redisTemplate;
     }
 }
+
