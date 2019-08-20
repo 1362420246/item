@@ -2,10 +2,10 @@ package com.telecomyt.item.web;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.telecomyt.item.dto.UserVo;
+import com.telecomyt.item.dto.UserVO;
 import com.telecomyt.item.entity.CacheUser;
-import com.telecomyt.item.utils.ImageUtils;
-import com.telecomyt.item.utils.OperationUtils;
+import com.telecomyt.item.util.ImageUtils;
+import com.telecomyt.item.util.OperationUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,7 +115,7 @@ public class ItemApplicationTests {
         130425199712205532
         130828114211303796
          */
-        UserVo userByCardId = OperationUtils.getUserByCardId("110226197908170010");
+        UserVO userByCardId = OperationUtils.getUserByCardId("110226197908170010");
         CacheUser cacheUserrByCardId = OperationUtils.getCacheUserrByCardId("110226197908170010");
         System.out.println(userByCardId);
         System.out.println(cacheUserrByCardId);

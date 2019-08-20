@@ -92,7 +92,7 @@
   </update>
 
   <!--批量插入-->
-  <insert id="insertList" parameterType="com.telecomyt.item.entity.ScheduleInfoDo">
+  <insert id="insertList" parameterType="com.telecomyt.item.entity.ScheduleInfoDO">
     insert into tb_schedule_info (group_id, creator_cardid, affiliated_cardid, is_delete)
     values
     <foreach collection="affiliatedCardids" separator="," item="affiliatedCardid" >
@@ -101,7 +101,7 @@
   </insert>
 
   <!--查询不重复日程-->
-  <select id="queryScheduleListByNoRepeat" resultType="com.telecomyt.item.dto.ScheduleInfoDto">
+  <select id="queryScheduleListByNoRepeat" resultType="com.telecomyt.item.dto.ScheduleInfoDTO">
       SELECT
           i.id,
           g.id AS groupId,
@@ -125,7 +125,7 @@
   </select>
 
   <!--查询重复日程-->
-  <select id="queryScheduleListByRepeat" resultType="com.telecomyt.item.dto.ScheduleInfoDto">
+  <select id="queryScheduleListByRepeat" resultType="com.telecomyt.item.dto.ScheduleInfoDTO">
       SELECT
           i.id,
           g.id AS groupId,

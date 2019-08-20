@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public BaseResp<?> defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
 
-        BaseResp baseResp = new BaseResp();
+        BaseResp<String> baseResp = new BaseResp<>();
         //获取日志信息
         SysLog sysLog = LogUtils.getServiceLog();
         sysLog.setTitle("异常日志");
