@@ -5,12 +5,12 @@ import com.google.common.collect.Sets;
 import com.telecomyt.item.dto.*;
 import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.ScheduleGroup;
-import com.telecomyt.item.entity.ScheduleInfoDo;
+import com.telecomyt.item.entity.ScheduleInfoDO;
 import com.telecomyt.item.entity.ScheduleLog;
 import com.telecomyt.item.enums.ResultStatus;
-import com.telecomyt.item.utils.DateUtil;
-import com.telecomyt.item.utils.OperationUtils;
-import com.telecomyt.item.utils.converter.ScheduleInfoVoConverter;
+import com.telecomyt.item.util.DateUtil;
+import com.telecomyt.item.util.OperationUtils;
+import com.telecomyt.item.util.converter.ScheduleInfoVoConverter;
 import com.telecomyt.item.web.mapper.ScheduleGroupMapper;
 import com.telecomyt.item.web.mapper.ScheduleInfoMapper;
 import com.telecomyt.item.web.mapper.ScheduleLogMapper;
@@ -56,20 +56,20 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     @Override
     @Transactional(transactionManager = "transactionManager" ,propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public BaseResp<String> addSchedule(ScheduleDto scheduleDto) {
-        ScheduleGroup scheduleGroup = new ScheduleGroup(scheduleDto);
+    public BaseResp<String> addSchedule(ScheduleDTO scheduleDTO) {
+        ScheduleGroup scheduleGroup = new ScheduleGroup(scheduleDTO);
         int addGroupResult = scheduleGroupMapper.insertSelective(scheduleGroup);
         if(addGroupResult > 0){
-            String creatorCardid = scheduleDto.getCreatorCardid();
+            String creatorCardid = scheduleDTO.getCreatorCardid();
             Integer groupId = scheduleGroup.getId();
-            List<String> affiliatedCardids = scheduleDto.getAffiliatedCardids();
+            List<String> affiliatedCardids = scheduleDTO.getAffiliatedCardids();
             if(affiliatedCardids == null){
                 affiliatedCardids = new ArrayList<>();
             }
             affiliatedCardids.add(creatorCardid);
-            ScheduleInfoDo scheduleInfoDo = ScheduleInfoDo.builder().groupId(groupId)
+            ScheduleInfoDO scheduleInfoDO = ScheduleInfoDO.builder().groupId(groupId)
                     .creatorCardid(creatorCardid).affiliatedCardids(affiliatedCardids).build();
-            int addInfoResult = scheduleInfoMapper.insertList(scheduleInfoDo);
+            int addInfoResult = scheduleInfoMapper.insertList(scheduleInfoDO);
             if(addInfoResult == 0){
                 log.info("新增日程详情失败。事务回滚");
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -90,12 +90,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     public BaseResp<Map> queryScheduleList(ScheduleListQuery scheduleListQuery) {
         Map<String, Collection> resultMap = Maps.newHashMap();
         //查询任务
-        List<TaskVo> taskList = taskMapper.getTaskByCardIdAndDate(scheduleListQuery.getCardid(),scheduleListQuery.getStartTime(),scheduleListQuery.getEndTime());
+        List<TaskVO> taskList = taskMapper.getTaskByCardIdAndDate(scheduleListQuery.getCardid(),scheduleListQuery.getStartTime(),scheduleListQuery.getEndTime());
         List<String> groupIds = taskMapper.getDeleteTask(scheduleListQuery.getCardid(),scheduleListQuery.getStartTime(),scheduleListQuery.getEndTime());
-        taskList.removeIf(taskVo -> groupIds.contains(taskVo.getGroupId()) );
+        taskList.removeIf(taskVO -> groupIds.contains(taskVO.getGroupId()) );
         resultMap.put("taskList",taskList);
         //不重复的  必查 按时间查
-        List<ScheduleInfoDto> noRepeatList = scheduleInfoMapper.queryScheduleListByNoRepeat(scheduleListQuery);
+        List<ScheduleInfoDTO> noRepeatList = scheduleInfoMapper.queryScheduleListByNoRepeat(scheduleListQuery);
         resultMap.put("noRepeatList",noRepeatList);
         //哪些日子有  ： 只有月查询时候
         Set<String> calendarSet = Sets.newTreeSet();
@@ -119,8 +119,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                 }
                 //任务
                 if(taskList.size() > 0){
-                    taskList.forEach(taskVo -> {
-                        LocalDateTime taskEndtime = taskVo.getTaskEndtime();
+                    taskList.forEach(taskVO -> {
+                        LocalDateTime taskEndtime = taskVO.getTaskEndtime();
                         String endStr = taskEndtime.toLocalDate().toString();
                         calendarSet.add(endStr);
                     });
@@ -147,14 +147,14 @@ public class ScheduleServiceImpl implements ScheduleService {
     public BaseResp<Map> queryScheduleListV2(ScheduleListQuery scheduleListQuery) {
         Map<String, Collection> resultMap = Maps.newHashMap();
         //查询任务
-        List<TaskVo> taskList = taskMapper.getTaskByCardIdAndDate(scheduleListQuery.getCardid(),scheduleListQuery.getStartTime(),scheduleListQuery.getEndTime());
+        List<TaskVO> taskList = taskMapper.getTaskByCardIdAndDate(scheduleListQuery.getCardid(),scheduleListQuery.getStartTime(),scheduleListQuery.getEndTime());
         resultMap.put("taskList",taskList);
         //不重复的  必查 按时间查
-        List<ScheduleInfoDto> noRepeatList = scheduleInfoMapper.queryScheduleListByNoRepeat(scheduleListQuery);
+        List<ScheduleInfoDTO> noRepeatList = scheduleInfoMapper.queryScheduleListByNoRepeat(scheduleListQuery);
         resultMap.put("noRepeatList",noRepeatList);
         //日重复的  必查 直接查
         scheduleListQuery.setRepeatRules(1);
-        List<ScheduleInfoDto> dayRepeatList = scheduleInfoMapper.queryScheduleListByRepeat(scheduleListQuery);
+        List<ScheduleInfoDTO> dayRepeatList = scheduleInfoMapper.queryScheduleListByRepeat(scheduleListQuery);
         resultMap.put("dayRepeatList",dayRepeatList);
         //周重复的  日查询时 要算开始时间是周几 、结束时间是周几
         scheduleListQuery.setRepeatRules(2);
@@ -162,7 +162,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             scheduleListQuery.setStartWeek(scheduleListQuery.getStartTime().getDayOfWeek().getValue());
             scheduleListQuery.setEndWeek(scheduleListQuery.getEndTime().getDayOfWeek().getValue());
         }
-        List<ScheduleInfoDto> weekRepeatList = scheduleInfoMapper.queryScheduleListByRepeat(scheduleListQuery);
+        List<ScheduleInfoDTO> weekRepeatList = scheduleInfoMapper.queryScheduleListByRepeat(scheduleListQuery);
         resultMap.put("weekRepeatList",weekRepeatList);
         //月重复的  日查询时 要算开始时间是几号 ； 周查询时候 要算 开始时间 和结束时间 都是几号  取范围值
         scheduleListQuery.setRepeatRules(3);
@@ -170,7 +170,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             scheduleListQuery.setStartDayMonth(scheduleListQuery.getStartTime().getDayOfMonth());
             scheduleListQuery.setEndDayMonth(scheduleListQuery.getEndTime().getDayOfMonth());
         }
-        List<ScheduleInfoDto> monthRepeatList = scheduleInfoMapper.queryScheduleListByRepeat(scheduleListQuery);
+        List<ScheduleInfoDTO> monthRepeatList = scheduleInfoMapper.queryScheduleListByRepeat(scheduleListQuery);
         resultMap.put("monthRepeatList",monthRepeatList);
         //哪些日子有  ： 只有月查询时候
         Set<String> calendarSet = Sets.newTreeSet();
@@ -231,8 +231,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                 }
                 //任务
                 if(taskList.size() > 0){
-                    taskList.forEach(taskVo -> {
-                        LocalDateTime taskEndtime = taskVo.getTaskEndtime();
+                    taskList.forEach(taskVO -> {
+                        LocalDateTime taskEndtime = taskVO.getTaskEndtime();
                         String endStr = taskEndtime.toLocalDate().toString();
                         calendarSet.add(endStr);
                     });
@@ -251,19 +251,19 @@ public class ScheduleServiceImpl implements ScheduleService {
      * @param groupId 组id
      */
     @Override
-    public BaseResp<ScheduleInfoVo> queryScheduleInfo(Integer groupId) {
+    public BaseResp<ScheduleInfoVO> queryScheduleInfo(Integer groupId) {
         ScheduleGroup scheduleGroup = scheduleGroupMapper.selectByPrimaryKey(groupId);
         if(scheduleGroup == null){
             return new BaseResp<>(ResultStatus.FAIL.getErrorCode(),"日程不存在");
         }
-        ScheduleInfoVo scheduleInfoVo = ScheduleInfoVoConverter.INSTANCE.scheduleGrouToVo(scheduleGroup);
-        String creatorCardid = scheduleInfoVo.getCreatorCardid();
-        UserVo creatorUser = OperationUtils.getUserByCardId(creatorCardid);
-        scheduleInfoVo.setCreatorUser(creatorUser);
+        ScheduleInfoVO scheduleInfoVO = ScheduleInfoVoConverter.INSTANCE.scheduleGrouToVo(scheduleGroup);
+        String creatorCardid = scheduleInfoVO.getCreatorCardid();
+        UserVO creatorUser = OperationUtils.getUserByCardId(creatorCardid);
+        scheduleInfoVO.setCreatorUser(creatorUser);
         List<String> affiliatedCardids = scheduleInfoMapper.queryAffiliatedCardids(groupId);
-        scheduleInfoVo.setAffiliatedCardids(affiliatedCardids);
-        List<UserVo> affiliatedUsers = OperationUtils.getUsersByCardIds(affiliatedCardids);
-        scheduleInfoVo.setAffiliatedUsers(affiliatedUsers);
+        scheduleInfoVO.setAffiliatedCardids(affiliatedCardids);
+        List<UserVO> affiliatedUsers = OperationUtils.getUsersByCardIds(affiliatedCardids);
+        scheduleInfoVO.setAffiliatedUsers(affiliatedUsers);
         List<ScheduleLog> scheduleLogs = scheduleLogMapper.queryByGroupId(groupId);
         scheduleLogs.stream().filter(scheduleLog -> StringUtils.isNotBlank(scheduleLog.getFileUri())).
                 forEach(scheduleLog -> scheduleLog.setFileUri( ip + scheduleLog.getFileUri()));
@@ -271,11 +271,11 @@ public class ScheduleServiceImpl implements ScheduleService {
                 forEach(scheduleLog -> scheduleLog.setFileZoomUrl( ip + scheduleLog.getFileZoomUrl()));
         //添加名字和头像
         scheduleLogs.forEach(log -> {
-            UserVo operationUser = OperationUtils.getUserByCardId(log.getOperationCardid());
+            UserVO operationUser = OperationUtils.getUserByCardId(log.getOperationCardid());
             log.setOperationUser(operationUser);
         });
-        scheduleInfoVo.setScheduleLogs(scheduleLogs);
-        return new BaseResp<>(ResultStatus.SUCCESS,scheduleInfoVo);
+        scheduleInfoVO.setScheduleLogs(scheduleLogs);
+        return new BaseResp<>(ResultStatus.SUCCESS, scheduleInfoVO);
     }
 
     /**

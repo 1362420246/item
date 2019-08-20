@@ -15,7 +15,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Data
-public class TaskDto implements Serializable {
+public class TaskDTO implements Serializable {
     private static final long serialVersionUID = -1920361582855456009L;
 
    @NotNull(message = "创建人id不能为空")

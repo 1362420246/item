@@ -1,6 +1,6 @@
 package com.telecomyt.item.entity;
 
-import com.telecomyt.item.dto.ScheduleDto;
+import com.telecomyt.item.dto.ScheduleDTO;
 import com.telecomyt.item.dto.ScheduleUpdateParam;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -92,14 +92,14 @@ public class ScheduleGroup implements Serializable {
      */
     private LocalDateTime updateTime;
 
-    public ScheduleGroup(ScheduleDto scheduleDto) {
-        this.creatorCardid = scheduleDto.getCreatorCardid();
-        this.scheduleTitle = scheduleDto.getScheduleTitle();
-        this.scheduleDescribe = scheduleDto.getScheduleDescribe();
-        this.startTime = scheduleDto.getStartTime();
-        this.endTime = scheduleDto.getEndTime();
-        this.isRepeat = scheduleDto.getIsRepeat();
-        this.repeatRules = scheduleDto.getRepeatRules();
+    public ScheduleGroup(ScheduleDTO scheduleDTO) {
+        this.creatorCardid = scheduleDTO.getCreatorCardid();
+        this.scheduleTitle = scheduleDTO.getScheduleTitle();
+        this.scheduleDescribe = scheduleDTO.getScheduleDescribe();
+        this.startTime = scheduleDTO.getStartTime();
+        this.endTime = scheduleDTO.getEndTime();
+        this.isRepeat = scheduleDTO.getIsRepeat();
+        this.repeatRules = scheduleDTO.getRepeatRules();
         this.createTime = LocalDateTime.now();
         this.updateTime = LocalDateTime.now();
         if(isRepeat){

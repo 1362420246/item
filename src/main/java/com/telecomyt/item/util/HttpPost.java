@@ -1,4 +1,4 @@
-package com.telecomyt.item.utils;
+package com.telecomyt.item.util;
 
 import java.io.*;
 import java.net.HttpURLConnection;

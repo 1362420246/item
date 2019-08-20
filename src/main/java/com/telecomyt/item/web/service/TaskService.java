@@ -2,7 +2,7 @@
 package com.telecomyt.item.web.service;
 
 import com.telecomyt.item.dto.TaskDescribe;
-import com.telecomyt.item.dto.TaskDto;
+import com.telecomyt.item.dto.TaskDTO;
 import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.TaskGroup;
 import com.telecomyt.item.entity.TaskLog;
@@ -23,11 +23,11 @@ import java.util.Map;
 public interface TaskService {
     /**
      * 新增组
-     * @param taskDto
+     * @param taskDTO
      * @return
      */
     //,MultipartFile grouptaskFile   throws IOException
-    BaseResp<Map> addTask(TaskDto taskDto, MultipartFile groupTaskFile) throws IOException;
+    BaseResp<Map> addTask(TaskDTO taskDTO, MultipartFile groupTaskFile) throws IOException;
 //    /**
 //     *
 //     */

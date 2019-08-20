@@ -1,9 +1,9 @@
 package com.telecomyt.item.web.mapper;
 
-import com.telecomyt.item.dto.ScheduleInfoDto;
+import com.telecomyt.item.dto.ScheduleInfoDTO;
 import com.telecomyt.item.dto.ScheduleListQuery;
 import com.telecomyt.item.entity.ScheduleInfo;
-import com.telecomyt.item.entity.ScheduleInfoDo;
+import com.telecomyt.item.entity.ScheduleInfoDO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -48,17 +48,17 @@ public interface ScheduleInfoMapper {
     /**
      * 批量插入
      */
-    int insertList(ScheduleInfoDo scheduleInfoDo);
+    int insertList(ScheduleInfoDO scheduleInfoDO);
 
     /**
      * 查询不重复日程
      */
-    List<ScheduleInfoDto> queryScheduleListByNoRepeat(ScheduleListQuery scheduleListQuery);
+    List<ScheduleInfoDTO> queryScheduleListByNoRepeat(ScheduleListQuery scheduleListQuery);
 
     /**
      * 查询重复日程
      */
-    List<ScheduleInfoDto> queryScheduleListByRepeat(ScheduleListQuery scheduleListQuery);
+    List<ScheduleInfoDTO> queryScheduleListByRepeat(ScheduleListQuery scheduleListQuery);
 
     /**
      * 查询关联人

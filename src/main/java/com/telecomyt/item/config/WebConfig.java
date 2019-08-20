@@ -1,7 +1,7 @@
 package com.telecomyt.item.config;
 
 import com.telecomyt.item.constant.CommonConstant;
-import com.telecomyt.item.utils.FileUtil;
+import com.telecomyt.item.util.FileUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -29,7 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String homePath = FileUtil.getHomePath();
-        //映射上传文件的路径
+        //映射路径上传文件的
         registry.addResourceHandler(CommonConstant.REPORTING_PATH + "**")
                 .addResourceLocations("file:"+ homePath + CommonConstant.REPORTING_PATH );
     }

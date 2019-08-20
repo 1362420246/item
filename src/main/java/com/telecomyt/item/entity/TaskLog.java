@@ -5,13 +5,14 @@
  */
 
 package com.telecomyt.item.entity;
-import com.telecomyt.item.dto.UserVo;
+import com.telecomyt.item.dto.UserVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,7 +21,7 @@ public class TaskLog implements Serializable {
     private static final long serialVersionUID = -2244507047106889578L;
     private Integer logId;
     private Integer groupId;
-    private Date logTime;
+    private LocalDateTime logTime;
     private String logCardId;
     private Integer logType;
     private String filePath;
@@ -38,6 +39,6 @@ public class TaskLog implements Serializable {
     /**
      * 操作者用户信息
      */
-    private UserVo logUser;
+    private UserVO logUser;
 
 }

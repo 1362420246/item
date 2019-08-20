@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
  * 任务显示层
  */
 @Data
-public class TaskVo implements Serializable {
+public class TaskVO implements Serializable {
     private static final long serialVersionUID = 241258762134364837L;
 
     /**

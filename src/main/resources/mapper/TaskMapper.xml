@@ -7,7 +7,7 @@
         values (#{creatorCardId},#{sheetTitle},#{sheetDescribe},#{taskEndTime},#{groupFileurl},#{groupFilepath},#{groupFilename},#{taskCreatTime})
     </insert>
     <!--批量插入-->
-    <insert id="insertTask" parameterType="com.telecomyt.item.entity.TaskDo">
+    <insert id="insertTask" parameterType="com.telecomyt.item.entity.TaskDO">
         insert into db_sheet_task (task_cardid, group_id, task_type, task_endtime)
         values
         <foreach collection="taskCardIds" separator="," item="taskCardId" >
@@ -15,7 +15,7 @@
         </foreach>
     </insert>
     <!--批量插入-->
-    <insert id="insertCoperTask" parameterType="com.telecomyt.item.entity.TaskDo">
+    <insert id="insertCoperTask" parameterType="com.telecomyt.item.entity.TaskDO">
         insert into db_sheet_task (task_copierid , group_id, task_type, task_endtime)
         values
         <foreach collection="taskCopierIds" separator="," item="taskCopierId" >
@@ -94,7 +94,7 @@
         </where>
     </select>
 
-    <resultMap id="resultMap" type="com.telecomyt.item.dto.TaskDescribe" >
+    <resultMap id="detaileResultMap" type="com.telecomyt.item.dto.TaskDescribe" >
         <id column="group_id" property="groupId"/>
         <result column="sheet_describe" property="sheetDescribe"  />
         <result column="creator_cardid" property="creatorCardId" />
@@ -118,7 +118,7 @@
     </resultMap>
 
     <!--查询任务列表详情-->
-    <select id="queryTaskDetailed" resultMap="resultMap">
+    <select id="queryTaskDetailed" resultMap="detaileResultMap">
          SELECT
             b.group_id ,
             b.task_endtime,
@@ -212,7 +212,7 @@
     </update>
     <!--删除任务-->
     <update id="deleteTask">
-        update db_sheet_group set is_delete = 1 where group_id = #{groupId}
+        update db_sheet_group set is_delete = 1,task_updatetime=#{taskUpdateTime} where group_id = #{groupId}
     </update>
     <!--删除任务日志-->
     <delete id="deleteTaskLog">
@@ -220,7 +220,7 @@
     </delete>
 
     <!--按照身份证和时间去查询任务-->
-    <select id="getTaskByCardIdAndDate" resultType="com.telecomyt.item.dto.TaskVo">
+    <select id="getTaskByCardIdAndDate" resultType="com.telecomyt.item.dto.TaskVO">
         SELECT
             distinct b.group_id,
             b.task_endtime,

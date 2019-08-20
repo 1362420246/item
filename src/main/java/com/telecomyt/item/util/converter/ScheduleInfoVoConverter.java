@@ -1,6 +1,6 @@
-package com.telecomyt.item.utils.converter;
+package com.telecomyt.item.util.converter;
 
-import com.telecomyt.item.dto.ScheduleInfoVo;
+import com.telecomyt.item.dto.ScheduleInfoVO;
 import com.telecomyt.item.entity.ScheduleGroup;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,6 +18,6 @@ public interface ScheduleInfoVoConverter {
     @Mappings({
             @Mapping(source = "id", target = "groupId")
     })
-    ScheduleInfoVo scheduleGrouToVo (ScheduleGroup scheduleGroup);
+    ScheduleInfoVO scheduleGrouToVo (ScheduleGroup scheduleGroup);
 
 }

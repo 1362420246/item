@@ -6,7 +6,7 @@ import com.telecomyt.item.constant.PushConstant;
 import com.telecomyt.item.dto.TaskIdState;
 import com.telecomyt.item.entity.CacheUser;
 import com.telecomyt.item.entity.TaskGroup;
-import com.telecomyt.item.utils.OperationUtils;
+import com.telecomyt.item.util.OperationUtils;
 import com.telecomyt.item.web.mapper.TaskMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;

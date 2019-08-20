@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
  * 日程详情传输对象
  */
 @Data
-public class ScheduleInfoDto implements Serializable {
+public class ScheduleInfoDTO implements Serializable {
 
     private static final long serialVersionUID = -5203140905131856487L;
     /**

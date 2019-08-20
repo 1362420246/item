@@ -12,7 +12,7 @@ import java.util.List;
  * 日程综合传输对象
  */
 @Data
-public class ScheduleDto implements Serializable {
+public class ScheduleDTO implements Serializable {
 
     private static final long serialVersionUID = -2219223120814315631L;
 

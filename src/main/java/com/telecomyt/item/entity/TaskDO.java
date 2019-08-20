@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TaskDo implements Serializable {
+public class TaskDO implements Serializable {
 
     private static final long serialVersionUID = 6214878095480373924L;
 

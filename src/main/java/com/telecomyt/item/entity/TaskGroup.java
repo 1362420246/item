@@ -1,7 +1,7 @@
 
 package com.telecomyt.item.entity;
 
-import com.telecomyt.item.dto.TaskDto;
+import com.telecomyt.item.dto.TaskDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,6 +43,7 @@ public class TaskGroup implements Serializable {
 
     private Integer taskType;
     private LocalDateTime taskCreatTime;
+    private LocalDateTime taskUpdateTime;
     /**
      * '正常0 结束1 默认0'
      */
@@ -58,12 +59,14 @@ public class TaskGroup implements Serializable {
      */
     private Integer isOverdue ;
 
-    public  TaskGroup(TaskDto taskDto){
-        this.creatorCardId = taskDto.getCreatorCardId();
-        this.sheetDescribe = taskDto.getSheetDescribe();
-        this.sheetTitle = taskDto.getSheetTitle();
-        this.taskEndTime = taskDto.getTaskEndTime();
+
+    public  TaskGroup(TaskDTO taskDTO){
+        this.creatorCardId = taskDTO.getCreatorCardId();
+        this.sheetDescribe = taskDTO.getSheetDescribe();
+        this.sheetTitle = taskDTO.getSheetTitle();
+        this.taskEndTime = taskDTO.getTaskEndTime();
         this.taskCreatTime = LocalDateTime.now();
+        this.taskUpdateTime = LocalDateTime.now();
         this.groupStatus = 0;
     }
 }

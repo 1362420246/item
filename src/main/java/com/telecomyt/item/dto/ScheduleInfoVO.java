@@ -11,7 +11,7 @@ import java.util.List;
  * 日程详情显示层对象
  */
 @Data
-public class ScheduleInfoVo implements Serializable {
+public class ScheduleInfoVO implements Serializable {
 
     private static final long serialVersionUID = -2078135105826726377L;
     /**
@@ -66,12 +66,12 @@ public class ScheduleInfoVo implements Serializable {
     /**
      * 创建人用户信息
      */
-    private UserVo creatorUser ;
+    private UserVO creatorUser ;
 
     /**
      * 关联人的用户信息数据
      */
-    private List<UserVo> affiliatedUsers ;
+    private List<UserVO> affiliatedUsers ;
 
 
 

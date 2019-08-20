@@ -1,10 +1,8 @@
-package com.telecomyt.item.utils;
+package com.telecomyt.item.util;
 
 import cn.hutool.core.util.URLUtil;
-import com.telecomyt.item.constant.CommonConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.system.ApplicationHome;
 
 import javax.servlet.http.HttpServletResponse;

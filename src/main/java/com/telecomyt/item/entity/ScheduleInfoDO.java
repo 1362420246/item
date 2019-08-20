@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ScheduleInfoDo implements Serializable {
+public class ScheduleInfoDO implements Serializable {
 
     private static final long serialVersionUID = 2141895934462636067L;
 

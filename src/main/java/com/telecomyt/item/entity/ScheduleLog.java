@@ -1,6 +1,6 @@
 package com.telecomyt.item.entity;
 
-import com.telecomyt.item.dto.UserVo;
+import com.telecomyt.item.dto.UserVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -76,7 +76,7 @@ public class ScheduleLog implements Serializable {
     /**
      * 操作人的用户信息
      */
-    private UserVo operationUser;
+    private UserVO operationUser;
 
     /**
      * 缩略图地址

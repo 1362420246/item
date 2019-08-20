@@ -1,7 +1,7 @@
 package com.telecomyt.item.web.controller;
 
 import com.telecomyt.item.exception.BasicException;
-import com.telecomyt.item.utils.FileUtil;
+import com.telecomyt.item.util.FileUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

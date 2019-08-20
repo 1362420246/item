@@ -14,7 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserVo implements Serializable {
+public class UserVO implements Serializable {
     private static final long serialVersionUID = 2214768243360788573L;
     /**
      * 身份号

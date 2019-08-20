@@ -10,10 +10,10 @@ import com.telecomyt.item.dto.*;
 import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.*;
 import com.telecomyt.item.enums.ResultStatus;
-import com.telecomyt.item.utils.DateUtil;
-import com.telecomyt.item.utils.FileUtil;
-import com.telecomyt.item.utils.OperationUtils;
-import com.telecomyt.item.utils.SpringContextHolder;
+import com.telecomyt.item.util.DateUtil;
+import com.telecomyt.item.util.FileUtil;
+import com.telecomyt.item.util.OperationUtils;
+import com.telecomyt.item.util.SpringContextHolder;
 import com.telecomyt.item.web.mapper.TaskMapper;
 import com.telecomyt.item.web.service.TaskAsynService;
 import com.telecomyt.item.web.service.TaskService;
@@ -55,12 +55,12 @@ public class TaskServiceImpl implements TaskService {
 
     /**
      * 新增组
-     * @param taskDto
+     * @param taskDTO
      * @return
      */
     @Override
-    public BaseResp<Map> addTask(TaskDto taskDto, MultipartFile groupTaskFile) throws IOException {
-        TaskGroup taskGroup = new TaskGroup(taskDto);
+    public BaseResp<Map> addTask(TaskDTO taskDTO, MultipartFile groupTaskFile) throws IOException {
+        TaskGroup taskGroup = new TaskGroup(taskDTO);
         if(groupTaskFile != null && !groupTaskFile.isEmpty()) {
             //上传文件名
             String groupFileName = groupTaskFile.getOriginalFilename();
@@ -82,19 +82,19 @@ public class TaskServiceImpl implements TaskService {
         int addTaskGroupResult = taskMapper.insertGroup(taskGroup);
         if(addTaskGroupResult > 0){
             Integer groupId = taskGroup.getGroupId();
-            LocalDateTime  taskEndTime = taskDto.getTaskEndTime();
-            List<String> taskCardIds = taskDto.getTaskCardIds();
-            TaskDo executorTaskDo = TaskDo.builder().taskCardIds(taskCardIds).groupId(groupId).taskType(1).taskEndTime(taskEndTime).build();
-            int addExecutorTaskResult = taskMapper.insertTask(executorTaskDo);
+            LocalDateTime  taskEndTime = taskDTO.getTaskEndTime();
+            List<String> taskCardIds = taskDTO.getTaskCardIds();
+            TaskDO executorTaskDO = TaskDO.builder().taskCardIds(taskCardIds).groupId(groupId).taskType(1).taskEndTime(taskEndTime).build();
+            int addExecutorTaskResult = taskMapper.insertTask(executorTaskDO);
             if(addExecutorTaskResult == 0){
                 log.info("新增任务执行人失败。");
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return new BaseResp<>(ResultStatus.FAIL);
             }
-            List<String> taskCopierIds = taskDto.getTaskCopierIds();
+            List<String> taskCopierIds = taskDTO.getTaskCopierIds();
             if(taskCopierIds != null && taskCopierIds.size() > 0){
-                TaskDo copierTaskDo = TaskDo.builder().taskCopierIds(taskCopierIds).groupId(groupId).taskType(2).taskEndTime(taskEndTime).build();
-                int addTaskCoperResult = taskMapper.insertCoperTask(copierTaskDo);
+                TaskDO copierTaskDO = TaskDO.builder().taskCopierIds(taskCopierIds).groupId(groupId).taskType(2).taskEndTime(taskEndTime).build();
+                int addTaskCoperResult = taskMapper.insertCoperTask(copierTaskDO);
                 if(addTaskCoperResult == 0){
                     log.info("新增任务抄送人失败。");
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -102,7 +102,7 @@ public class TaskServiceImpl implements TaskService {
                 }
             }
             //添加日志
-            TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(new Date()).
+            TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(LocalDateTime.now()).
                     logCardId(taskGroup.getCreatorCardId()).logType(3).build();
             taskMapper.insertMyLog(taskLog);
             //事项通知
@@ -180,8 +180,8 @@ public class TaskServiceImpl implements TaskService {
             List<Integer> overdues = new ArrayList<>();
             lists.forEach(taskSelect -> {
                 List<String> taskCardIds = taskMapper.getExecutorByGroupId(taskSelect.getGroupId());
-                List<UserVo> usersByCardIds = OperationUtils.getUsersByCardIds(taskCardIds);
-                List<String> names = usersByCardIds.stream().map(UserVo::getName).filter(Objects::nonNull).collect(Collectors.toList());
+                List<UserVO> usersByCardIds = OperationUtils.getUsersByCardIds(taskCardIds);
+                List<String> names = usersByCardIds.stream().map(UserVO::getName).filter(Objects::nonNull).collect(Collectors.toList());
                 taskSelect.setTaskCardIds(names);
                 if(taskSelect.getIsOverdue() == 0){
                     LocalDateTime taskEndTime = taskSelect.getTaskEndTime();
@@ -230,7 +230,7 @@ public class TaskServiceImpl implements TaskService {
         taskLogs.stream().filter(log -> StringUtils.isNotBlank(log.getFileZoomUrl())).
                 forEach(log -> log.setFileZoomUrl( ip + log.getFileZoomUrl()));
         taskLogs.forEach(log ->{
-            UserVo user = OperationUtils.getUserByCardId(log.getLogCardId());
+            UserVO user = OperationUtils.getUserByCardId(log.getLogCardId());
             log.setLogUser(user);
         });
         //查询执行者
@@ -241,14 +241,14 @@ public class TaskServiceImpl implements TaskService {
         describeResult.setTaskCopierId(taskCopierId);
         //获取创建的用户信息
         String creatorCardId = describeResult.getCreatorCardId();
-        UserVo creatorUser = OperationUtils.getUserByCardId(creatorCardId);
+        UserVO creatorUser = OperationUtils.getUserByCardId(creatorCardId);
         describeResult.setCreatorUser(creatorUser);
         //抄送的用户信息
         List<String> taskCopierIds = taskCopierId.stream().map(TaskIdState::getCardId).collect(Collectors.toList());
-        List<UserVo> taskCopierUsers = OperationUtils.getUsersByCardIds(taskCopierIds);
+        List<UserVO> taskCopierUsers = OperationUtils.getUsersByCardIds(taskCopierIds);
         describeResult.setTaskCopierUsers(taskCopierUsers);
         //获取执行的用户信息
-        List<UserVo> taskCardUsers = OperationUtils.getUsersByTaskIdState(taskCardId);
+        List<UserVO> taskCardUsers = OperationUtils.getUsersByTaskIdState(taskCardId);
         describeResult.setTaskCardUsers(taskCardUsers);
         if(cardid.equals(describeResult.getCreatorCardId())){
             describeResult.setTaskType(0);
@@ -278,8 +278,7 @@ public class TaskServiceImpl implements TaskService {
 
     /**
      * 查询新增任务详情
-     * @param taskCardId
-     * @param
+     * @param taskCardId 创建者id
      * @return
      */
     @Override
@@ -294,8 +293,8 @@ public class TaskServiceImpl implements TaskService {
 
     /**
      * 查询其它任务详情
-     * @param taskCardId
-     * @param groupId
+     * @param taskCardId 创建者id
+     * @param groupId 组id
      * @return
      */
 //    @Override
@@ -309,7 +308,7 @@ public class TaskServiceImpl implements TaskService {
 //    }
 
     /**
-     * 任务详情
+     * 任务日志
      */
     @Override
     public BaseResp<List> queryMyTaskLog(Integer groupId) {
@@ -325,14 +324,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * 修改任务
+     * 修改任务(执行人修改)
      */
     @Override
     public BaseResp<String> updateTask(TaskGroup taskGroup) {
         int flag = taskMapper.updateTask(taskGroup);
         if (flag > 0) {
             //添加日志
-            TaskLog taskLog = TaskLog.builder().groupId(taskGroup.getGroupId()).logTime(new Date()).
+            TaskLog taskLog = TaskLog.builder().groupId(taskGroup.getGroupId()).logTime(LocalDateTime.now()).
                     logCardId(taskGroup.getCreatorCardId()).logType(9).build();
             taskMapper.insertMyLog(taskLog);
             //事项通知
@@ -377,7 +376,7 @@ public class TaskServiceImpl implements TaskService {
                     break;
             }
             if(logType != 0){
-                TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(new Date()).
+                TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(LocalDateTime.now()).
                         logCardId(taskCardId).logType(logType).fileTagging(reason).build();
                 taskMapper.insertMyLog(taskLog);
             }
@@ -428,7 +427,7 @@ public class TaskServiceImpl implements TaskService {
                     return new BaseResp<>(ResultStatus.FAIL);
                 }
             }
-            TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(new Date()).
+            TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(LocalDateTime.now()).
                     logCardId(taskGroup.getCreatorCardId()).logType(4).build();
             taskMapper.insertMyLog(taskLog);
             //事项通知
@@ -453,10 +452,11 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public BaseResp<String> deleteTask(Integer groupId, String reason) {
-        int taskResult = taskMapper.deleteTask(groupId);
+        LocalDateTime taskUpdateTime = LocalDateTime.now();
+        int taskResult = taskMapper.deleteTask(groupId,taskUpdateTime);
         if(taskResult > 0){
             TaskGroup taskGroup = taskMapper.getTaskGroupByGroupId( groupId);
-            TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(new Date()).
+            TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(LocalDateTime.now()).
                     logCardId(taskGroup.getCreatorCardId()).logType(5).fileTagging(reason).build();
             taskMapper.insertMyLog(taskLog);
             //事项通知

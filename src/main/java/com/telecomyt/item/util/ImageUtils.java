@@ -1,4 +1,4 @@
-package com.telecomyt.item.utils;
+package com.telecomyt.item.util;
 
 import com.telecomyt.item.constant.ImageConstant;
 import net.coobird.thumbnailator.Thumbnails;

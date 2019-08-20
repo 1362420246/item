@@ -1,9 +1,8 @@
-package com.telecomyt.item.utils;
+package com.telecomyt.item.util;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.servlet.ServletUtil;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.telecomyt.item.entity.log.SysLog;
 import lombok.experimental.UtilityClass;

@@ -11,7 +11,7 @@ public interface ScheduleService {
     /**
      * 新增日程
      */
-    BaseResp<String> addSchedule(ScheduleDto scheduleDto);
+    BaseResp<String> addSchedule(ScheduleDTO scheduleDTO);
 
     /**
      * 查询日程列表
@@ -22,7 +22,7 @@ public interface ScheduleService {
      * 查询日程详情 （包含日志）
      * @param groupId 组id
      */
-    BaseResp<ScheduleInfoVo> queryScheduleInfo(Integer groupId);
+    BaseResp<ScheduleInfoVO> queryScheduleInfo(Integer groupId);
 
     /**
      * 添加日程日志

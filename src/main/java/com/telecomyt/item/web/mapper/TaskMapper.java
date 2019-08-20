@@ -27,14 +27,14 @@ public interface TaskMapper {
      *新增任务
      * @return
      */
-    int insertTask(TaskDo taskDo);
+    int insertTask(TaskDO taskDO);
 
     /**
      *
-     * @param taskDo
+     * @param taskDO
      * @return
      */
-    int insertCoperTask(TaskDo taskDo);
+    int insertCoperTask(TaskDO taskDO);
 
     /**
      *增加日志
@@ -120,9 +120,10 @@ public interface TaskMapper {
     /**
      *删除任务
      * @param groupId
+     * @param taskUpdateTime
      * @return
      */
-   int deleteTask(@Param("groupId") Integer groupId);
+   int deleteTask(@Param("groupId") Integer groupId,@Param("taskUpdateTime") LocalDateTime taskUpdateTime);
 
     /**
      * 删除任务日志
@@ -138,7 +139,7 @@ public interface TaskMapper {
      * @param startTime 开始时间
      * @param endTime 结束时间
      */
-    List<TaskVo> getTaskByCardIdAndDate(
+    List<TaskVO> getTaskByCardIdAndDate(
             @Param("cardid") String cardid, @Param("startTime") LocalDateTime startTime,
             @Param("endTime") LocalDateTime endTime);
 

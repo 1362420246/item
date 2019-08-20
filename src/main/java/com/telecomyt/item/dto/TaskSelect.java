@@ -31,6 +31,7 @@ public class TaskSelect implements Serializable {
     /**
      * 是否被逾期 0：否  1：是逾期
      */
+
     private Integer isOverdue ;
     /**
      * 0未开始 1进行中 2拒绝 3已完成

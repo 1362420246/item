@@ -1,11 +1,7 @@
 package com.telecomyt.item.dto;
 
-import com.telecomyt.item.entity.Task;
 import com.telecomyt.item.entity.TaskLog;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -45,15 +41,15 @@ public class TaskDescribe implements Serializable {
      /**
       * 创建人用户信息
       */
-     private UserVo creatorUser;
+     private UserVO creatorUser;
      /**
       * 执行人用户信息
       */
-     private List<UserVo> taskCardUsers;
+     private List<UserVO> taskCardUsers;
      /**
       * 抄送人用户信息
       */
-     private List<UserVo> taskCopierUsers;
+     private List<UserVO> taskCopierUsers;
 
      /**
       *  0-创建者1-接受任务  2-抄送任务

@@ -3,28 +3,24 @@ package com.telecomyt.item.web.controller;
 
 import com.telecomyt.item.constant.CommonConstant;
 import com.telecomyt.item.dto.TaskDescribe;
-import com.telecomyt.item.dto.TaskDto;
+import com.telecomyt.item.dto.TaskDTO;
 import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.TaskGroup;
 import com.telecomyt.item.entity.TaskLog;
 import com.telecomyt.item.enums.ResultStatus;
-import com.telecomyt.item.exception.BasicException;
-import com.telecomyt.item.utils.BeanValidator;
-import com.telecomyt.item.utils.FileUtil;
-import com.telecomyt.item.utils.ImageUtils;
+import com.telecomyt.item.util.BeanValidator;
+import com.telecomyt.item.util.FileUtil;
+import com.telecomyt.item.util.ImageUtils;
 import com.telecomyt.item.web.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -45,9 +41,9 @@ public class TaskController {
      * 新增组
      */
     @PostMapping("/insertNewTask")
-    public BaseResp<Map> insertNewTask(TaskDto taskDto, MultipartFile groupTaskFile) throws IOException {
-        BeanValidator.check(taskDto);
-        return taskService.addTask(taskDto,groupTaskFile);
+    public BaseResp<Map> insertNewTask(TaskDTO taskDTO, MultipartFile groupTaskFile) throws IOException {
+        BeanValidator.check(taskDTO);
+        return taskService.addTask(taskDTO,groupTaskFile);
     }
 
 //    /**
@@ -73,7 +69,7 @@ public class TaskController {
        if(logType == null || groupId == null || logCardId == null ){
             return new BaseResp<>(ResultStatus.INVALID_PARAM);
        }
-       TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(new Date()).logCardId(logCardId).logType(logType).build();
+       TaskLog taskLog = TaskLog.builder().groupId(groupId).logTime(LocalDateTime.now()).logCardId(logCardId).logType(logType).build();
        if(logType == 0 || logType == 1){
             //如果文件不为空，写入上传路径
             if(logFile == null || logFile.isEmpty()) {
@@ -171,7 +167,9 @@ public class TaskController {
 //    }
 
     /**
-     * 查询任务日志
+     *
+     * @param groupId
+     * @return
      */
     @GetMapping("/getMyTaskLog")
     public BaseResp<List> queryMyTaskLog(Integer groupId){

@@ -6,9 +6,9 @@ import com.telecomyt.item.dto.*;
 import com.telecomyt.item.dto.resp.BaseResp;
 import com.telecomyt.item.entity.ScheduleLog;
 import com.telecomyt.item.enums.ResultStatus;
-import com.telecomyt.item.utils.BeanValidator;
-import com.telecomyt.item.utils.FileUtil;
-import com.telecomyt.item.utils.ImageUtils;
+import com.telecomyt.item.util.BeanValidator;
+import com.telecomyt.item.util.FileUtil;
+import com.telecomyt.item.util.ImageUtils;
 import com.telecomyt.item.web.service.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -37,9 +36,9 @@ public class ScheduleController {
      */
     @ServiceLog("添加日程")
     @PostMapping("/add")
-    public BaseResp<String> addSchedule(@RequestBody ScheduleDto scheduleDto){
-        BeanValidator.check(scheduleDto);
-        return scheduleService.addSchedule(scheduleDto);
+    public BaseResp<String> addSchedule(@RequestBody ScheduleDTO scheduleDTO){
+        BeanValidator.check(scheduleDTO);
+        return scheduleService.addSchedule(scheduleDTO);
     }
 
     /**
@@ -61,7 +60,7 @@ public class ScheduleController {
      */
     @ServiceLog("查询日程详情")
     @GetMapping("/query/{groupId}")
-    public BaseResp<ScheduleInfoVo> queryScheduleInfo(@PathVariable Integer groupId){
+    public BaseResp<ScheduleInfoVO> queryScheduleInfo(@PathVariable Integer groupId){
         return scheduleService.queryScheduleInfo(groupId);
     }
 

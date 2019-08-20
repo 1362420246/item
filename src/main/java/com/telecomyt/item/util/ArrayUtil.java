@@ -1,4 +1,4 @@
-package com.telecomyt.item.utils;
+package com.telecomyt.item.util;
 
 /**
  * @author zhoupengbing
