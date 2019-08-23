@@ -1,10 +1,11 @@
+#使用hikari连接池
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     #账号配置
     url: jdbc:mysql://localhost:3306/item?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
     username: root
-    password: 123456
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
     #hikari数据库连接池
     hikari:
@@ -15,3 +16,22 @@ spring:
       auto-commit: true  #此属性控制从池返回的连接的默认自动提交行为,默认值：true
       max-lifetime: 1800000 #此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
       connection-timeout: 30000 #数据库连接超时时间,默认30秒，即30000
+
+parameter:
+  picture:
+    #图片访问的ip和端口
+    ip: http://39.106.33.10:8083
+
+dxyt:
+  bus:
+    push:
+      BASE_API_URL: http://20.1.11.52:5988/http/GA000Comm
+      BWLYIPDZ: 20.1.11.129
+      BWLYDKH: 8080
+      FWQQZ_ZCXX: A00111000000000000504
+      FWBS: S00111000000000006002
+      FFBS: FUN001
+      FFMC: notice.createPushByUsername
+      PACKAGE_NAME: com.telecomyt.item
+      FWQQ_SJSJLX: service_request
+      URL:  http://20.1.11.5:80/item/app/#/taskDetail?valueType=%d&groupId=%s&groupStatus=%d&type=notice&current=false
