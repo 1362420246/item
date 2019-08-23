@@ -35,14 +35,10 @@ public class LogUtils {
     public SysLog getServiceLog()throws Exception{
         HttpServletRequest request = ((ServletRequestAttributes)
                 Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-
         //获取当前用户信息
         String username = "" ;
-
-
         //请求参数
         String params = JSONUtil.toJsonStr(request.getParameterMap()).replaceAll("[\\[\\]]", "");
-
         return SysLog.builder()
                 .createUser(username)
                 .type("1")

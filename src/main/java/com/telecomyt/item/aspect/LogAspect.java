@@ -37,7 +37,6 @@ public class LogAspect {
      */
     @Around("@annotation(serviceLog)")
     public Object arround(ProceedingJoinPoint point, ServiceLog serviceLog)throws Throwable{
-
         //类名
         String className = point.getTarget().getClass().getName();
         //方法名
@@ -55,5 +54,4 @@ public class LogAspect {
         SpringContextHolder.publishEvent(new ServiceLogEvent(sLog));
         return proceed;
     }
-
 }
