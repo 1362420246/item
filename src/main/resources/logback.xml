@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
     <!--加载配置-->
     <property resource="logback.properties"/>
 
@@ -24,9 +27,10 @@
         <encoder>
             <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <!-- 此处设置字符集 -->
+            <charset>UTF-8</charset>
         </encoder>
-        <!--滚动策略-->
-        <!-- SizeAndTimeBasedRollingPolicy 可以按照大小切割日志  日志文件中的%d、%i是不可缺少的-->
+        <!-- 滚动策略 SizeAndTimeBasedRollingPolicy 按照时间滚动 是TimeBasedRollingPolicy子类 日志文件中的%d、%i是不可缺少的-->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!--路径-->
             <fileNamePattern>${LOG_INFO_HOME}//%d{yyyy-MM-dd_HH}.%i.log</fileNamePattern>
@@ -39,18 +43,29 @@
 
     <!--ERROR日志-->
     <appender name="ERROR-LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--如果只是想要 Error 级别的日志，那么需要过滤一下，默认是 info 级别的，ThresholdFilter-->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
         </filter>
         <encoder>
             <pattern>[%d{yyyy-MM-dd' 'HH:mm:ss.sss}] [%C] [%t] [%L] [%-5p] %m%n</pattern>
+            <!-- 此处设置字符集 -->
+            <charset>UTF-8</charset>
         </encoder>
-        <!--滚动策略 次策略无法按照大小切割日志 -->
+        <!--滚动策略，按照时间滚动 TimeBasedRollingPolicy-->
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天的日志改名为今天的日期。即，<File> 的日志都是当天的。-->
+        <!--<File>logs/error.spring-boot-demo-logback.log</File>-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!--路径-->
-            <fileNamePattern>${LOG_ERROR_HOME}//%d{yyyy-MM-dd_HH}.log</fileNamePattern>
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <fileNamePattern>${LOG_ERROR_HOME}//%d{yyyy-MM-dd_HH}.%i.log</fileNamePattern>
             <!--日志文件保留天数-->
             <maxHistory>30</maxHistory>
+            <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+            <!--<totalSizeCap>1GB</totalSizeCap>-->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- maxFileSize:这是活动文件的大小，默认值是10MB-->
+                <maxFileSize>${LOG_MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
 
