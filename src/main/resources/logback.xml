@@ -54,13 +54,6 @@
         </rollingPolicy>
     </appender>
 
-    <!--日志输出级别 -->
-    <root level= "${LOG_LEVEL}">
-        <appender-ref ref="CONSOLE-LOG" />
-        <appender-ref ref="INFO-LOG" />
-        <appender-ref ref="ERROR-LOG" />
-    </root>
-
     <!-- 异步输出 -->
     <appender name="ASYNC-INFO" class="ch.qos.logback.classic.AsyncAppender">
         <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
@@ -70,7 +63,7 @@
         <!-- 添加附加的appender,最多只能添加一个 -->
         <appender-ref ref="INFO-LOG"/>
     </appender>
-
+    <!-- 异步输出 -->
     <appender name="ASYNC-ERROR" class="ch.qos.logback.classic.AsyncAppender">
         <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
         <discardingThreshold>0</discardingThreshold>
@@ -79,5 +72,12 @@
         <!-- 添加附加的appender,最多只能添加一个 -->
         <appender-ref ref="ERROR-LOG"/>
     </appender>
+
+    <!--日志输出级别 -->
+    <root level= "${LOG_LEVEL}">
+        <appender-ref ref="CONSOLE-LOG" />
+        <appender-ref ref="ASYNC-INFO" />
+        <appender-ref ref="ASYNC-ERROR" />
+    </root>
 
 </configuration>
