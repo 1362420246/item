@@ -15,7 +15,7 @@
             <pattern>[%d{yyyy-MM-dd' 'HH:mm:ss.sss}] [%C] [%t] [%L] [%-5p] %m%n</pattern>
         </layout>-->
         <encoder>
-            <!--<pattern>%d %p (%file:%line\)- %m%n</pattern>-->
+            <!-- 带颜色的输出 -->
             <!--格式化输出：%d:表示日期    %thread:表示线程名     %-5level:级别从左显示5个字符宽度  %msg:日志消息    %n:是换行符-->
             <pattern> %red(%d{yyyy-MM-dd HH:mm:ss})--%green([%thread])--%highlight(%-5level)--%boldMagenta(%logger) %cyan(%msg%n)</pattern>
             <charset>UTF-8</charset>

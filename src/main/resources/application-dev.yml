@@ -1,10 +1,4 @@
 spring:
-    servlet:
-      multipart:
-        # 最大支持文件大小
-        max-file-size: 100MB
-        # 最大支持请求大小
-        max-request-size: 100MB
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         druid:
@@ -66,22 +60,3 @@ spring:
           max-wait: -1
       # 数据库
       database: 3
-
-parameter:
-  picture:
-    #图片访问的ip和端口
-    ip: http://39.106.33.10:8083
-
-dxyt:
-  bus:
-    push:
-      BASE_API_URL: http://20.1.11.52:5988/http/GA000Comm
-      BWLYIPDZ: 20.1.11.129
-      BWLYDKH: 8080
-      FWQQZ_ZCXX: A00111000000000000504
-      FWBS: S00111000000000006002
-      FFBS: FUN001
-      FFMC: notice.createPushByUsername
-      PACKAGE_NAME: com.telecomyt.item
-      FWQQ_SJSJLX: service_request
-      URL:  http://20.1.11.5:80/item/app/#/taskDetail?valueType=%d&groupId=%s&groupStatus=%d&type=notice&current=false
