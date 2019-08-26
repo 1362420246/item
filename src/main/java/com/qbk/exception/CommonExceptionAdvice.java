@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.validation.ConstraintViolation;
@@ -42,6 +43,13 @@ public class CommonExceptionAdvice {
     public BaseResult<String> handleMissingServletRequestParServiceExceptionameterException(MissingServletRequestParameterException e) {
         log.error("缺少请求参数", e);
         return BaseResultGenerator.error("缺少请求参数");
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(MultipartException.class)
+    public BaseResult<String> handleMultipartException(MultipartException e) {
+        log.error("传输文件过大", e);
+        return BaseResultGenerator.error("传输文件过大");
     }
 
     /**

@@ -30,7 +30,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/test")
 @Profile({ "dev"})
-@Api(tags = "1.4", description = "测试控制器", value = "测试")
+@Api(tags = "1.4",value = "测试控制器")
 public class TestContoller {
 
     @Autowired
@@ -84,10 +84,10 @@ public class TestContoller {
 
     /**
      * 校验测试三：
-     * 1.使用注解 工具类 BeanValidator 校验器 校验单个对象
+     * 1.使用工具类 BeanValidator 校验器 校验单个对象
      * 2.转换单个对象
      */
-    @ApiOperation(value = "校验测试3", notes = "使用注解 工具类 BeanValidator 校验器 校验单个对象")
+    @ApiOperation(value = "校验测试3", notes = "使用工具类 BeanValidator 校验器 校验单个对象")
     @ServiceLog("参数校验测试3")
     @PostMapping("/v1.3/param_test")
     public BaseResult<TestResponse> parameterValidator(@RequestBody TestRequest testRequest){
@@ -102,10 +102,10 @@ public class TestContoller {
 
     /**
      * 校验测试四：
-     * 1.使用注解 工具类 BeanValidator 校验器 校验多个对象
+     * 1.使用工具类 BeanValidator 校验器 校验多个对象
      * 2.转换多个对象
      */
-    @ApiOperation(value = "校验测试4", notes = "使用注解 工具类 BeanValidator 校验器 校验多个对象")
+    @ApiOperation(value = "校验测试4", notes = "使用工具类 BeanValidator 校验器 校验多个对象")
     @ServiceLog("参数校验测试4")
     @PostMapping("/v1.4/param_test")
     public BaseResult<List<TestResponse>> parameterValidator(@RequestBody List<TestRequest> testRequests){

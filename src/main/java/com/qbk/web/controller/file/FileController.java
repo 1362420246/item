@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 //用于类
-@Api(tags = "1.0", description = "文件控制器", value = "文件")
+@Api(tags = "1.0", value = "文件控制器")
 public class FileController {
 
     /**

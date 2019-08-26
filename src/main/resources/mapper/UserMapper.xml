@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qbk.web.mapper.UserMapper">
+
+  <resultMap id="UserResultMap" type="com.qbk.entity.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="login_name" jdbcType="VARCHAR" property="loginName" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="salt" jdbcType="VARCHAR" property="salt" />
+    <result column="is_lock" jdbcType="TINYINT" property="isLock" />
+    <result column="is_del" jdbcType="TINYINT" property="isDel" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+
+  <sql id="User_Column_List">
+    id, login_name, nick_name, password, salt, is_lock, is_del, create_date, update_date
+  </sql>
+
+  <resultMap id="RoleResultMap" type="com.qbk.entity.Role">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="is_del" jdbcType="TINYINT" property="isDel" />
+  </resultMap>
+
+  <sql id="Role_Column_List">
+    id, name, create_date, update_date, is_del
+  </sql>
+
+  <resultMap id="MenuResultMap" type="com.qbk.entity.Menu">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="paths" jdbcType="VARCHAR" property="paths" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="is_del" jdbcType="TINYINT" property="isDel" />
+  </resultMap>
+
+  <sql id="Menu_Column_List">
+    id, name, parent_id, level, paths, sort, create_date, update_date, is_del
+  </sql>
+
+  <!--获得该用户角色-->
+  <select id="getRoleByUserName" resultMap="RoleResultMap">
+      SELECT c.id ,c.`name`
+      FROM tb_user AS a
+      LEFT JOIN tb_user_role AS b
+      ON a.id = b.user_id
+      LEFT JOIN tb_role AS c
+      ON b.role_id = c.id
+      AND c.is_del = 0
+      WHERE a.login_name = #{username}
+  </select>
+
+  <!--获得该用户的权限-->
+  <select id="getMenuNameByRoleIds" resultType="java.lang.String">
+      SELECT distinct c.`name`
+      FROM tb_role AS a
+      LEFT JOIN tb_role_menu AS b
+      ON a.id = b.role_id
+      LEFT JOIN tb_menu AS c
+      ON b.menu_id = c.id
+      AND c.is_del = 0
+      WHERE b.role_id in
+      <foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
+            #{roleId}
+      </foreach>
+  </select>
+
+  <!--获取用户信息-->
+  <select id="getUserByName" resultMap="UserResultMap">
+    SELECT <include refid="User_Column_List" />
+    FROM tb_user
+    WHERE login_name = #{username}
+    AND is_del = 0
+  </select>
+
+</mapper>
