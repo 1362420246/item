@@ -60,3 +60,9 @@ spring:
           max-wait: -1
       # 数据库
       database: 3
+
+#当properties一直中文乱码可以选择在yml里面配置
+#或者删除文件properties(不要选safe delete)，然后新建一个文件（记得工程编码指定的是正确的），把内容copy进去，重启，就可以了
+info:
+  build:
+    test2: 测试中文乱码
