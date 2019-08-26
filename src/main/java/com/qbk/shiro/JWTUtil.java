@@ -10,12 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 /**
- * Created with IntelliJ IDEA
- *
- * @Author yuanhaoyue swithaoy@gmail.com
- * @Description JWT 工具类
- * @Date 2018-04-07
- * @Time 22:48
+ * JWT 工具类
  */
 public class JWTUtil {
     // 过期时间 24 小时

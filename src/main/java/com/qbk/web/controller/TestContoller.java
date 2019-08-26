@@ -16,6 +16,10 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
@@ -41,10 +45,13 @@ public class TestContoller {
      * 分别测试有没有事务的时候，数据库连接是否是同一个
      * 需要并发测试才能看到结果
      */
+//    @RequiresRoles(value={"admin","user"},logical = Logical.OR)
     @ApiOperation(value = "测试连接", notes = "数据库连接测试")
     @ServiceLog("测试连接")
     @GetMapping("/connection")
     public BaseResult<String> testConnection(){
+        Subject subject = SecurityUtils.getSubject();
+        subject.checkRole("admin");
         testService.testConnection();
         return BaseResultGenerator.success("test");
     }

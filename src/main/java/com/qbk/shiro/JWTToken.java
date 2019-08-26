@@ -3,12 +3,7 @@ package com.qbk.shiro;
 import org.apache.shiro.authc.AuthenticationToken;
 
 /**
- * Created with IntelliJ IDEA
- *
- * @Author yuanhaoyue swithaoy@gmail.com
- * @Description token
- * @Date 2018-04-09
- * @Time 16:54
+ * 代替 UsernamePasswordToken
  */
 public class JWTToken implements AuthenticationToken {
     /**
@@ -17,12 +12,21 @@ public class JWTToken implements AuthenticationToken {
     private String username;
 
     /**
-     * The password, in char[] format
+     * The password
      */
     private String password;
 
-   JWTToken(){}
-   JWTToken(String username){
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    JWTToken(){}
+
+   JWTToken(final String username){
        this.username = username;
    }
    public JWTToken(final String username, final String password){
@@ -32,11 +36,11 @@ public class JWTToken implements AuthenticationToken {
 
     @Override
     public Object getPrincipal() {
-        return username;
+        return getUsername();
     }
 
     @Override
     public Object getCredentials() {
-        return password;
+        return getUsername();
     }
 }

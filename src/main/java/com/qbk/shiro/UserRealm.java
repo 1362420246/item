@@ -34,15 +34,17 @@ public class UserRealm extends AuthorizingRealm {
     private UserMapper userMapper;
 
     /**
+     * 使用JWT替代原生Token
      * 必须重写此方法，不然会报错
      */
     @Override
     public boolean supports(AuthenticationToken token) {
-        if(token instanceof JWTToken){
+        if(token instanceof JWTToken || token instanceof UsernamePasswordToken){
             return true;
         }else {
             return false;
         }
+
     }
 
     /**
@@ -51,8 +53,7 @@ public class UserRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        String username = JWTUtil.getUsername(principals.toString());
-        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        String username = principals.toString();
         //获得该用户角色
         List<Role> roleList = userMapper.getRoleByUserName(username);
         Set<Integer> roleIds = roleList.stream().map(Role::getId).collect(Collectors.toSet());
@@ -61,6 +62,7 @@ public class UserRealm extends AuthorizingRealm {
         List<String> menuNames = userMapper.getMenuNameByRoleIds(roleIds);
         //需要将 role, permission 封装到 Set 作为 info.setRoles(), info.setStringPermissions() 的参数
         //设置该用户拥有的角色和权限
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         info.setRoles(roleNames);
         info.setStringPermissions(new HashSet<>(menuNames));
         return info;
@@ -76,10 +78,8 @@ public class UserRealm extends AuthorizingRealm {
     @ServiceLog("用户登录")
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
-        String token = (String) authcToken.getPrincipal();
-        // 解密获得username，用于和数据库进行对比
-        String username = JWTUtil.getUsername(token);
-        if (username == null || !JWTUtil.verify(token, username)) {
+        String username = (String) authcToken.getPrincipal();
+        if (username == null ) {
             log.debug("token认证失败！");
             throw new AuthenticationException("token认证失败！");
         }
@@ -92,7 +92,18 @@ public class UserRealm extends AuthorizingRealm {
             log.debug("该用户已被封号");
             throw new AuthenticationException("该用户已被封号！");
         }
-        return new SimpleAuthenticationInfo(token, token, getName());
+        /**
+         * 返回一个从数据库中查出来的的凭证。用户名为和密码。
+         * 接下来shiro框架做的事情就很简单了。
+         * 它会拿你的输入的token与当前返回的这个数据库凭证SimpleAuthenticationInfo对比一下
+         * 看看是不是一样，如果用户的帐号密码与数据库中查出来的数据一样，那么本次登录成功
+         * 否则就是你密码输入错误
+         */
+        if(authcToken instanceof JWTToken ){
+            return new SimpleAuthenticationInfo(user.getLoginName(), username , getName());
+        }else {
+            return new SimpleAuthenticationInfo(user.getLoginName(), user.getPassword() , getName());
+        }
     }
 
 }

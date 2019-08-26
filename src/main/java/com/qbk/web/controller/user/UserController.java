@@ -27,10 +27,11 @@ public class UserController {
         try {
             Subject subject = SecurityUtils.getSubject();
             //将用户请求参数封装后，直接提交给Shiro处理
-//            UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-            JWTToken token = new JWTToken(username, password);
+            UsernamePasswordToken token = new UsernamePasswordToken(username, password);
             subject.login(token);
-            return BaseResultGenerator.success(JWTUtil.createToken(username));
+            boolean authenticated = subject.isAuthenticated();
+            System.out.println("是否认证成功："+authenticated);
+            return BaseResultGenerator.success("登陆成功",JWTUtil.createToken(username));
         } catch (UnknownAccountException e) {
             return BaseResultGenerator.error(e.getMessage());
         } catch (IncorrectCredentialsException e) {
@@ -38,7 +39,6 @@ public class UserController {
         } catch (LockedAccountException e) {
             return BaseResultGenerator.error("账号已被锁定,请联系管理员");
         } catch (AuthenticationException e) {
-            e.printStackTrace();
             return BaseResultGenerator.error("账户验证失败");
         }
     }
