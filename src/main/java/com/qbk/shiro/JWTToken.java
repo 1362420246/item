@@ -3,44 +3,30 @@ package com.qbk.shiro;
 import org.apache.shiro.authc.AuthenticationToken;
 
 /**
- * 代替 UsernamePasswordToken
+ * 类似于 UsernamePasswordToken
  */
 public class JWTToken implements AuthenticationToken {
-    /**
-     * The username
-     */
-    private String username;
 
-    /**
-     * The password
-     */
-    private String password;
+    private String token;
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
+    public String getToken() {
+        return token;
     }
 
     JWTToken(){}
 
-   JWTToken(final String username){
-       this.username = username;
+   JWTToken(final String token){
+       this.token = token;
    }
-   public JWTToken(final String username, final String password){
-       this.username = username;
-       this.password = password;
-   }
+
 
     @Override
     public Object getPrincipal() {
-        return getUsername();
+        return getToken();
     }
 
     @Override
     public Object getCredentials() {
-        return getUsername();
+        return getToken();
     }
 }

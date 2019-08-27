@@ -20,27 +20,15 @@ public class UserController {
 
 
     @ApiOperation(value = "登陆", notes = "用户登陆")
-//    @ServiceLog("登陆")
+    @ServiceLog("登陆")
     @PostMapping("/login")
     public BaseResult<String> login(@RequestParam("username") String username ,
                                     @RequestParam("password") String password ){
-        try {
-            Subject subject = SecurityUtils.getSubject();
-            //将用户请求参数封装后，直接提交给Shiro处理
-            UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-            subject.login(token);
-            boolean authenticated = subject.isAuthenticated();
-            System.out.println("是否认证成功："+authenticated);
-            return BaseResultGenerator.success("登陆成功",JWTUtil.createToken(username));
-        } catch (UnknownAccountException e) {
-            return BaseResultGenerator.error(e.getMessage());
-        } catch (IncorrectCredentialsException e) {
-            return BaseResultGenerator.error("账号或密码不正确");
-        } catch (LockedAccountException e) {
-            return BaseResultGenerator.error("账号已被锁定,请联系管理员");
-        } catch (AuthenticationException e) {
-            return BaseResultGenerator.error("账户验证失败");
-        }
+        Subject subject = SecurityUtils.getSubject();
+        //将用户请求参数封装token后，直接提交给Shiro处理
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        subject.login(token);
+        return BaseResultGenerator.success("登陆成功",JWTUtil.createToken(username));
     }
 
 }

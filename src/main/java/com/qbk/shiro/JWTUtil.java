@@ -13,13 +13,18 @@ import java.util.Date;
  * JWT 工具类
  */
 public class JWTUtil {
-    // 过期时间 24 小时
-    private static final long EXPIRE_TIME = 60 * 24 * 60 * 1000;
-    // 密钥
-    private static final String SECRET = "SHIRO+JWT";
+    /**
+     * 过期时间 毫秒
+     */
+    private static final long EXPIRE_TIME = 5 * 60 * 1000;
 
     /**
-     * 生成 token, 5min后过期
+     * 密钥
+     */
+    private static final String SECRET = "QBK_SHIRO_JWT";
+
+    /**
+     * 生成 token
      *
      * @param username 用户名
      * @return 加密的token

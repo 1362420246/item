@@ -3,7 +3,13 @@ package com.qbk.exception;
 
 import com.qbk.result.BaseResult;
 import com.qbk.result.BaseResultGenerator;
+import com.qbk.result.ResultStatus;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -148,17 +154,6 @@ public class CommonExceptionAdvice {
     }
 
     /**
-     * 业务层需要自己声明异常的情况
-     */
-    @ResponseStatus(HttpStatus.OK)
-    @ExceptionHandler(BasicException.class)
-    public BaseResult handleServiceException(BasicException e) {
-        log.error("业务逻辑异常", e);
-        return BaseResultGenerator.generate(e.getCode(),e.getMsg());
-    }
-
-
-    /**
      * 获取其它异常。包括500
      *
      * @param e
@@ -169,8 +164,70 @@ public class CommonExceptionAdvice {
     @ExceptionHandler(value = Exception.class)
     public BaseResult defaultErrorHandler(Exception e) {
         log.error("Exception", e);
-        return BaseResultGenerator.error("系统异常");
+        return BaseResultGenerator.generate(ResultStatus.http_status_internal_server_error);
+    }
+
+    /**
+     * 业务层需要自己声明异常的情况
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(BasicException.class)
+    public BaseResult handleServiceException(BasicException e) {
+        log.error("业务逻辑异常", e);
+        return BaseResultGenerator.generate(e.getCode(),e.getMsg());
+    }
+
+    /***********shiro 异常*******************/
+    /**
+     * shiro 未知的账号 异常
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(value = UnknownAccountException.class)
+    public BaseResult unknownAccountException(UnknownAccountException e) {
+        log.error("Exception", e);
+        return BaseResultGenerator.error("未知的账号");
+    }
+
+    /**
+     * shiro 未被授权 异常
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(value = UnauthorizedException.class)
+    public BaseResult unauthorizedException(UnauthorizedException e) {
+        log.error("Exception", e);
+        return BaseResultGenerator.error("未被授权");
+    }
+
+    /**
+     * shiro 不正确的凭证 异常
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(value = IncorrectCredentialsException.class)
+    public BaseResult incorrectCredentialsException(IncorrectCredentialsException e) {
+        log.error("Exception", e);
+        return BaseResultGenerator.error("账号或密码不正确");
+    }
+
+    /**
+     * shiro 账号被锁定 异常
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(value = LockedAccountException.class)
+    public BaseResult lockedAccountException(LockedAccountException e) {
+        log.error("Exception", e);
+        return BaseResultGenerator.error("账号已被锁定,请联系管理员");
+    }
+
+    /**
+     * shiro 认证失败 异常
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(value = AuthenticationException.class)
+    public BaseResult authenticationException(AuthenticationException e) {
+        log.error("Exception", e);
+        return BaseResultGenerator.error("账户验证失败");
     }
 
 
 }
+

@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,17 +42,52 @@ public class TestContoller {
     private TestService testService ;
 
     /**
+     *  测试角色
+     */
+    @ApiOperation(value = "测试权限1", notes = "测试权限1")
+    @ServiceLog("测试权限1")
+    @GetMapping("/role/v1")
+    public BaseResult<String> testRole1(){
+        Subject subject = SecurityUtils.getSubject();
+        subject.checkRole("admin");
+        log.debug("测试权限1成功");
+        return BaseResultGenerator.success("test");
+    }
+
+    /**
+     * 测试注解角色
+     * logical 如果指定了多个角色，则用于权限检查的逻辑操作,默认值 and
+     */
+    @RequiresRoles(value={"admin"},logical = Logical.OR)
+    @ApiOperation(value = "测试权限2", notes = "测试权限2")
+    @ServiceLog("测试权限2")
+    @GetMapping("/role/v2")
+    public BaseResult<String> testRole2(){
+        log.debug("测试权限2成功");
+        return BaseResultGenerator.success("test");
+    }
+
+    /**
+     *  测试注解权限
+     */
+    @RequiresPermissions(value = {"测试操作"})
+    @ApiOperation(value = "测试权限3", notes = "测试权限3")
+    @ServiceLog("测试权限3")
+    @GetMapping("/role/v3")
+    public BaseResult<String> testPermission(){
+        log.debug("测试权限3成功");
+        return BaseResultGenerator.success("test");
+    }
+
+    /**
      * 数据库连接测试：
      * 分别测试有没有事务的时候，数据库连接是否是同一个
      * 需要并发测试才能看到结果
      */
-//    @RequiresRoles(value={"admin","user"},logical = Logical.OR)
     @ApiOperation(value = "测试连接", notes = "数据库连接测试")
     @ServiceLog("测试连接")
     @GetMapping("/connection")
     public BaseResult<String> testConnection(){
-        Subject subject = SecurityUtils.getSubject();
-        subject.checkRole("admin");
         testService.testConnection();
         return BaseResultGenerator.success("test");
     }

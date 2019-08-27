@@ -34,17 +34,14 @@ public class UserRealm extends AuthorizingRealm {
     private UserMapper userMapper;
 
     /**
-     * 使用JWT替代原生Token
+     * 校验Token类型
      * 必须重写此方法，不然会报错
+     * UsernamePasswordToken 用于登陆校验
+     * JWTToken 用于校验token
      */
     @Override
     public boolean supports(AuthenticationToken token) {
-        if(token instanceof JWTToken || token instanceof UsernamePasswordToken){
-            return true;
-        }else {
-            return false;
-        }
-
+        return token instanceof JWTToken || token instanceof UsernamePasswordToken;
     }
 
     /**
@@ -75,22 +72,17 @@ public class UserRealm extends AuthorizingRealm {
      * @param authcToken 用户身份信息 token
      * @return 返回封装了用户信息的 AuthenticationInfo 实例
      */
-    @ServiceLog("用户登录")
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
         String username = (String) authcToken.getPrincipal();
-        if (username == null ) {
-            log.debug("token认证失败！");
-            throw new AuthenticationException("token认证失败！");
-        }
         User user = userMapper.getUserByName(username);
         if (user == null) {
-            log.debug("该用户不存在！");
-            throw new AuthenticationException("该用户不存在！");
+            log.debug("{}该用户不存在！",username);
+            throw new UnknownAccountException();
         }
         if (user.getIsLock()) {
-            log.debug("该用户已被封号");
-            throw new AuthenticationException("该用户已被封号！");
+            log.debug("{}该用户已被封号",username);
+            throw new LockedAccountException("该用户已被封号！");
         }
         /**
          * 返回一个从数据库中查出来的的凭证。用户名为和密码。
