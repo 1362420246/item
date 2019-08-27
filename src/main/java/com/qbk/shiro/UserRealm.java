@@ -92,7 +92,7 @@ public class UserRealm extends AuthorizingRealm {
          * 否则就是你密码输入错误
          */
         if(authcToken instanceof JWTToken ){
-            return new SimpleAuthenticationInfo(user.getLoginName(), username , getName());
+            return new SimpleAuthenticationInfo(user.getLoginName(), ShiroKit.sha256(user.getLoginName(),user.getSalt()),ByteSource.Util.bytes(user.getSalt()) , getName());
         }else {
             return new SimpleAuthenticationInfo(user.getLoginName(), user.getPassword() ,ByteSource.Util.bytes(user.getSalt()), getName());
         }
