@@ -94,9 +94,19 @@ public class UserRealm extends AuthorizingRealm {
         if(authcToken instanceof JWTToken ){
             return new SimpleAuthenticationInfo(user.getLoginName(), username , getName());
         }else {
-            return new SimpleAuthenticationInfo(user.getLoginName(), user.getPassword() , getName());
+            return new SimpleAuthenticationInfo(user.getLoginName(), user.getPassword() ,ByteSource.Util.bytes(user.getSalt()), getName());
         }
     }
 
+    /**
+     * 注入父类的属性，注入加密算法匹配密码时使用
+     */
+    @Override
+    public void setCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
+        HashedCredentialsMatcher shaCredentialsMatcher = new HashedCredentialsMatcher();
+        shaCredentialsMatcher.setHashAlgorithmName(ShiroKit.HASH_ALGORITHM_NAME);
+        shaCredentialsMatcher.setHashIterations(ShiroKit.HASH_ITERATIONS);
+        super.setCredentialsMatcher(shaCredentialsMatcher);
+    }
 }
 
