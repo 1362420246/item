@@ -86,7 +86,7 @@ public class ShiroConfig {
     }
 
     /**
-     * 添加注解支持
+     * 以下三个方法是添加权限注解支持
      */
     @Bean
     public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {

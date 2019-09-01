@@ -38,9 +38,6 @@ public class TestResponse implements Serializable {
     @ApiModelProperty(value = "邮箱",required = true ,dataType = DataType.STRING)
     private String mail;
 
-    /**
-     * TODO spring.jackson.date-format 好像对 LocalDateTime 类不起作用
-     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "当前时间1",required = false ,dataType = DataType.DATETIME)
     private LocalDateTime time = LocalDateTime.now();

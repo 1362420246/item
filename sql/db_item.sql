@@ -58,7 +58,8 @@ CREATE TABLE `tb_user`  (
   `is_del` tinyint(2) NOT NULL DEFAULT 0 COMMENT '是否删除',
   `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0),
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `username` (`login_name`) USING BTREE COMMENT '用户登录名唯一'
 )  ENGINE=InnoDB ROW_FORMAT=COMPACT COMMENT='用户表';
 
 DROP TABLE IF EXISTS `tb_user_role`;

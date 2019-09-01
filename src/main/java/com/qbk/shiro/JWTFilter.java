@@ -1,5 +1,6 @@
 package com.qbk.shiro;
 
+import cn.hutool.core.util.URLUtil;
 import com.qbk.exception.BasicException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -30,40 +32,45 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     private static String LOGIN_SIGN = "token";
 
     /**
-     * 是否放行
-     */
-    @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        if (isLoginAttempt(request, response)) {
-            return executeLogin(request, response);
-        }else {
-            return false;
-        }
-    }
-
-    /**
      * 检测用户是否登录
      * 检测header里面是否包含token的key
      */
     @Override
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
         HttpServletRequest req = (HttpServletRequest) request;
+        //从请求头里获取token
         String authToken = req.getHeader(LOGIN_SIGN);
-        return StringUtils.isNotBlank(authToken);
-
+        boolean notBlank = StringUtils.isNotBlank(authToken);
+        if(!notBlank){
+            String path = URLUtil.getPath(req.getRequestURI());
+            log.debug("请求：{}，不包含token",path );
+        }
+        return notBlank;
     }
 
+
     /**
+     * 进行登陆
      * 解析jwt 进行认证校验
      */
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) {
         HttpServletRequest req = (HttpServletRequest) request;
         String authToken = req.getHeader(LOGIN_SIGN);
+        //从token中获取name
         String username = JWTUtil.getUsername(authToken);
-       if( StringUtils.isBlank(username)){
-            return false ;
+        if( StringUtils.isBlank(username)){
+           log.debug("token:{},中无用户信息",authToken );
+           return false ;
         }
+        //从token中获取过期时间
+        Date expiresDate = JWTUtil.getExpiresDate(authToken);
+        if(expiresDate.getTime() - System.currentTimeMillis() <= 0){
+           log.debug("token:{},已过期",authToken );
+           return false ;
+        }
+        //TODO 这个token无法续时
+        //将用户名封装自定义token中，提交给Shiro处理，触发认证方法
         JWTToken token = new JWTToken(username);
         getSubject(request, response).login(token);
         return true;

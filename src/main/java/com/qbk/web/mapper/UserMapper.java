@@ -23,4 +23,14 @@ public interface UserMapper {
      * 获取用户信息
      */
     User getUserByName(String username);
+
+    /**
+     * 添加用户
+     */
+    int addUser(User user);
+
+    /**
+     * 给指定用户添加角色
+     */
+    int addRole(@Param("userId") Integer userId,@Param("roleIds") List<Integer> roleIds);
 }

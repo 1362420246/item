@@ -80,4 +80,17 @@ public class JWTUtil {
             return null;
         }
     }
+
+    /**
+     * 获取过期时间
+     */
+    public static Date getExpiresDate(String token) {
+        try {
+            DecodedJWT jwt = JWT.decode(token);
+            return jwt.getExpiresAt();
+        } catch (JWTDecodeException e) {
+            return new Date(System.currentTimeMillis() -1);
+        }
+    }
+
 }

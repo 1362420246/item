@@ -92,8 +92,15 @@ public class UserRealm extends AuthorizingRealm {
          * 否则就是你密码输入错误
          */
         if(authcToken instanceof JWTToken ){
-            return new SimpleAuthenticationInfo(user.getLoginName(), ShiroKit.sha256(user.getLoginName(),user.getSalt()),ByteSource.Util.bytes(user.getSalt()) , getName());
+            //校验token
+            return new SimpleAuthenticationInfo(user.getLoginName(), ShiroUtil.sha256(user.getLoginName(),user.getSalt()),ByteSource.Util.bytes(user.getSalt()) , getName());
         }else {
+            /*登陆token
+            * @param 主体与指定域关联的“主”主体。
+            * @param 拥有验证给定主体的散列凭证。
+            * @param credentialsSalt散列给定的hashedCredentials时使用的salt
+            * @param realmName获取主体和凭据的领域。
+             */
             return new SimpleAuthenticationInfo(user.getLoginName(), user.getPassword() ,ByteSource.Util.bytes(user.getSalt()), getName());
         }
     }
@@ -104,8 +111,8 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     public void setCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
         HashedCredentialsMatcher shaCredentialsMatcher = new HashedCredentialsMatcher();
-        shaCredentialsMatcher.setHashAlgorithmName(ShiroKit.HASH_ALGORITHM_NAME);
-        shaCredentialsMatcher.setHashIterations(ShiroKit.HASH_ITERATIONS);
+        shaCredentialsMatcher.setHashAlgorithmName(ShiroUtil.HASH_ALGORITHM_NAME);
+        shaCredentialsMatcher.setHashIterations(ShiroUtil.HASH_ITERATIONS);
         super.setCredentialsMatcher(shaCredentialsMatcher);
     }
 }
