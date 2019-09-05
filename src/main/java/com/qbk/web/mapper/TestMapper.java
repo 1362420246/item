@@ -18,4 +18,11 @@ public interface TestMapper {
     @Select("select @@pseudo_thread_id")
     Integer getPseudoThreadId();
 
+    /**
+     * 获取线程id
+     * 防止同一个事务中，只执行一次sql
+     */
+    @Select("select @@pseudo_thread_id +1 -1")
+    Integer getPseudoThreadIdByWhere();
+
 }

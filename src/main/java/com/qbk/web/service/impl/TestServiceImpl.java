@@ -25,7 +25,7 @@ public class TestServiceImpl implements TestService {
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void testConnection() {
         Integer threadId = testMapper.getPseudoThreadId();
-        Integer threadId2 = testMapper.getPseudoThreadId();
+        Integer threadId2 = testMapper.getPseudoThreadIdByWhere();
         log.debug("当前线程id：{} ---{}",threadId ,threadId2);
     }
 }
