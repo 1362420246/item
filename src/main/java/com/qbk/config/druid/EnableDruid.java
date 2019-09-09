@@ -10,6 +10,7 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+//导入的一个或多个@Configuration}类
 @Import(DruidImportSelector.class)
 public @interface EnableDruid {
 }
