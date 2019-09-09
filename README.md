@@ -1,1 +1,15 @@
-# item
+## spring-boot2.1.6
+## mybatis3.4.6
+## logback
+## hikari
+## druid
+## mysql
+## redis
+## tomcat
+## jackson
+## swagger
+## shiro
+## jwt
+## actuator
+## aop
+## validation
