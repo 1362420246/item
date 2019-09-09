@@ -76,4 +76,22 @@ public class UserController {
 
     //TODO 删除用户的时候 需要把登陆名称改掉 因为登陆名是以为索引
 
+
+    //TODO 查询
+    /**
+     * 测试分页助手 - 分页排序查询
+     */
+//    public void testQueryByPageAndSort() {
+//        initData();
+//        int currentPage = 1;
+//        int pageSize = 5;
+//        String orderBy = "id desc";
+//        int count = userMapper.selectCount(null);
+//        PageHelper.startPage(currentPage, pageSize, orderBy);
+//        List<User> users = userMapper.selectAll();
+//        PageInfo<User> userPageInfo = new PageInfo<>(users);
+//        Assert.assertEquals(5, userPageInfo.getSize());
+//        Assert.assertEquals(count, userPageInfo.getTotal());
+//        log.debug("【userPageInfo】= {}", userPageInfo);
+//    }
 }
