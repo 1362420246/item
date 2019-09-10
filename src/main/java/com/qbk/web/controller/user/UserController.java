@@ -18,7 +18,9 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.subject.support.WebDelegatingSubject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Set;
 
 @Api(tags = "1.0.0", value = "用户控制器")
 @RestController
@@ -76,13 +79,23 @@ public class UserController {
 
     //TODO 删除用户的时候 需要把登陆名称改掉 因为登陆名是以为索引
 
-
-    //TODO 查询
     /**
-     * 测试分页助手 - 分页排序查询
+     * 查询用户列表
+     * 权限 ：admin  or   user
+     *
+     *  Logical.OR 表示或者关系，默认是  Logical.AND ，如果是AND 需要当前登陆的用户同时满足所有角色才可以
      */
-//    public void testQueryByPageAndSort() {
-//        initData();
+    @RequiresRoles(value={ "user"} )
+    @GetMapping("/select/list")
+    public BaseResult<String> selectList() {
+        // shiro获取当前登录的用户信息,username 是过滤器中校验token时放进去的
+        Subject subject = SecurityUtils.getSubject();
+        String username = (String) subject.getPrincipal();
+        System.out.println(username);
+
+        subject.checkRole("user");
+
+
 //        int currentPage = 1;
 //        int pageSize = 5;
 //        String orderBy = "id desc";
@@ -93,5 +106,6 @@ public class UserController {
 //        Assert.assertEquals(5, userPageInfo.getSize());
 //        Assert.assertEquals(count, userPageInfo.getTotal());
 //        log.debug("【userPageInfo】= {}", userPageInfo);
-//    }
+        return BaseResultGenerator.success("成功");
+    }
 }
