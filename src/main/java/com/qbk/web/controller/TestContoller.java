@@ -35,7 +35,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/test")
 @Profile({ "dev"})
-@Api(tags = "1.4",value = "测试控制器")
+@Api(tags = "1.4",value = "测试控制器",description="测试控制器")
 public class TestContoller {
 
     @Autowired

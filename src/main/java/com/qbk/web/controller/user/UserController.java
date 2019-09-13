@@ -3,6 +3,7 @@ package com.qbk.web.controller.user;
 import com.qbk.constant.CommonConstant;
 import com.qbk.entity.Role;
 import com.qbk.entity.User;
+import com.qbk.entity.param.LoginRequest;
 import com.qbk.entity.param.UserAddParam;
 import com.qbk.log.annotation.ServiceLog;
 import com.qbk.result.BaseResult;
@@ -30,7 +31,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 
-@Api(tags = "1.0.0", value = "用户控制器")
+@Api(tags = "1.0.0", value = "用户控制器",description="用户控制器")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -45,8 +46,9 @@ public class UserController {
     @ApiOperation(value = "登陆", notes = "用户登陆")
     @ServiceLog("登陆")
     @PostMapping("/login")
-    public BaseResult<String> login(@RequestParam("username") String username ,
-                                    @RequestParam("password") String password ){
+    public BaseResult<String> login(@Valid @RequestBody LoginRequest loginRequest){
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
         Subject subject = SecurityUtils.getSubject();
         //将用户请求参数封装token后，直接提交给Shiro处理，，触发认证方法
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
@@ -77,7 +79,7 @@ public class UserController {
 
     //TODO 修改用户时候需要版本号 还需要修改密码的版本号，用户校验token时 是否密码修改过
 
-    //TODO 删除用户的时候 需要把登陆名称改掉 因为登陆名是以为索引
+    //TODO 删除用户的时候 需要把登陆名称改掉 因为登陆名是唯一索引
 
     /**
      * 查询用户列表

@@ -71,15 +71,16 @@ public class ShiroConfig {
         filterRuleMap.put("/test/connection", "anon");
         //swagger接口权限 开放
         filterRuleMap.put("/swagger-ui.html", "anon");
-        filterRuleMap.put("/webjars/**", "anon");
-        filterRuleMap.put("/v2/**", "anon");
-        filterRuleMap.put("/swagger-resources/**", "anon");
+        filterRuleMap.put("/v2/api-docs", "anon");
+        filterRuleMap.put("/configuration/security", "anon");
+        filterRuleMap.put("/configuration/ui", "anon");
         filterRuleMap.put("/swagger-resources", "anon");
-        filterRuleMap.put("/static/**", "anon");
         filterRuleMap.put("/favicon.ico", "anon");
         filterRuleMap.put("/v3/api-docs", "anon");
         filterRuleMap.put("/v3/swagger-security", "anon");
         filterRuleMap.put("/v3/swagger-login", "anon");
+        filterRuleMap.put("/static/**", "anon");
+
         // 所有请求通过我们自己的JWT Filter 。这行代码必须放在所有权限设置的最后，不然会导致所有 url 都被拦截
         filterRuleMap.put("/**", "jwt");
         shiroFilter.setFilterChainDefinitionMap(filterRuleMap);
