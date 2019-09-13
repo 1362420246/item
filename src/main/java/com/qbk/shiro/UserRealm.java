@@ -6,6 +6,7 @@ import com.qbk.log.annotation.ServiceLog;
 import com.qbk.web.mapper.UserMapper;
 import com.qbk.web.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -37,11 +38,10 @@ public class UserRealm extends AuthorizingRealm {
      * 校验Token类型
      * 必须重写此方法，不然会报错
      * UsernamePasswordToken 用于登陆校验
-     * JWTToken 用于校验token
      */
     @Override
     public boolean supports(AuthenticationToken token) {
-        return token instanceof JWTToken || token instanceof UsernamePasswordToken;
+        return token instanceof UsernamePasswordToken;
     }
 
     /**
@@ -84,25 +84,19 @@ public class UserRealm extends AuthorizingRealm {
             log.debug("{}该用户已被封号",username);
             throw new LockedAccountException("该用户已被封号！");
         }
-        /**
+        /*登陆token
          * 返回一个从数据库中查出来的的凭证。用户名为和密码。
          * 接下来shiro框架做的事情就很简单了。
          * 它会拿你的输入的token与当前返回的这个数据库凭证SimpleAuthenticationInfo对比一下
          * 看看是不是一样，如果用户的帐号密码与数据库中查出来的数据一样，那么本次登录成功
          * 否则就是你密码输入错误
+        * @param 主体与指定域关联的“主”主体。
+        * @param 拥有验证给定主体的散列凭证。
+        * @param credentialsSalt散列给定的hashedCredentials时使用的salt
+        * @param realmName获取主体和凭据的领域
          */
-        if(authcToken instanceof JWTToken ){
-            //校验token
-            return new SimpleAuthenticationInfo(user.getLoginName(), ShiroUtil.sha256(user.getLoginName(),user.getSalt()),ByteSource.Util.bytes(user.getSalt()) , getName());
-        }else {
-            /*登陆token
-            * @param 主体与指定域关联的“主”主体。
-            * @param 拥有验证给定主体的散列凭证。
-            * @param credentialsSalt散列给定的hashedCredentials时使用的salt
-            * @param realmName获取主体和凭据的领域。
-             */
-            return new SimpleAuthenticationInfo(user.getLoginName(), user.getPassword() ,ByteSource.Util.bytes(user.getSalt()), getName());
-        }
+        return new SimpleAuthenticationInfo(user.getLoginName(), user.getPassword() ,ByteSource.Util.bytes(user.getSalt()), getName());
+
     }
 
     /**

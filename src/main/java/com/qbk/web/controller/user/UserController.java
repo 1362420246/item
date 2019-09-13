@@ -14,8 +14,10 @@ import com.qbk.shiro.ShiroUtil;
 import com.qbk.web.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.session.Session;
@@ -31,6 +33,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 
+@Slf4j
 @Api(tags = "1.0.0", value = "用户控制器",description="用户控制器")
 @RestController
 @RequestMapping("/user")
@@ -86,16 +89,15 @@ public class UserController {
      * 权限 ：admin  or   user
      *
      *  Logical.OR 表示或者关系，默认是  Logical.AND ，如果是AND 需要当前登陆的用户同时满足所有角色才可以
+     *  如果value中有多个角色，那么会调用多次doGetAuthorizationInfo方法
      */
-    @RequiresRoles(value={ "admin"} )
+    @RequiresRoles(value={"user"} , logical = Logical.AND )
     @GetMapping("/select/list")
     public BaseResult<String> selectList() {
         // shiro获取当前登录的用户信息,username 是过滤器中校验token时放进去的
         Subject subject = SecurityUtils.getSubject();
         String username = (String) subject.getPrincipal();
         System.out.println(username);
-//
-//        subject.checkRole("user");
 
 
 //        int currentPage = 1;
