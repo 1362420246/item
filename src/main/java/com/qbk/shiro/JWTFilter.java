@@ -2,6 +2,9 @@ package com.qbk.shiro;
 
 import cn.hutool.core.util.URLUtil;
 import com.alibaba.fastjson.JSON;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.qbk.exception.BasicException;
 import com.qbk.result.BaseResultGenerator;
 import com.qbk.util.HttpUtil;
@@ -21,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Objects;
@@ -64,20 +68,36 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     protected boolean executeLogin(ServletRequest request, ServletResponse response) {
         HttpServletRequest req = (HttpServletRequest) request;
         String authToken = req.getHeader(LOGIN_SIGN);
+
         //从token中获取name
         String username = JWTUtil.getUsername(authToken);
         if( StringUtils.isBlank(username)){
-           log.debug("token:{},中无用户信息",authToken );
-           HttpUtil.responseSendErrorJson((HttpServletResponse) response,"错误token");
-           return false ;
+            log.debug("token:{},中无用户信息",authToken );
+            HttpUtil.responseSendErrorJson((HttpServletResponse) response,"错误的token");
+            return false ;
         }
-        //从token中获取过期时间
-        Date expiresDate = JWTUtil.getExpiresDate(authToken);
-        if(expiresDate.getTime() - System.currentTimeMillis() <= 0){
-           log.debug("token:{},已过期",authToken );
+
+        //校验token
+        try {
+            JWTUtil.verify(authToken);
+        } catch (UnsupportedEncodingException e) {
+            log.error("当前Java平台实现不支持UTF-8字符编码。", e );
+            HttpUtil.responseSendErrorJson((HttpServletResponse) response,"错误的token");
+            return false ;
+        }catch (JWTDecodeException e){
+            log.error("错误的token组成。", e );
+            HttpUtil.responseSendErrorJson((HttpServletResponse) response,"错误的token");
+            return false ;
+        }catch (SignatureVerificationException e){
+            log.debug("无效的token:{}",authToken );
+            HttpUtil.responseSendErrorJson((HttpServletResponse) response,"无效的token");
+            return false ;
+        }catch (TokenExpiredException e){
+            log.debug("token:{},已过期",authToken );
             HttpUtil.responseSendErrorJson((HttpServletResponse) response,"token已过期");
-           return false ;
+            return false ;
         }
+
         //TODO 这个token无法续时
         //将用户名封装自定义token中，提交给Shiro处理，触发认证方法
         JWTToken token = new JWTToken(username);

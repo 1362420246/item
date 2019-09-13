@@ -16,8 +16,17 @@
         </layout>-->
         <encoder>
             <!-- 带颜色的输出 -->
-            <!--格式化输出：%d:表示日期    %thread:表示线程名     %-5level:级别从左显示5个字符宽度  %msg:日志消息    %n:是换行符-->
-            <pattern> %red(%d{yyyy-MM-dd HH:mm:ss})--%green([%thread])--%highlight(%-5level)--%boldMagenta(%logger) %cyan(%msg%n)</pattern>
+            <!--格式化输出：
+                    %d:表示日期
+                    %thread:表示线程名
+                    %-5level:级别从左显示5个字符宽度
+                    %logger:输出在获取Logger对象时指定的Class对象的全限定名称
+                    %line 输出行号
+                    %msg:日志消息
+                    %n:是换行符
+             -->
+            <pattern> %red(%d{yyyy-MM-dd HH:mm:ss})--%green([%thread])--%highlight(%-5level)--%boldMagenta(%logger-%line) %cyan(%msg%n)</pattern>
+
             <charset>UTF-8</charset>
         </encoder>
     </appender>
@@ -32,7 +41,7 @@
         </filter>
         <encoder>
             <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}-%line - %msg%n</pattern>
             <!-- 此处设置字符集 -->
             <charset>UTF-8</charset>
         </encoder>
@@ -54,7 +63,7 @@
             <level>ERROR</level>
         </filter>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}-%line - %msg%n</pattern>
             <!-- 此处设置字符集 -->
             <charset>UTF-8</charset>
         </encoder>

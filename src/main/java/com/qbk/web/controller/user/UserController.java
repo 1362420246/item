@@ -87,15 +87,15 @@ public class UserController {
      *
      *  Logical.OR 表示或者关系，默认是  Logical.AND ，如果是AND 需要当前登陆的用户同时满足所有角色才可以
      */
-    @RequiresRoles(value={ "user"} )
+    @RequiresRoles(value={ "admin"} )
     @GetMapping("/select/list")
     public BaseResult<String> selectList() {
         // shiro获取当前登录的用户信息,username 是过滤器中校验token时放进去的
         Subject subject = SecurityUtils.getSubject();
         String username = (String) subject.getPrincipal();
         System.out.println(username);
-
-        subject.checkRole("user");
+//
+//        subject.checkRole("user");
 
 
 //        int currentPage = 1;
