@@ -1,11 +1,15 @@
 package com.qbk.shiro;
 
 import cn.hutool.core.util.URLUtil;
+import com.alibaba.fastjson.JSON;
 import com.qbk.exception.BasicException;
+import com.qbk.result.BaseResultGenerator;
+import com.qbk.util.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
+import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,6 +20,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Objects;
@@ -32,22 +37,24 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     private static String LOGIN_SIGN = "token";
 
     /**
-     * 检测用户是否登录
-     * 检测header里面是否包含token的key
+     * 身份校验
      */
     @Override
-    protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+        boolean loggedIn = false;
         HttpServletRequest req = (HttpServletRequest) request;
         //从请求头里获取token
         String authToken = req.getHeader(LOGIN_SIGN);
-        boolean notBlank = StringUtils.isNotBlank(authToken);
-        if(!notBlank){
+        //检测header里面是否包含token的key
+        if(StringUtils.isNotBlank(authToken)){
+            loggedIn = executeLogin(request, response);
+        }else {
             String path = URLUtil.getPath(req.getRequestURI());
             log.debug("请求：{}，不包含token",path );
+            HttpUtil.responseSendErrorJson((HttpServletResponse) response,"缺少token");
         }
-        return notBlank;
+        return loggedIn;
     }
-
 
     /**
      * 进行登陆
@@ -61,12 +68,14 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         String username = JWTUtil.getUsername(authToken);
         if( StringUtils.isBlank(username)){
            log.debug("token:{},中无用户信息",authToken );
+           HttpUtil.responseSendErrorJson((HttpServletResponse) response,"错误token");
            return false ;
         }
         //从token中获取过期时间
         Date expiresDate = JWTUtil.getExpiresDate(authToken);
         if(expiresDate.getTime() - System.currentTimeMillis() <= 0){
            log.debug("token:{},已过期",authToken );
+            HttpUtil.responseSendErrorJson((HttpServletResponse) response,"token已过期");
            return false ;
         }
         //TODO 这个token无法续时
