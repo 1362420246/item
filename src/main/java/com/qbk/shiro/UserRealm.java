@@ -121,7 +121,7 @@ public class UserRealm extends AuthorizingRealm {
 
     /**
      * 注入父类的属性，注入加密算法和循环次数 匹配密码时使用
-     *  UsernamePasswordToken token = new UsernamePasswordToken(username, password); 时
+     *  登陆 UsernamePasswordToken token = new UsernamePasswordToken(username, password); 时
         password 就会被下面算法 和循环次数 加密。
         对应SimpleAuthenticationInfo(Object principal, Object hashedCredentials, ByteSource credentialsSalt, String realmName)
         中的credentialsSalt 盐值加密后 和 hashedCredentials 对比

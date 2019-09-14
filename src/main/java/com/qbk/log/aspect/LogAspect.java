@@ -4,11 +4,14 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONUtil;
+import com.qbk.entity.AuthorizationUser;
 import com.qbk.log.entity.SysLog;
 import com.qbk.log.annotation.ServiceLog;
 import com.qbk.log.event.ServiceLogEvent;
 import com.qbk.log.util.SpringContextHolder;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -46,8 +49,13 @@ public class LogAspect {
         //执行方法并返回结果
         Object proceed = point.proceed();
         long endTime = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
-        //TODO 获取当前用户信息
-        String username = "" ;
+        // 获取当前用户信息
+        Subject subject = SecurityUtils.getSubject();
+        AuthorizationUser user = (AuthorizationUser) subject.getPrincipal();
+        String username = "";
+        if(Objects.nonNull(user)){
+           username = user.getLoginName() ;
+        }
         //参数
         String params = JSONUtil.toJsonStr(point.getArgs()).replaceAll("[\\[\\]]", "");
         SysLog sLog = SysLog.builder()

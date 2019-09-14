@@ -96,4 +96,16 @@
         </foreach>
     </insert>
 
+    <!--查询用户列表-->
+    <select id="selectList" parameterType="com.qbk.entity.query.UserQuery" resultMap="UserResultMap">
+        SELECT id, login_name, nick_name, is_lock, create_date, update_date
+        FROM tb_user u
+        <where>
+            <if test="isLock != null" >
+                AND is_lock = #{isLock}
+            </if>
+                AND is_del = 0
+        </where>
+    </select>
+
 </mapper>

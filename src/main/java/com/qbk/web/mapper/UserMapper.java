@@ -2,6 +2,8 @@ package com.qbk.web.mapper;
 
 import com.qbk.entity.Role;
 import com.qbk.entity.User;
+import com.qbk.entity.dto.UserDTO;
+import com.qbk.entity.query.UserQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -33,4 +35,10 @@ public interface UserMapper {
      * 给指定用户添加角色
      */
     int addRole(@Param("userId") Integer userId,@Param("roleIds") List<Integer> roleIds);
+
+    /**
+     * 查询用户列表
+     */
+    List<User> selectList(UserQuery userQuery);
+
 }

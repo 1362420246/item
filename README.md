@@ -16,6 +16,7 @@
 ## validation
 ## mapstruct
 ## async
+## pageHelper
 
 spring-boot-demo-cache-ehcache
 spring-boot-demo-session
