@@ -1,5 +1,6 @@
 package com.qbk.shiro;
 
+import com.qbk.entity.AuthorizationUser;
 import com.qbk.entity.Role;
 import com.qbk.entity.User;
 import com.qbk.web.mapper.UserMapper;
@@ -53,8 +54,6 @@ public class UserJwtRealm extends AuthorizingRealm {
             throw new LockedAccountException("该用户已被封号！");
         }
 
-        //因为JWTToken 中的getCredentials()返回的就是username
-        String credentials = ShiroUtil.sha256(user.getLoginName(), user.getSalt());
           /*校验token
            * @param 可以是username 也可以是user实体，但是取的时候要注意类型
            *        和token中getPrincipal()对应
@@ -63,18 +62,21 @@ public class UserJwtRealm extends AuthorizingRealm {
            * @param 盐值
            * @param 当前的realm名
         */
-        return new SimpleAuthenticationInfo(user.getLoginName(),credentials,ByteSource.Util.bytes(user.getSalt()) , "userJwtRealm");
-    }
+//        return new SimpleAuthenticationInfo(
+//                AuthorizationUser.copyProperties(user) ,
+//                user.getLoginName(),
+//                ByteSource.Util.bytes(user.getSalt()) ,
+//                "userJwtRealm");
 
-    /**
-     * 注入父类的属性，注入加密算法匹配密码时使用
-     */
-    @Override
-    public void setCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
-        HashedCredentialsMatcher shaCredentialsMatcher = new HashedCredentialsMatcher();
-        shaCredentialsMatcher.setHashAlgorithmName(ShiroUtil.HASH_ALGORITHM_NAME);
-        shaCredentialsMatcher.setHashIterations(ShiroUtil.HASH_ITERATIONS);
-        super.setCredentialsMatcher(shaCredentialsMatcher);
+         /*校验token
+           * @param user
+           * @param JWTToken中的getCredentials()
+           * @param 当前的realm名
+        */
+        return new SimpleAuthenticationInfo(
+                AuthorizationUser.copyProperties(user) ,
+                user.getLoginName(),
+                getName());
     }
 
 }

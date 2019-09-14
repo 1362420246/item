@@ -1,5 +1,6 @@
 package com.qbk.shiro;
 
+import com.qbk.entity.AuthorizationUser;
 import com.qbk.entity.Role;
 import com.qbk.entity.User;
 import com.qbk.log.annotation.ServiceLog;
@@ -50,18 +51,34 @@ public class UserRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        String username = principals.toString();
+        /*
+         * PrincipalCollection 一个身份集合，其包含了Realm验证成功的身份信息
+               类型 为 doGetAuthenticationInfo() 方法返回值 SimpleAuthenticationInfo 的第一个参数类型
+               通常 为 User实体 或者 username（String）
+         * Object getPrimaryPrincipal()  如果只有一个Principal 那么直接返回即可，
+              如果有多个Principal，则返回第一个（因为内部使用Map存储，所以可以认为是返回任意一个）；
+         * T oneByType(Class<T> type) 根据凭据的类型返回相应的Principal；
+         * Collection fromRealm(String realmName)  根据Realm 名字（每个Principal 都与一个Realm 关联）获取相应的Principal。
+         */
+        Object primaryPrincipal = principals.getPrimaryPrincipal();
+        AuthorizationUser uesr = (AuthorizationUser)primaryPrincipal;
+        String username = uesr.getLoginName();
         //获得该用户角色
         List<Role> roleList = userMapper.getRoleByUserName(username);
         Set<Integer> roleIds = roleList.stream().map(Role::getId).collect(Collectors.toSet());
         Set<String> roleNames = roleList.stream().map(Role::getName).collect(Collectors.toSet());
         //获得该用户的权限
         List<String> menuNames = userMapper.getMenuNameByRoleIds(roleIds);
+        HashSet<String> menuNameSet = new HashSet<>(menuNames);
         //需要将 role, permission 封装到 Set 作为 info.setRoles(), info.setStringPermissions() 的参数
         //设置该用户拥有的角色和权限
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         info.setRoles(roleNames);
-        info.setStringPermissions(new HashSet<>(menuNames));
+        info.setStringPermissions(menuNameSet);
+
+        //存储角色权限， 方便subject.getPrincipal() 时获取的对象包含角色权限
+        uesr.setRoleNames(roleNames);
+        uesr.setMenuNames(menuNameSet);
         return info;
     }
 
@@ -95,17 +112,26 @@ public class UserRealm extends AuthorizingRealm {
         * @param credentialsSalt散列给定的hashedCredentials时使用的salt
         * @param realmName获取主体和凭据的领域
          */
-        return new SimpleAuthenticationInfo(user.getLoginName(), user.getPassword() ,ByteSource.Util.bytes(user.getSalt()), getName());
-
+        return new SimpleAuthenticationInfo(
+                AuthorizationUser.copyProperties(user),
+                user.getPassword(),
+                ByteSource.Util.bytes(user.getSalt()),
+                getName());
     }
 
     /**
-     * 注入父类的属性，注入加密算法匹配密码时使用
+     * 注入父类的属性，注入加密算法和循环次数 匹配密码时使用
+     *  UsernamePasswordToken token = new UsernamePasswordToken(username, password); 时
+        password 就会被下面算法 和循环次数 加密。
+        对应SimpleAuthenticationInfo(Object principal, Object hashedCredentials, ByteSource credentialsSalt, String realmName)
+        中的credentialsSalt 盐值加密后 和 hashedCredentials 对比
      */
     @Override
     public void setCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
         HashedCredentialsMatcher shaCredentialsMatcher = new HashedCredentialsMatcher();
+        //加密算法
         shaCredentialsMatcher.setHashAlgorithmName(ShiroUtil.HASH_ALGORITHM_NAME);
+        //循环次数
         shaCredentialsMatcher.setHashIterations(ShiroUtil.HASH_ITERATIONS);
         super.setCredentialsMatcher(shaCredentialsMatcher);
     }

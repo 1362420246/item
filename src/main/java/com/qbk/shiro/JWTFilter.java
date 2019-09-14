@@ -77,7 +77,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
             return false ;
         }
 
-        //校验token
+        //校验token 这个token无法续时
         try {
             JWTUtil.verify(authToken);
         } catch (UnsupportedEncodingException e) {
@@ -98,7 +98,6 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
             return false ;
         }
 
-        //TODO 这个token无法续时
         //将用户名封装自定义token中，提交给Shiro处理，触发认证方法
         JWTToken token = new JWTToken(username);
         getSubject(request, response).login(token);

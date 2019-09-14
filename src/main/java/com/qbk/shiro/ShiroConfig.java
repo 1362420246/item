@@ -59,8 +59,8 @@ public class ShiroConfig {
         securityManager.setAuthenticator(modularRealmAuthenticator);
 
         //针对多realm 授权
-        //通过PermissionResolver将权限字符串转换成相应的Permission实例，默认使用WildcardPermissionResolver，即转换为通配符的WildcardPermission；
         ModularRealmAuthorizer authorizer = new ModularRealmAuthorizer();
+        //通过PermissionResolver将权限字符串转换成相应的Permission实例，默认使用WildcardPermissionResolver，即转换为通配符的WildcardPermission；
         authorizer.setPermissionResolver(new WildcardPermissionResolver());
         securityManager.setAuthorizer(authorizer);
 

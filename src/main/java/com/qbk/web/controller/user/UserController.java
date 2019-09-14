@@ -1,6 +1,7 @@
 package com.qbk.web.controller.user;
 
 import com.qbk.constant.CommonConstant;
+import com.qbk.entity.AuthorizationUser;
 import com.qbk.entity.Role;
 import com.qbk.entity.User;
 import com.qbk.entity.param.LoginRequest;
@@ -79,10 +80,13 @@ public class UserController {
         return userService.add(user);
     }
 
+    //TODO 刷新token，因为jwt的token无法续时，只能给新的token
 
     //TODO 修改用户时候需要版本号 还需要修改密码的版本号，用户校验token时 是否密码修改过
 
     //TODO 删除用户的时候 需要把登陆名称改掉 因为登陆名是唯一索引
+
+    //TODO  缓存
 
     /**
      * 查询用户列表
@@ -91,14 +95,18 @@ public class UserController {
      *  Logical.OR 表示或者关系，默认是  Logical.AND ，如果是AND 需要当前登陆的用户同时满足所有角色才可以
      *  如果value中有多个角色，那么会调用多次doGetAuthorizationInfo方法
      */
-    @RequiresRoles(value={"user"} , logical = Logical.AND )
+    @RequiresRoles(value={"user"} , logical = Logical.OR )
     @GetMapping("/select/list")
     public BaseResult<String> selectList() {
-        // shiro获取当前登录的用户信息,username 是过滤器中校验token时放进去的
-        Subject subject = SecurityUtils.getSubject();
-        String username = (String) subject.getPrincipal();
-        System.out.println(username);
 
+        //Subject 存储在 ThreadLocal 中
+        Subject subject = SecurityUtils.getSubject();
+
+        // shiro获取当前登录的用户信息
+        AuthorizationUser user = (AuthorizationUser) subject.getPrincipal();
+        System.out.println(user);
+        System.out.println(user.getRoleNames());
+        System.out.println(user.getMenuNames());
 
 //        int currentPage = 1;
 //        int pageSize = 5;
