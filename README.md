@@ -18,12 +18,18 @@
 ## async
 ## pageHelper
 
+spring-boot-demo-upload
 spring-boot-demo-cache-ehcache
 spring-boot-demo-session
 spring-boot-demo-zookeeper
 spring-boot-demo-mq-rabbitmq
+spring-boot-demo-mq-rocketmq
+spring-boot-demo-mq-kafka
 spring-boot-demo-websocket
 spring-boot-demo-websocket-socketio
 spring-boot-demo-mongodb
 spring-boot-demo-elasticsearch
+spring-boot-demo-elasticsearch-rest-high-level-client
+spring-boot-demo-task
+spring-boot-demo-task-quartz
 spring-boot-demo-task-xxl-job
