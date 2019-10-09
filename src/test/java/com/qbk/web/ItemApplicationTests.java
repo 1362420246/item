@@ -6,8 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -24,12 +22,6 @@ public class ItemApplicationTests {
 
     @Autowired
     private RestTemplate restTemplate ;
-
-    @Autowired
-    private RedisTemplate<String,Object> redisTemplate;
-
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate ;
 
     /**
      * post请求
