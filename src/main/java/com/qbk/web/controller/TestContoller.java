@@ -23,6 +23,7 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -142,7 +143,6 @@ public class TestContoller {
         return BaseResultGenerator.success(converter);
     }
 
-
     /**
      * 校验测试四：
      * 1.使用工具类 BeanValidator 校验器 校验多个对象
@@ -157,6 +157,20 @@ public class TestContoller {
         BeanValidator.check(testRequests);
         //对象转换
         List<TestResponse> converter = TestConverterMapper.INSTANCE.converter(testRequests);
+        return BaseResultGenerator.success(converter);
+    }
+
+    /**
+     * 校验测试五：
+     * 1.使用 @Validated 校验单个对象
+     */
+    @ApiOperation(value = "校验测试5", notes = "使用 @Validated 校验单个对象")
+    @ServiceLog("参数校验测试5")
+    @GetMapping("/v1.5/param_test")
+    public BaseResult<TestResponse> parameterValidated(@Validated TestRequest testRequest){
+        log.debug("接收的参数是:{}",testRequest);
+        //对象转换
+        TestResponse converter = TestConverterMapper.INSTANCE.converter(testRequest);
         return BaseResultGenerator.success(converter);
     }
 }

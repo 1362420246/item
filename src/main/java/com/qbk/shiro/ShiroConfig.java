@@ -108,7 +108,7 @@ public class ShiroConfig {
         Map<String, String> filterRuleMap = new LinkedHashMap<>();
         // 不通过JWTFilter
         filterRuleMap.put("/user/login", "anon");
-        filterRuleMap.put("/test/connection", "anon");
+        filterRuleMap.put("/test/**", "anon");
         //swagger接口权限 开放
         filterRuleMap.put("/swagger-ui.html", "anon");
         filterRuleMap.put("/v2/api-docs", "anon");
