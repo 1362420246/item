@@ -1,34 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
 
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-
-    <!--加载配置-->
     <property resource="logback.properties"/>
 
-    <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
-   <!-- <property name="LOG_HOME" value="/home" />-->
+    <!-- 彩色日志 -->
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+
+    <!-- 彩色日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
 
     <!--控制台输出-->
     <appender name="CONSOLE-LOG" class="ch.qos.logback.core.ConsoleAppender">
-        <!--<layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>[%d{yyyy-MM-dd' 'HH:mm:ss.sss}] [%C] [%t] [%L] [%-5p] %m%n</pattern>
-        </layout>-->
-        <encoder>
-            <!-- 带颜色的输出 -->
-            <!--格式化输出：
-                    %d:表示日期
-                    %thread:表示线程名
-                    %-5level:级别从左显示5个字符宽度
-                    %logger:输出在获取Logger对象时指定的Class对象的全限定名称
-                    %line 输出行号
-                    %msg:日志消息
-                    %n:是换行符
-             -->
-            <pattern> %red(%d{yyyy-MM-dd HH:mm:ss})--%green([%thread])--%highlight(%-5level)--%boldMagenta(%logger-%line) %cyan(%msg%n)</pattern>
-
-            <charset>UTF-8</charset>
-        </encoder>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </layout>
     </appender>
 
     <!-- 按照每天生成日志文件 -->
