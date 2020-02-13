@@ -3,6 +3,7 @@ package com.qbk.entity.valid;
 import lombok.Data;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.util.*;
 
 /**
@@ -13,6 +14,7 @@ import java.util.*;
 public class ValidableList<E> implements List<E> {
 
     @Valid
+    @Size(min = 1 ,message = "元素个数必须大于0")
     private List<E> list = new ArrayList<>();
 
     @Override

@@ -27,6 +27,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -172,5 +174,23 @@ public class TestContoller {
         //对象转换
         TestResponse converter = TestConverterMapper.INSTANCE.converter(testRequest);
         return BaseResultGenerator.success(converter);
+    }
+
+    /**
+     * 校验测试七： 失败
+     * 1.使用注解 @Valid 校验多个参数
+     * 2.转换单个对象
+     */
+    @ApiOperation(value = "校验测试7", notes = "使用注解 @Valid 校验多个参数")
+    @ServiceLog("参数校验测试7")
+    @GetMapping("/v1.7/param_test")
+    @Valid //TODO @Valid 注解放到类上方法上字段上都不能起到校验作用，这种散装校验还是需要用@Validated放到类上
+    public BaseResult<?> parameterValids(
+             @NotNull(message = "id不能为空") Integer id,
+             @NotBlank(message = "name不能为空") String name
+    ){
+        System.out.println(id);
+        System.out.println(name);
+        return BaseResultGenerator.success();
     }
 }
