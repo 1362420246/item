@@ -29,7 +29,7 @@
         <hutool.version>4.5.9</hutool.version>
         <mapstruct.version>1.2.0.Final</mapstruct.version>
         <commons-collections.verison>3.2.2</commons-collections.verison>
-        <commons-io.verison>2.6</commons-io.verison>
+        <commons-io.verison>2.7</commons-io.verison>
         <thumbnailator.version>0.4.8</thumbnailator.version>
         <battcn.swagger.version>2.1.5-RELEASE</battcn.swagger.version>
     </properties>
